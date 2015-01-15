@@ -1,14 +1,10 @@
-﻿body {
-    font-family: 'Segoe UI', sans-serif;
-}
+﻿body { font-family: 'Segoe UI', sans-serif; }
 
-span {
-    font-style: italic;
-}
+span { font-style: italic; }
 
 .cs452-active {
-    -ms-border-radius:50%;
-    border-radius:50%; 
-    border:solid black 1px;
-    padding:5px
+    -ms-border-radius: 50%;
+    border: solid black 1px;
+    border-radius: 50%;
+    padding: 5px
 }
