@@ -23,30 +23,24 @@
                     <ul class="nav navbar-nav">
                         <li><a href="https://www.google.com">Google</a></li>
                         <li><a href="https://scottkast.github.com">Official Scott Kast website</a></li>
-                        <li><a href="Page10.html">Page 10</a></li>
+                        <li class="active"><a href="Page10.html">Page 10</a></li>
                     </ul>
                 </div>
             </nav>
             <h1>CSCI 452: Compiler & Interpreter Construction</h1>
             <div id="content"></div>
             <article>
-                <h2>LL Parser</h2>
-                <p>LL Parser is a top-down parser (also predictive parsing). Recursive descent parsing is a top-down parser.</p>
-                <p>
-                    To do top down parsing, you must transform a grammer in two ways: 
-                    <ol>
-                        <li>eliminate left recursion</li>
-                        <li>perform left factoring (remove non deterministic)</li>
-                    </ol>
-                </p>
-            </article>
-            <article>
-                <h2>A simple grammar</h2>
-                <ol>
-                    <li>Expression → Term</li>
-                    <li>Term → Term <span class="cs452-active">-</span> Term | Term <span class="cs452-active">+</span> Term | Factor</li>
-                    <li>Factor → Factor <span class="cs452-active">*</span> Factor | Factor <span class="cs452-active">/</span> Factor | <span class="cs452-active">(</span> Expression <span class="cs452-active">)</span> | <span class="cs452-active">var</span> | <span class="cs452-active">int</span> | <span class="cs452-active">real</span></li>
-                </ol>            
+                <h2>Find first and follows:</h2>  
+                <ul>
+                    <li>
+                        S → A B C D E
+                    </li>
+                    <li>A → a | ε</li>
+                    <li>B → b | ε</li>
+                    <li>C → c</li>
+                    <li>D → d | ε</li>
+                    <li>E → e | ε</li>
+                </ul>
             </article>
         </div><!-- /.container -->
     </body>
