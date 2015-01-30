@@ -9,13 +9,14 @@ namespace Lexer.SharpPascalCompiler
 {
     class Program
     {
+        private static readonly string strInputFileLocation = "..\\..\\input.txt";
         static void Main(string[] args)
         {
             try
             {
-                using (StreamReader sr = new StreamReader("..\\..\\input.txt"))
+                using (StreamReader sr = new StreamReader(strInputFileLocation))
                 {
-                    String line = sr.ReadToEnd();
+                    String line = sr.ReadLine();
                     Console.WriteLine(line);
                 }
             }
