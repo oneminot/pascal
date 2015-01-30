@@ -13,7 +13,7 @@ namespace Lexer.SharpPascalCompiler
         {
             try
             {
-                using (StreamReader sr = new StreamReader("TestFile.txt"))
+                using (StreamReader sr = new StreamReader("..\\..\\input.txt"))
                 {
                     String line = sr.ReadToEnd();
                     Console.WriteLine(line);
