@@ -1,0 +1,101 @@
+#ifndef Lexer_H
+#define Lexer_H
+#include <string>
+#include <sstream>
+#include <fstream>
+#include "Token.h"
+namespace KPascal
+{
+	class Lexer
+	{
+	private:
+		const static int numberOfStates = 13;
+		const static int numberOfAsciiValuesOfInput = 127;
+		const std::string dfaFileName = "dfa.txt";
+		const std::string programFileName = "ksample.txt";
+		int kLanguage[numberOfAsciiValuesOfInput][numberOfStates];
+		int kColumn;
+		int currentState, previousState;
+		std::ifstream fin;
+		//std::stringstream kLine;
+	public:
+		Lexer()
+		{
+			fin.open(dfaFileName);
+			if (fin.is_open())
+			{
+				for (int i = 0; i < numberOfAsciiValuesOfInput; i++)
+				{
+					for (int j = 0; j < numberOfStates; j++)
+					{
+						fin >> kLanguage[i][j];
+					}
+				}
+			}
+			fin.close();
+			fin.open(programFileName);
+		};
+		~Lexer()
+		{
+
+		};
+		bool getToken(Token & kToken)
+		{
+			currentState = 0;
+			previousState = 0;
+			kToken.value.clear();
+			while (true)
+			{
+				char myCharacter = fin.peek();
+				previousState = currentState;
+				currentState = kLanguage[myCharacter][currentState];
+				kToken.value.push_back(myCharacter);
+				if (currentState == 55 || myCharacter == -1)
+				{
+					if (previousState == 0)
+					{
+						if (myCharacter == -1)
+						{
+							return false;
+						}
+						currentState = 0;
+						kToken.value.clear();
+					}
+					else
+					{
+						kToken.value.pop_back();
+						kToken.type = previousState;
+						switch (kToken.type)
+						{
+						case 1:
+							kToken.sType = "word";
+							break;
+						case 2:
+							kToken.sType = "integer";
+							break;
+						case 3:
+							kToken.sType = "special";
+							break;
+						case 5:
+							kToken.sType = "real";
+							break;
+						case 10:
+							kToken.sType = "real";
+							break;
+						default:
+							;//do nothing
+						}
+						return true;
+					}
+				}
+				else if (currentState == 99)
+				{
+					std::cout << "oops";
+					exit(1);
+				}
+				fin.get();
+			}
+		}
+	};
+}
+#endif

@@ -1,0 +1,9 @@
+program abc
+integer a,b,c
+real x
+begin 
+	b=6;
+	a=b+-4;
+	x=-5.63e002;
+end
+end

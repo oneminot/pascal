@@ -1,0 +1,15 @@
+01 integer
+02 real
+03 variable
+04 factor
+05 term
+06 factr
+07 termr
+08 expr
+09 +
+10 -
+11 *
+12 /
+13 (
+14 )
+15 $

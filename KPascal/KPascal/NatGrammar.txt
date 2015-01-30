@@ -1,0 +1,9 @@
+if word is not a keyword and not keyword then identifier 
+
+block				->		begin statement multistatement end.
+statement			->		begin statement multistatement end |
+							if boolean expression then statement else statement |
+																	(optional)
+							var := expression
+multistatement		->		; statement multistatement
+booleanexpression	->		expression = expression 
