@@ -3,104 +3,242 @@
 
 KPascal::Lexer lexer;
 KPascal::Token token;
-int index = 0;
-void Term();
-void Expression();
-void Factor();
 
-void FactorPrime()
+const int size = 11;
+char tokenarray[] = "BiV=VtiV=VtVCIeVCIeVCIE.";
+int tokenloc = 0;
+int numberoftokens = 1;
+void factor();
+void expr();
+void term();
+void mstat();
+void stat();
+
+void factorprime()
 {
-	if (token.value == "*" || token.value == "/")
+	if (token.value == "*" || token.value == ")")
 	{
+		tokenloc++;
 		lexer.getToken(token);
-		Factor();
+		factor();
+		factorprime();
 	}
 }
 
-void Factor()
+void factor()
 {
+
 	if (token.value == "(")
 	{
+		tokenloc++;
 		lexer.getToken(token);
-		Expression();
+		expr();
 		if (token.value == ")")
 		{
-				lexer.getToken(token);
-				FactorPrime();
+			tokenloc++;
+			lexer.getToken(token);
+			factorprime();
 		}
 		else
 		{
 			std::cout << "Error" << std::endl;
 			system("pause");
-			exit(1);
+			exit(0);
 		}
 	}
-	else if (token.sType == "integer" || token.sType == "real" || token.sType == "variable")
+	else if (token.value == "R" || token.value == "V" || token.value == "I")
 	{
+		tokenloc++;
 		lexer.getToken(token);
-		FactorPrime();
-	}
-	else if (token.value == "+" || token.value == "-")
-	{
-		lexer.getToken(token);
-		Term();
-		lexer.getToken(token);
-		FactorPrime();
+		factorprime();
 	}
 	else
 	{
-		//if (token.value != "ÿ")
-		//{
-			std::cout << "Error" << std::endl;
-			system("pause");
-			exit(1);
-		//}
+		std::cout << "Error" << std::endl;
+		system("pause");
+		exit(0);
 	}
 }
 
-void TermPrime()
+
+void termprime()
 {
 	if (token.value == "+" || token.value == "-")
 	{
+		tokenloc++;
 		lexer.getToken(token);
-		Term();
-		TermPrime();
+		term();
+		termprime();
 	}
 }
 
-void Term()
+void term()
 {
-	Factor();
-	TermPrime();
+	factor();
+	termprime();
 }
 
-void Expression()
+void expr()
 {
-	Term();
+	term();
 }
 
-void Block()
+void bexprprime()
 {
-	//needs more work
-}
-
-void RescursiveDescentMain()
-{
-	lexer.getToken(token);
-	Block();
-}
-
-int main()
-{
-	int नेपाली = 0;
-	RescursiveDescentMain();
-	if (token.value != "ÿ")
+	if (token.value == "=")
+	{
+		tokenloc++;
+		lexer.getToken(token);
+		expr();
+	}
+	else if (token.value == "<")
+	{
+		tokenloc++;
+		expr();
+	}
+	else
 	{
 		std::cout << "Error" << std::endl;
 		system("pause");
-		exit(1);
+		exit(0);
 	}
-	std::cout << "Good code!" << std::endl;
+}
+
+void bexpr()
+{
+	expr();
+	bexprprime();
+}
+
+void statprime()
+{
+	if (token.value == "e")
+	{
+		tokenloc++;
+		lexer.getToken(token);
+		stat();
+	}
+}
+
+void stat()
+{
+	if (token.value == "V")
+	{
+		tokenloc++;
+		lexer.getToken(token);
+		if (token.value == "C")
+		{
+			tokenloc++;
+			lexer.getToken(token);
+			expr();
+		}
+		else
+		{
+			std::cout << "Error" << std::endl;
+			system("pause");
+			exit(0);
+		}
+	}
+	else if (token.value == "B")
+	{
+		tokenloc++;
+		lexer.getToken(token);
+		mstat();
+		if (token.value == "E")
+		{
+			tokenloc++;
+			lexer.getToken(token);
+		}
+		else
+		{
+			std::cout << "Error" << std::endl;
+			system("pause");
+			exit(0);
+		}
+	}
+	else if (token.value == "i")
+	{
+		tokenloc++;
+		lexer.getToken(token);
+		bexpr();
+		if (token.value == "t")
+		{
+			tokenloc++;
+			lexer.getToken(token);
+			stat();
+			statprime();
+		}
+		else
+		{
+			std::cout << "Error" << std::endl;
+			system("pause");
+			exit(0);
+		}
+	}
+}
+
+void mstatprime()
+{
+	if (token.value == ";")
+	{
+		tokenloc++;
+		lexer.getToken(token);
+		mstat();
+	}
+}
+
+void mstat()
+{
+	stat();
+	mstatprime();
+}
+
+void block()
+{
+	if (token.value == "B")
+	{
+		tokenloc++;
+		lexer.getToken(token);
+		mstat();
+		if (token.value == "E")
+		{
+			tokenloc++;
+			lexer.getToken(token);
+		}
+		else
+		{
+			std::cout << "Error" << std::endl;
+			system("pause");
+			exit(0);
+		}
+	}
+	else
+	{
+		std::cout << "Error" << std::endl;
+		system("pause");
+		exit(0);
+	}
+}
+
+void program()
+{
+	block();
+	if (token.value == ".")
+	{
+		tokenloc++;
+		lexer.getToken(token);
+	}
+	else
+	{
+		std::cout << "Error" << std::endl;
+		system("pause");
+		exit(0);
+	}
+}
+
+void main()
+{
+	program();
+	std::cout << "Gooooooooood code" << std::endl;
 	system("pause");
-	return 0;
 }

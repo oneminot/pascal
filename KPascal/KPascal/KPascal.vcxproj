@@ -75,6 +75,7 @@
     <ClInclude Include="Token.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="dictation.txt" />
     <Text Include="NatGrammar.txt" />
     <Text Include="table.txt" />
     <Text Include="dfa.txt" />
