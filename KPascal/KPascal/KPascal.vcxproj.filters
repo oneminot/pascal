@@ -61,5 +61,8 @@
     <Text Include="NatGrammar.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="dictation.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
