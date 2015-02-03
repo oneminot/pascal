@@ -72,6 +72,7 @@
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Production.h" />
+    <ClInclude Include="ReservedKeyword.h" />
     <ClInclude Include="Token.h" />
   </ItemGroup>
   <ItemGroup>
