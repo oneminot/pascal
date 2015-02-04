@@ -4,6 +4,7 @@
 #include <sstream>
 #include <fstream>
 #include "Token.h"
+#include "ReservedKeyword.h"
 namespace KPascal
 {
 	class Lexer
@@ -17,6 +18,7 @@ namespace KPascal
 		int kColumn;
 		int currentState, previousState;
 		std::ifstream fin;
+		KPascal::ReservedKeyword reservedkeyword;
 		//std::stringstream kLine;
 	public:
 		Lexer()
@@ -65,6 +67,14 @@ namespace KPascal
 					{
 						kToken.value.pop_back();
 						kToken.type = previousState;
+						if (reservedkeyword.IsKeywordReserved(token.value))
+						{
+							token.isKeyword = true;
+						}
+						else
+						{
+							token.isKeyword = false;
+						}
 						switch (kToken.type)
 						{
 						case 1:

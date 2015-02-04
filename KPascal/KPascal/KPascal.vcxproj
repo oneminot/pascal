@@ -78,6 +78,7 @@
   <ItemGroup>
     <Text Include="dictation.txt" />
     <Text Include="NatGrammar.txt" />
+    <Text Include="reservedkeywords.txt" />
     <Text Include="table.txt" />
     <Text Include="dfa.txt" />
     <Text Include="keyword.txt" />

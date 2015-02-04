@@ -32,3 +32,14 @@
 //	std::cout << "Parse successful" << std::endl;
 //	system("pause");
 //}
+
+//#include "ReservedKeyword.h"
+//
+//int main()
+//{
+//	KPascal::ReservedKeyword r;
+//	if (r.IsKeywordReserved("Kushal"))
+//	{
+//		std::cout << "found!" << std::endl;
+//	}
+//}
