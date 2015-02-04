@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8B2D5A66-7517-4576-96F1-324305F020A6}</ProjectGuid>
-    <RootNamespace>KPascal</RootNamespace>
+    <ProjectGuid>{CFC27D65-67C3-4821-82D2-5E3CBC015CD7}</ProjectGuid>
+    <RootNamespace>SymbolTable</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -64,26 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="RecursiveDescent.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Keyword.h" />
-    <ClInclude Include="Lexer.h" />
-    <ClInclude Include="Parser.h" />
-    <ClInclude Include="Production.h" />
-    <ClInclude Include="ReservedKeyword.h" />
-    <ClInclude Include="Token.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="dictation.txt" />
-    <Text Include="NatGrammar.txt" />
-    <Text Include="table.txt" />
-    <Text Include="dfa.txt" />
-    <Text Include="keyword.txt" />
-    <Text Include="ksample.txt" />
-    <Text Include="production.txt" />
-    <Text Include="sample.txt" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

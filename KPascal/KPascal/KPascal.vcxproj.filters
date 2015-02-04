@@ -38,6 +38,9 @@
     <ClInclude Include="Production.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ReservedKeyword.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="dfa.txt">

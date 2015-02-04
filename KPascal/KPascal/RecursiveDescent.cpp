@@ -1,6 +1,10 @@
 ﻿#include <iostream>
 #include "Lexer.h"
 
+#include <map>
+
+std::map<std::string, bool> reservedkeyword;
+
 KPascal::Lexer lexer;
 KPascal::Token token;
 
@@ -238,6 +242,13 @@ void program()
 
 void main()
 {
+	reservedkeyword["Begin"] = true;
+	reservedkeyword["End"] = true;
+
+	if (reservedkeyword.find("x") != reservedkeyword.end())
+	{
+		std::cout << "found";
+	}
 	program();
 	std::cout << "Gooooooooood code" << std::endl;
 	system("pause");
