@@ -67,5 +67,8 @@
     <Text Include="dictation.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="reservedkeywords.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
