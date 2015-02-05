@@ -197,12 +197,12 @@ void mstat()
 
 void block()
 {
-	if (token.value == "B")
+	if (token.value == "Begin")
 	{
 		tokenloc++;
 		lexer.getToken(token);
 		mstat();
-		if (token.value == "E")
+		if (token.value == "End")
 		{
 			tokenloc++;
 			lexer.getToken(token);
@@ -226,6 +226,11 @@ void program()
 {
 	if (token.value == "Program")
 	{
+		//this is the program name 
+		lexer.getToken(token);
+		//this is the semi colon 
+		lexer.getToken(token);
+		//this is Begin;
 		lexer.getToken(token);
 		block();
 		if (token.value == ".")
