@@ -230,13 +230,22 @@ void program()
 		lexer.getToken(token);
 		//this is the semi colon 
 		lexer.getToken(token);
-		//this is Begin;
-		lexer.getToken(token);
-		block();
-		if (token.value == ".")
+		if (token.value == ";")
 		{
-			tokenloc++;
+			//this is Begin;
 			lexer.getToken(token);
+			block();
+			if (token.value == ".")
+			{
+				tokenloc++;
+				lexer.getToken(token);
+			}
+			else
+			{
+				std::cout << "Error" << std::endl;
+				system("pause");
+				exit(0);
+			}
 		}
 		else
 		{
