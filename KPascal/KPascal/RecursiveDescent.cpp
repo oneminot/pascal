@@ -224,23 +224,31 @@ void block()
 
 void program()
 {
-	block();
-	if (token.value == ".")
+	if (token.value == "Program")
 	{
-		tokenloc++;
 		lexer.getToken(token);
-	}
-	else
-	{
-		std::cout << "Error" << std::endl;
-		system("pause");
-		exit(0);
+		block();
+		if (token.value == ".")
+		{
+			tokenloc++;
+			lexer.getToken(token);
+		}
+		else
+		{
+			std::cout << "Error" << std::endl;
+			system("pause");
+			exit(0);
+		}
 	}
 }
 
 void main()
 {
+	while (true)
+	{
+		lexer.getToken(token);
+	}
 	program();
-	std::cout << "Gooooooooood code" << std::endl;
+	std::cout << "Good code" << std::endl;
 	system("pause");
 }
