@@ -70,5 +70,8 @@
     <Text Include="reservedkeywords.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="kPascalSample.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
