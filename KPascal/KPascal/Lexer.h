@@ -67,13 +67,13 @@ namespace KPascal
 					{
 						kToken.value.pop_back();
 						kToken.type = previousState;
-						if (reservedkeyword.IsKeywordReserved(token.value))
+						if (reservedkeyword.IsKeywordReserved(kToken.value))
 						{
-							token.isKeyword = true;
+							kToken.isKeyword = true;
 						}
 						else
 						{
-							token.isKeyword = false;
+							kToken.isKeyword = false;
 						}
 						switch (kToken.type)
 						{

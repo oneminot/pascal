@@ -1,0 +1,75 @@
+program HelloWorld(output);
+
+var global : integer;
+
+function abs(num : integer) : integer;
+var temp : integer;
+begin
+    if num < 0 then
+        abs:= num*-1
+    else
+       abs:=num;
+end;
+
+procedure test(var p1:integer; p2,p3:integer);
+var localint : integer;
+var global : integer;  // local copy of global
+// var p2 : integer;  // Duplicate identifier
+begin
+    // x:=0;  // error Not a local or global variable
+    global:=0;  // Changes local copy of global
+    localint:=0;
+    p1:=p2 + p3;
+    p2 := localint;
+    p3 := localint;
+end;
+
+procedure recursion(count : integer);
+begin
+    if count < 10 then
+    begin
+        global:=count;
+        recursion(count+1);
+    end;
+     writeln('count ',count);
+     writeln('global ',global);
+end;
+
+var x,y:integer;
+var z:integer;
+    q,w:integer;
+var myarray,myarray2 : Array [1..5] of integer;
+var mytwodarray : Array [1..5,5..10] of boolean;
+    mythreedarray : Array [1..5,1..5,1..5] of boolean;
+
+
+begin
+  z:=-1;
+  w:= -100;
+  q:=-200;
+  writeln('abs of -100 ', abs(w));
+  recursion(5);
+  writeln('global ',global);
+  test(z,w,q);
+  writeln('global ',global);
+  writeln('z ',z);
+  writeln('w ',w);
+  writeln('q ',q);
+  x:=5;
+  myarray[1]:=5;
+  mytwodarray[1,5]:=true;
+  for x:=1 to 5 do
+  begin
+   writeln('x ',x);
+    for y:=10 downto 5 do
+    begin
+        mytwodarray[x,y]:=false;
+        writeln('y ',y);
+    end
+  end;
+  mythreedarray[1,1,1]:=true;
+  mytwodarray[1,5]:=true;
+  if mytwodarray[1,5] then
+    writeln('true');
+  writeln('Hello, world!');
+end.

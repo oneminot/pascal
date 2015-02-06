@@ -31,7 +31,7 @@ namespace KPascal
 		}
 		bool IsKeywordReserved(std::string keyword)
 		{
-				if (reservedkeywords.find(keyword) == reservedkeywords.end())
+				if (reservedkeywords.find(keyword) != reservedkeywords.end())
 				{
 					return true;
 				}

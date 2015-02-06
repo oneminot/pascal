@@ -197,12 +197,12 @@ void mstat()
 
 void block()
 {
-	if (token.value == "B")
+	if (token.value == "Begin")
 	{
 		tokenloc++;
 		lexer.getToken(token);
 		mstat();
-		if (token.value == "E")
+		if (token.value == "End")
 		{
 			tokenloc++;
 			lexer.getToken(token);
@@ -224,23 +224,42 @@ void block()
 
 void program()
 {
-	block();
-	if (token.value == ".")
+	if (token.value == "Program")
 	{
-		tokenloc++;
+		//this is the program name 
 		lexer.getToken(token);
-	}
-	else
-	{
-		std::cout << "Error" << std::endl;
-		system("pause");
-		exit(0);
+		//this is the semi colon 
+		lexer.getToken(token);
+		if (token.value == ";")
+		{
+			//this is Begin;
+			lexer.getToken(token);
+			block();
+			if (token.value == ".")
+			{
+				tokenloc++;
+				lexer.getToken(token);
+			}
+			else
+			{
+				std::cout << "Error" << std::endl;
+				system("pause");
+				exit(0);
+			}
+		}
+		else
+		{
+			std::cout << "Error" << std::endl;
+			system("pause");
+			exit(0);
+		}
 	}
 }
 
 void main()
 {
+	lexer.getToken(token);
 	program();
-	std::cout << "Gooooooooood code" << std::endl;
+	std::cout << "Good code" << std::endl;
 	system("pause");
 }
