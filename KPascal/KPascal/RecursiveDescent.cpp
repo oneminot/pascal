@@ -222,6 +222,53 @@ void block()
 	}
 }
 
+void Varprodprime()
+{
+	//to be continued
+}
+
+void Varlist()
+{
+	lexer.getToken(token);
+	if (token.value == ";")
+	{
+		lexer.getToken(token);
+		if (!token.isKeyword)
+		{
+			//we have a variable 
+			Varlist();
+		}
+	}
+	else
+	{
+		//do nothing 
+	}
+}
+
+void Vari()
+{
+	lexer.getToken(token);
+	if (!token.isKeyword)
+	{
+		//we have a variable 
+		Varlist(); 
+		lexer.getToken(token);
+		if (token.value == ";")
+		{
+			Varprodprime();
+		}
+	}
+}
+
+void PFV()
+{
+	lexer.getToken(token);
+	if (token.value == "var")
+	{
+		Vari();
+	}
+}
+
 void program()
 {
 	if (token.value == "Program")
@@ -232,6 +279,8 @@ void program()
 		lexer.getToken(token);
 		if (token.value == ";")
 		{
+			//this is where var should go 
+			PFV();
 			//this is Begin;
 			lexer.getToken(token);
 			block();
