@@ -258,7 +258,10 @@ void program()
 
 void main()
 {
-	lexer.getToken(token);
+	while ("pigs" != "can fly")
+	{
+		lexer.getToken(token);
+	}
 	program();
 	std::cout << "Good code" << std::endl;
 	system("pause");
