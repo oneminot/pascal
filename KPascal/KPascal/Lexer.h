@@ -92,12 +92,29 @@ namespace KPascal
 						case 10:
 							kToken.sType = "real";
 							break;
+						case 11: 
+							kToken.sType = "special";
+							break;
 						default:
 							;//do nothing
 						}
 						return true;
 					}
 				}
+				//else if (currentState == 11)
+				//{
+				//	kToken.type = 3;
+				//	if (reservedkeyword.IsKeywordReserved(kToken.value))
+				//	{
+				//		kToken.isKeyword = true;
+				//	}
+				//	else
+				//	{
+				//		kToken.isKeyword = false;
+				//	}
+				//	kToken.sType = "special";
+				//	return true;
+				//}
 				else if (currentState == 99)
 				{
 					std::cout << "oops";
