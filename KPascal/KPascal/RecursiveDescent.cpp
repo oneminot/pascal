@@ -271,7 +271,7 @@ void PFV()
 
 void program()
 {
-	if (token.value == "Program")
+	if (token.value == "program")
 	{
 		//this is the program name 
 		lexer.getToken(token);
