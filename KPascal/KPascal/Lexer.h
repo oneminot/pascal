@@ -3,6 +3,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include <algorithm>
 #include "Token.h"
 #include "ReservedKeyword.h"
 namespace KPascal
@@ -98,6 +99,7 @@ namespace KPascal
 						default:
 							;//do nothing
 						}
+						std::transform(kToken.value.begin(), kToken.value.end(), kToken.value.begin(), ::tolower);
 						return true;
 					}
 				}
