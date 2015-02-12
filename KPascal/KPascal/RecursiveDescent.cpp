@@ -16,6 +16,13 @@ void term();
 void mstat();
 void stat();
 
+void HasError()
+{
+	std::cout << "Error" << std::endl;
+	system("pause");
+	exit(0);
+}
+
 void factorprime()
 {
 	if (token.value == "*" || token.value == ")")
@@ -43,9 +50,7 @@ void factor()
 		}
 		else
 		{
-			std::cout << "Error" << std::endl;
-			system("pause");
-			exit(0);
+			HasError();
 		}
 	}
 	else if (token.value == "R" || token.value == "V" || token.value == "I")
@@ -56,9 +61,7 @@ void factor()
 	}
 	else
 	{
-		std::cout << "Error" << std::endl;
-		system("pause");
-		exit(0);
+		HasError();
 	}
 }
 
@@ -100,9 +103,7 @@ void bexprprime()
 	}
 	else
 	{
-		std::cout << "Error" << std::endl;
-		system("pause");
-		exit(0);
+		HasError();
 	}
 }
 
@@ -136,9 +137,7 @@ void stat()
 		}
 		else
 		{
-			std::cout << "Error" << std::endl;
-			system("pause");
-			exit(0);
+			HasError();
 		}
 	}
 	else if (token.value == "B")
@@ -153,9 +152,7 @@ void stat()
 		}
 		else
 		{
-			std::cout << "Error" << std::endl;
-			system("pause");
-			exit(0);
+			HasError();
 		}
 	}
 	else if (token.value == "i")
@@ -172,9 +169,7 @@ void stat()
 		}
 		else
 		{
-			std::cout << "Error" << std::endl;
-			system("pause");
-			exit(0);
+			HasError();
 		}
 	}
 }
@@ -209,16 +204,12 @@ void block()
 		}
 		else
 		{
-			std::cout << "Error" << std::endl;
-			system("pause");
-			exit(0);
+			HasError();
 		}
 	}
 	else
 	{
-		std::cout << "Error" << std::endl;
-		system("pause");
-		exit(0);
+		HasError();
 	}
 }
 
@@ -260,12 +251,84 @@ void Vari()
 	}
 }
 
+void Localvar()
+{
+
+}
+
+void Plist()
+{
+
+}
+
+void Proc()
+{
+	lexer.getToken(token);
+	//we have a variable;
+	lexer.getToken(token);
+	//we should get a left parenthesis now 
+	if (token.value == "(")
+	{
+		Plist();
+		lexer.getToken(token);
+		//we should have a right parenthesis now
+		if (token.value == ")")
+		{
+			lexer.getToken(token);
+			if (token.value == ";")
+			{
+				lexer.getToken(token);
+				Localvar();
+				block();
+				lexer.getToken(token);
+				if (token.value == ";")
+				{
+					//success 
+				}
+				else
+				{
+
+				}
+			}
+			else
+			{
+				HasError();
+			}
+		}
+		else
+		{
+			HasError();
+		}
+	}
+	else
+	{
+		HasError();
+	}
+}
+
+void Func()
+{
+
+}
+
 void PFV()
 {
 	lexer.getToken(token);
 	if (token.value == "var")
 	{
 		Vari();
+	}
+	else if (token.value == "procedure")
+	{
+		Proc();
+	}
+	else if (token.value == "function")
+	{
+		Func();
+	}
+	else
+	{
+		//do nothing 
 	}
 }
 
@@ -291,16 +354,12 @@ void program()
 			}
 			else
 			{
-				std::cout << "Error" << std::endl;
-				system("pause");
-				exit(0);
+				HasError();
 			}
 		}
 		else
 		{
-			std::cout << "Error" << std::endl;
-			system("pause");
-			exit(0);
+			HasError();
 		}
 	}
 }
