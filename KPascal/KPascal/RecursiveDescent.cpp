@@ -287,7 +287,7 @@ void Proc()
 				}
 				else
 				{
-
+					HasError();
 				}
 			}
 			else
