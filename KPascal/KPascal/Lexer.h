@@ -67,15 +67,7 @@ namespace KPascal
 					else
 					{
 						kToken.value.pop_back();
-						kToken.type = previousState;
-						if (reservedkeyword.IsKeywordReserved(kToken.value))
-						{
-							kToken.isKeyword = true;
-						}
-						else
-						{
-							kToken.isKeyword = false;
-						}
+						kToken.type = previousState;						
 						switch (kToken.type)
 						{
 						case 1:
@@ -100,6 +92,14 @@ namespace KPascal
 							;//do nothing
 						}
 						std::transform(kToken.value.begin(), kToken.value.end(), kToken.value.begin(), ::tolower);
+						if (reservedkeyword.IsKeywordReserved(kToken.value))
+						{
+							kToken.isKeyword = true;
+						}
+						else
+						{
+							kToken.isKeyword = false;
+						}
 						return true;
 					}
 				}

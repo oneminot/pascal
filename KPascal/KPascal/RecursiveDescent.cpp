@@ -247,7 +247,6 @@ void Varprodprime()
 		if (!token.isKeyword)
 		{
 			Varlist();
-			lexer.getToken(token);
 			if (token.value == ":")
 			{
 				Datatype();
@@ -256,9 +255,7 @@ void Varprodprime()
 				{
 					Varprodprime();
 				}
-				else { HasError(); }
 			}
-			else { HasError(); }
 		}
 		else { HasError(); }
 	}
@@ -267,7 +264,6 @@ void Varprodprime()
 		if (!token.isKeyword)
 		{
 			Varlist();
-			lexer.getToken(token);
 			if (token.value == ":")
 			{
 				Datatype();
@@ -276,18 +272,16 @@ void Varprodprime()
 				{
 					Varprodprime();
 				}
-				else { HasError(); }
 			}
 			else { HasError(); }
 		}
-		else { HasError(); }
 	}
 }
 
 void Varlist()
 {
 	lexer.getToken(token);
-	if (token.value == ";")
+	if (token.value == ",")
 	{
 		lexer.getToken(token);
 		if (!token.isKeyword)
@@ -305,7 +299,6 @@ void Vari()
 	{
 		//we have a variable 
 		Varlist();
-		lexer.getToken(token);
 		if (token.value == ":")
 		{
 			Datatype();
@@ -478,26 +471,25 @@ void PFV()
 
 void program()
 {
-	if (token.value == "program")
-	{
-		//this is the program name 
-		lexer.getToken(token);
-		//this is the semi colon 
-		lexer.getToken(token);
-		if (token.value == ";")
-		{
+	//if (token.value == "program")
+	//{
+	//	//this is the program name 
+	//	lexer.getToken(token);
+	//	//this is the semi colon 
+	//	lexer.getToken(token);
+	//	if (token.value == ";")
+	//	{
 			PFV();
-			lexer.getToken(token);
-			block();
-			if (token.value == ".")
-			{
-				tokenloc++;
-				lexer.getToken(token);
-			}
-			else { HasError(); }
-		}
-		else { HasError(); }
-	}
+		//	block();
+		//	if (token.value == ".")
+		//	{
+		//		tokenloc++;
+		//		lexer.getToken(token);
+		//	}
+		//	else { HasError(); }
+		//}
+		//else { HasError(); }
+	//}
 }
 
 void main()
