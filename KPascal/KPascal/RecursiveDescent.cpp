@@ -15,6 +15,9 @@ void expr();
 void term();
 void mstat();
 void stat();
+void Varlist();
+void Varprodprime();
+void PLend();
 
 void HasError()
 {
@@ -221,12 +224,24 @@ void Datatype()
 
 void Varprod()
 {
-
+	Varlist();
+	lexer.getToken(token);
+	if (token.value == ":")
+	{
+		Datatype();
+		lexer.getToken(token);
+		if (token.value == ";")
+		{
+			Varprodprime();
+		}
+		else { HasError(); }
+	}
+	else { HasError(); }
 }
 
 void Varprodprime()
 {
-	//to be continued
+	
 }
 
 void Varlist()
