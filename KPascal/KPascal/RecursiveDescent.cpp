@@ -7,7 +7,6 @@ KPascal::Lexer lexer;
 KPascal::Token token;
 
 const int size = 11;
-char tokenarray[] = "BiV=VtiV=VtVCIeVCIeVCIE.";
 int tokenloc = 0;
 int numberoftokens = 1;
 void factor();
@@ -195,12 +194,12 @@ void mstat()
 
 void block()
 {
-	if (token.value == "Begin")
+	if (token.value == "begin")
 	{
 		tokenloc++;
 		lexer.getToken(token);
 		mstat();
-		if (token.value == "End")
+		if (token.value == "end")
 		{
 			tokenloc++;
 			lexer.getToken(token);
@@ -241,7 +240,48 @@ void Varprod()
 
 void Varprodprime()
 {
-	
+	lexer.getToken(token);
+	if (token.value == "var")
+	{
+		lexer.getToken(token);
+		if (!token.isKeyword)
+		{
+			Varlist();
+			lexer.getToken(token);
+			if (token.value == ":")
+			{
+				Datatype();
+				lexer.getToken(token);
+				if (token.value == ";")
+				{
+					Varprodprime();
+				}
+				else { HasError(); }
+			}
+			else { HasError(); }
+		}
+		else { HasError(); }
+	}
+	else
+	{
+		if (!token.isKeyword)
+		{
+			Varlist();
+			lexer.getToken(token);
+			if (token.value == ":")
+			{
+				Datatype();
+				lexer.getToken(token);
+				if (token.value == ";")
+				{
+					Varprodprime();
+				}
+				else { HasError(); }
+			}
+			else { HasError(); }
+		}
+		else { HasError(); }
+	}
 }
 
 void Varlist()
