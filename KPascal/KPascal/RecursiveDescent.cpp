@@ -331,14 +331,17 @@ void PFV()
 	if (token.value == "var")
 	{
 		Vari();
+		PFV();
 	}
 	else if (token.value == "procedure")
 	{
 		Proc();
+		PFV();
 	}
 	else if (token.value == "function")
 	{
 		Func();
+		PFV();
 	}
 }
 
