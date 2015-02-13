@@ -219,6 +219,11 @@ void Datatype()
 	if (token.value != "boolean" && token.value != "integer") { HasError(); }
 }
 
+void Varprod()
+{
+
+}
+
 void Varprodprime()
 {
 	//to be continued
@@ -252,7 +257,7 @@ void Vari()
 			lexer.getToken(token);
 			if (token.value == ";")
 			{
-				//success 
+				Varprodprime();
 			}
 			else { HasError(); }
 		}
@@ -261,35 +266,106 @@ void Vari()
 
 void Localvar()
 {
+	lexer.getToken(token);
+	if (token.value == "var")
+	{
+		lexer.getToken(token);
+		Varprod();
+	}
+}
 
+void PLprime()
+{
+	lexer.getToken(token);
+	if (token.value == "var")
+	{
+		lexer.getToken(token);
+		if (!token.isKeyword)
+		{
+			Varlist();
+			lexer.getToken(token);
+			if (token.value == ":")
+			{
+				Datatype();
+				PLend();
+			}
+		}
+	}
+	else if (!token.isKeyword)
+	{
+		Varlist();
+		lexer.getToken(token);
+		if (token.value == ":")
+		{
+			Datatype();
+			PLend();
+		}
+	}
+}
+
+void PLend()
+{
+	lexer.getToken(token);
+	if (token.value == ";")
+	{
+		PLprime();
+	}
 }
 
 void Plist()
 {
-
+	lexer.getToken(token);
+	if (token.value == "var")
+	{
+		lexer.getToken(token);
+		if (!token.isKeyword)
+		{
+			Varlist();
+			lexer.getToken(token);
+			if (token.value == ":")
+			{
+				Datatype();
+				PLend();
+			}
+		}
+	}
+	else if (!token.isKeyword)
+	{
+		Varlist();
+		lexer.getToken(token);
+		if (token.value == ":")
+		{
+			Datatype();
+			PLend();
+		}
+	}
 }
 
 void Proc()
 {
 	lexer.getToken(token);
 	//we have a variable;
-	lexer.getToken(token);
-	//we should get a left parenthesis now 
-	if (token.value == "(")
+	if (!token.isKeyword)
 	{
-		Plist();
 		lexer.getToken(token);
-		//we should have a right parenthesis now
-		if (token.value == ")")
+		//we should get a left parenthesis now 
+		if (token.value == "(")
 		{
+			Plist();
 			lexer.getToken(token);
-			if (token.value == ";")
+			//we should have a right parenthesis now
+			if (token.value == ")")
 			{
 				lexer.getToken(token);
-				Localvar();
-				block();
-				lexer.getToken(token);
-				if (token.value != ";") { HasError(); }
+				if (token.value == ";")
+				{
+					lexer.getToken(token);
+					Localvar();
+					block();
+					lexer.getToken(token);
+					if (token.value != ";") { HasError(); }
+				}
+				else { HasError(); }
 			}
 			else { HasError(); }
 		}
