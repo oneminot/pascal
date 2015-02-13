@@ -213,6 +213,12 @@ void block()
 	}
 }
 
+void Datatype()
+{
+	lexer.getToken(token);
+	if (token.value != "boolean" && token.value != "integer") { HasError(); }
+}
+
 void Varprodprime()
 {
 	//to be continued
@@ -230,10 +236,6 @@ void Varlist()
 			Varlist();
 		}
 	}
-	else
-	{
-		//do nothing 
-	}
 }
 
 void Vari()
@@ -242,11 +244,17 @@ void Vari()
 	if (!token.isKeyword)
 	{
 		//we have a variable 
-		Varlist(); 
+		Varlist();
 		lexer.getToken(token);
-		if (token.value == ";")
+		if (token.value == ":")
 		{
-			Varprodprime();
+			Datatype();
+			lexer.getToken(token);
+			if (token.value == ";")
+			{
+				//success 
+			}
+			else { HasError(); }
 		}
 	}
 }
@@ -281,34 +289,40 @@ void Proc()
 				Localvar();
 				block();
 				lexer.getToken(token);
-				if (token.value == ";")
-				{
-					//success 
-				}
-				else
-				{
-					HasError();
-				}
+				if (token.value != ";") { HasError(); }
 			}
-			else
-			{
-				HasError();
-			}
+			else { HasError(); }
 		}
-		else
-		{
-			HasError();
-		}
+		else { HasError(); }
 	}
-	else
-	{
-		HasError();
-	}
+	else { HasError(); }
 }
 
 void Func()
 {
-
+	lexer.getToken(token);
+	lexer.getToken(token);
+	//we have a variable;
+	lexer.getToken(token);
+	if (token.value == "(")
+	{
+		Plist();
+		lexer.getToken(token);
+		if (token.value == ")")
+		{
+			lexer.getToken(token);
+			if (token.value == ":")
+			{
+				lexer.getToken(token);
+				Datatype();
+				lexer.getToken(token);
+				if (token.value != ";") { HasError(); }
+			}
+			else { HasError(); }
+		}
+		else { HasError(); }
+	}
+	else { HasError(); }
 }
 
 void PFV()
@@ -326,10 +340,6 @@ void PFV()
 	{
 		Func();
 	}
-	else
-	{
-		//do nothing 
-	}
 }
 
 void program()
@@ -342,9 +352,7 @@ void program()
 		lexer.getToken(token);
 		if (token.value == ";")
 		{
-			//this is where var should go 
 			PFV();
-			//this is Begin;
 			lexer.getToken(token);
 			block();
 			if (token.value == ".")
@@ -352,15 +360,9 @@ void program()
 				tokenloc++;
 				lexer.getToken(token);
 			}
-			else
-			{
-				HasError();
-			}
+			else { HasError(); }
 		}
-		else
-		{
-			HasError();
-		}
+		else { HasError(); }
 	}
 }
 
