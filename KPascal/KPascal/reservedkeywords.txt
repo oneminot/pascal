@@ -1,4 +1,6 @@
-Begin 
-End 
-Kushal 
-Integer 
+begin
+end
+integer
+boolean
+program
+var

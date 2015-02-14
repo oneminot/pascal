@@ -10,12 +10,10 @@ namespace Testbed.CSharpConsole
     {
         static void Main(string[] args)
         {
-            // declare an integer 
-            var x = 5;
-            // declare an array 
-            int[] kushal = new int[x];
-            // this ought to give an error 
-            kushal[5] = 3;
+            // declare an implicitly-typed variable but don't initialize it
+            // notice that the ide will say that Implicitly-typed local variables must be initialized
+            var x;
+            x = 5;
         }
     }
 }
