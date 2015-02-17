@@ -100,6 +100,7 @@ namespace KPascal
 						{
 							kToken.isKeyword = false;
 						}
+						std::cout << kToken.value << std::endl;
 						return true;
 					}
 				}
