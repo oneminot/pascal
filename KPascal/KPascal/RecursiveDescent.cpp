@@ -217,8 +217,11 @@ void block()
 
 void Datatype()
 {
-	lexer.getToken(token);
-	if (token.value != "boolean" && token.value != "integer") { HasError(); }
+	if (token.value == "boolean" || token.value == "integer") 
+	{ 
+		lexer.getToken(token); 
+	}
+	else { HasError(); }
 }
 
 void Varprod()
@@ -240,22 +243,25 @@ void Varprod()
 
 void Varprodprime()
 {
-	lexer.getToken(token);
 	if (token.value == "var")
 	{
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
+			lexer.getToken(token);
 			Varlist();
 			if (token.value == ":")
 			{
-				Datatype();
 				lexer.getToken(token);
+				Datatype();
 				if (token.value == ";")
 				{
+					lexer.getToken(token);
 					Varprodprime();
 				}
+				else { HasError(); }
 			}
+			else { HasError(); }
 		}
 		else { HasError(); }
 	}
@@ -263,13 +269,15 @@ void Varprodprime()
 	{
 		if (!token.isKeyword)
 		{
+			lexer.getToken(token);
 			Varlist();
 			if (token.value == ":")
 			{
-				Datatype();
 				lexer.getToken(token);
+				Datatype();
 				if (token.value == ";")
 				{
+					lexer.getToken(token);
 					Varprodprime();
 				}
 			}
@@ -280,13 +288,13 @@ void Varprodprime()
 
 void Varlist()
 {
-	lexer.getToken(token);
 	if (token.value == ",")
 	{
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
 			//we have a variable 
+			lexer.getToken(token);
 			Varlist();
 		}
 	}
@@ -294,17 +302,18 @@ void Varlist()
 
 void Vari()
 {
-	lexer.getToken(token);
 	if (!token.isKeyword)
 	{
 		//we have a variable 
+		lexer.getToken(token);
 		Varlist();
 		if (token.value == ":")
 		{
-			Datatype();
 			lexer.getToken(token);
+			Datatype();
 			if (token.value == ";")
 			{
+				lexer.getToken(token);
 				Varprodprime();
 			}
 			else { HasError(); }
@@ -324,16 +333,16 @@ void Localvar()
 
 void PLprime()
 {
-	lexer.getToken(token);
 	if (token.value == "var")
 	{
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
-			Varlist();
 			lexer.getToken(token);
+			Varlist();
 			if (token.value == ":")
 			{
+				lexer.getToken(token);
 				Datatype();
 				PLend();
 			}
@@ -341,37 +350,39 @@ void PLprime()
 	}
 	else if (!token.isKeyword)
 	{
-		Varlist();
 		lexer.getToken(token);
+		Varlist();
 		if (token.value == ":")
 		{
+			lexer.getToken(token);
 			Datatype();
 			PLend();
 		}
 	}
+	else { HasError(); }
 }
 
 void PLend()
 {
-	lexer.getToken(token);
 	if (token.value == ";")
 	{
+		lexer.getToken(token);
 		PLprime();
 	}
 }
 
 void Plist()
 {
-	lexer.getToken(token);
 	if (token.value == "var")
 	{
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
-			Varlist();
 			lexer.getToken(token);
+			Varlist();
 			if (token.value == ":")
 			{
+				lexer.getToken(token);
 				Datatype();
 				PLend();
 			}
@@ -379,10 +390,11 @@ void Plist()
 	}
 	else if (!token.isKeyword)
 	{
-		Varlist();
 		lexer.getToken(token);
+		Varlist();
 		if (token.value == ":")
 		{
+			lexer.getToken(token);
 			Datatype();
 			PLend();
 		}
@@ -391,7 +403,6 @@ void Plist()
 
 void Proc()
 {
-	lexer.getToken(token);
 	//we have a variable;
 	if (!token.isKeyword)
 	{
@@ -399,8 +410,8 @@ void Proc()
 		//we should get a left parenthesis now 
 		if (token.value == "(")
 		{
-			Plist();
 			lexer.getToken(token);
+			Plist();
 			//we should have a right parenthesis now
 			if (token.value == ")")
 			{
@@ -411,7 +422,11 @@ void Proc()
 					Localvar();
 					block();
 					lexer.getToken(token);
-					if (token.value != ";") { HasError(); }
+					if (token.value == ";")
+					{
+						lexer.getToken(token);
+					}
+					else { HasError(); }
 				}
 				else { HasError(); }
 			}
@@ -440,7 +455,11 @@ void Func()
 				lexer.getToken(token);
 				Datatype();
 				lexer.getToken(token);
-				if (token.value != ";") { HasError(); }
+				if (token.value == ";")
+				{
+					lexer.getToken(token);
+				}
+				else { HasError(); }
 			}
 			else { HasError(); }
 		}
@@ -451,19 +470,21 @@ void Func()
 
 void PFV()
 {
-	lexer.getToken(token);
 	if (token.value == "var")
 	{
+		lexer.getToken(token);
 		Vari();
 		PFV();
 	}
 	else if (token.value == "procedure")
 	{
+		lexer.getToken(token);
 		Proc();
 		PFV();
 	}
 	else if (token.value == "function")
 	{
+		lexer.getToken(token);
 		Func();
 		PFV();
 	}
@@ -471,25 +492,26 @@ void PFV()
 
 void program()
 {
-	//if (token.value == "program")
-	//{
-	//	//this is the program name 
-	//	lexer.getToken(token);
-	//	//this is the semi colon 
-	//	lexer.getToken(token);
-	//	if (token.value == ";")
-	//	{
+	if (token.value == "program")
+	{
+		//this is the program name 
+		lexer.getToken(token);
+		//this is the semi colon 
+		lexer.getToken(token);
+		if (token.value == ";")
+		{
+			lexer.getToken(token);
 			PFV();
-		//	block();
-		//	if (token.value == ".")
-		//	{
-		//		tokenloc++;
-		//		lexer.getToken(token);
-		//	}
-		//	else { HasError(); }
-		//}
-		//else { HasError(); }
-	//}
+			block();
+			if (token.value == ".")
+			{
+				tokenloc++;
+				lexer.getToken(token);
+			}
+			else { HasError(); }
+		}
+		else { HasError(); }
+	}
 }
 
 void main()

@@ -1,3 +1,6 @@
+Program HelloWorld;
 var x, y:integer;
 z:boolean;
 var kig1, kig2, kig3:integer;
+Begin 
+End.
