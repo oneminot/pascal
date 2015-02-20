@@ -55,7 +55,7 @@ void factor()
 			HasError();
 		}
 	}
-	else if (token.value == "R" || token.value == "V" || token.value == "I")
+	else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword)  || token.sType == "integer")
 	{
 		tokenloc++;
 		lexer.getToken(token);
@@ -101,6 +101,12 @@ void bexprprime()
 	else if (token.value == "<")
 	{
 		tokenloc++;
+		lexer.getToken(token);
+		expr();
+	}
+	else if (token.value == ">")
+	{
+		lexer.getToken(token);
 		expr();
 	}
 	else
@@ -117,7 +123,7 @@ void bexpr()
 
 void statprime()
 {
-	if (token.value == "e")
+	if (token.value == "else")
 	{
 		tokenloc++;
 		lexer.getToken(token);
@@ -127,11 +133,12 @@ void statprime()
 
 void stat()
 {
-	if (token.value == "V")
+	// looking for a variable 
+	if (token.sType == "word" && !token.isKeyword)
 	{
 		tokenloc++;
 		lexer.getToken(token);
-		if (token.value == "C")
+		if (token.value == ":=")
 		{
 			tokenloc++;
 			lexer.getToken(token);
@@ -142,12 +149,12 @@ void stat()
 			HasError();
 		}
 	}
-	else if (token.value == "B")
+	else if (token.value == "begin")
 	{
 		tokenloc++;
 		lexer.getToken(token);
 		mstat();
-		if (token.value == "E")
+		if (token.value == "end")
 		{
 			tokenloc++;
 			lexer.getToken(token);
@@ -157,21 +164,17 @@ void stat()
 			HasError();
 		}
 	}
-	else if (token.value == "i")
+	else if (token.value == "if")
 	{
 		tokenloc++;
 		lexer.getToken(token);
 		bexpr();
-		if (token.value == "t")
+		if (token.value == "then")
 		{
 			tokenloc++;
 			lexer.getToken(token);
 			stat();
 			statprime();
-		}
-		else
-		{
-			HasError();
 		}
 	}
 }
@@ -180,7 +183,6 @@ void mstatprime()
 {
 	if (token.value == ";")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		mstat();
 	}
@@ -217,9 +219,9 @@ void block()
 
 void Datatype()
 {
-	if (token.value == "boolean" || token.value == "integer") 
-	{ 
-		lexer.getToken(token); 
+	if (token.value == "boolean" || token.value == "integer")
+	{
+		lexer.getToken(token);
 	}
 	else { HasError(); }
 }
@@ -230,8 +232,8 @@ void Varprod()
 	lexer.getToken(token);
 	if (token.value == ":")
 	{
-		Datatype();
 		lexer.getToken(token);
+		Datatype();
 		if (token.value == ";")
 		{
 			Varprodprime();
@@ -265,24 +267,21 @@ void Varprodprime()
 		}
 		else { HasError(); }
 	}
-	else
+	else if (!token.isKeyword && token.sType == "word")
 	{
-		if (!token.isKeyword)
+		lexer.getToken(token);
+		Varlist();
+		if (token.value == ":")
 		{
 			lexer.getToken(token);
-			Varlist();
-			if (token.value == ":")
+			Datatype();
+			if (token.value == ";")
 			{
 				lexer.getToken(token);
-				Datatype();
-				if (token.value == ";")
-				{
-					lexer.getToken(token);
-					Varprodprime();
-				}
+				Varprodprime();
 			}
-			else { HasError(); }
 		}
+		else { HasError(); }
 	}
 }
 
@@ -323,7 +322,6 @@ void Vari()
 
 void Localvar()
 {
-	lexer.getToken(token);
 	if (token.value == "var")
 	{
 		lexer.getToken(token);
@@ -404,7 +402,7 @@ void Plist()
 void Proc()
 {
 	//we have a variable;
-	if (!token.isKeyword)
+	if (!token.isKeyword && token.sType == "word")
 	{
 		lexer.getToken(token);
 		//we should get a left parenthesis now 
@@ -437,16 +435,16 @@ void Proc()
 	else { HasError(); }
 }
 
+// function abs(num:integer):integer;
 void Func()
 {
-	lexer.getToken(token);
-	lexer.getToken(token);
 	//we have a variable;
 	lexer.getToken(token);
+	//we have a left parenthesis 
 	if (token.value == "(")
 	{
-		Plist();
 		lexer.getToken(token);
+		Plist();
 		if (token.value == ")")
 		{
 			lexer.getToken(token);
@@ -454,10 +452,17 @@ void Func()
 			{
 				lexer.getToken(token);
 				Datatype();
-				lexer.getToken(token);
 				if (token.value == ";")
 				{
 					lexer.getToken(token);
+					Localvar();
+					lexer.getToken(token);
+					block();
+					if (token.value == ";")
+					{
+						lexer.getToken(token);
+					}
+					else { HasError(); }
 				}
 				else { HasError(); }
 			}

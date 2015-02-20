@@ -4,3 +4,8 @@ integer
 boolean
 program
 var
+function
+procedure
+if
+then
+else
