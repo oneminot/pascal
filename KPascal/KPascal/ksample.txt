@@ -6,7 +6,7 @@ function abs(num:integer):integer;
 var temp:integer;
 begin
     if num < 0 then
-        abs:= num*-1
+        abs:= num*1
     else
        abs:=num;
 end;

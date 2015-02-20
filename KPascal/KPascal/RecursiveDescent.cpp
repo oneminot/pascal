@@ -101,6 +101,12 @@ void bexprprime()
 	else if (token.value == "<")
 	{
 		tokenloc++;
+		lexer.getToken(token);
+		expr();
+	}
+	else if (token.value == ">")
+	{
+		lexer.getToken(token);
 		expr();
 	}
 	else
@@ -170,10 +176,6 @@ void stat()
 			stat();
 			statprime();
 		}
-		else
-		{
-			HasError();
-		}
 	}
 }
 
@@ -181,7 +183,6 @@ void mstatprime()
 {
 	if (token.value == ";")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		mstat();
 	}
@@ -457,7 +458,6 @@ void Func()
 					Localvar();
 					lexer.getToken(token);
 					block();
-					lexer.getToken(token);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
