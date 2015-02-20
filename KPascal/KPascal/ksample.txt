@@ -11,5 +11,6 @@ begin
        abs:=num;
 end;
 begin
-
+    global:=5;
+	notglobal:=5;
 end.
