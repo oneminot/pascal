@@ -1,22 +1,11 @@
 #ifndef SymbolTable_H_
 #define SymbolTable_H_
 #include <map>
-class SymbolTable
+#include <string>
+#include "ParameterData.h"
+#include "LocalVariable.h"
+struct SymbolTable
 {
-public:
-	SymbolTable();
-	~SymbolTable();
-
-private:
-
+	std::map <std::string, ParameterData> Table;
 };
-
-SymbolTable::SymbolTable()
-{
-
-}
-
-SymbolTable::~SymbolTable()
-{
-}
 #endif // !SymbolTable_H_
