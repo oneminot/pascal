@@ -73,6 +73,7 @@
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Production.h" />
     <ClInclude Include="ReservedKeyword.h" />
+    <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="Token.h" />
   </ItemGroup>
   <ItemGroup>
