@@ -47,6 +47,12 @@
     <ClInclude Include="ParameterData.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LocalVariable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Variable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="dfa.txt">
