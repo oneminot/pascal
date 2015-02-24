@@ -4,8 +4,9 @@
 #include <string>
 #include "ParameterData.h"
 #include "LocalVariable.h"
+#include "VariableData.h"
 struct SymbolTable
 {
-	std::map <std::string, ParameterData> Table;
+	std::map <std::string, VariableData> Table;
 };
 #endif // !SymbolTable_H_

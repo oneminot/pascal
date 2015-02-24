@@ -78,6 +78,7 @@
     <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="Variable.h" />
+    <ClInclude Include="VariableData.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dictation.txt" />
