@@ -1,5 +1,6 @@
 #ifndef SymbolTable_H_
 #define SymbolTable_H_
+#include <map>
 class SymbolTable
 {
 public:
@@ -12,6 +13,7 @@ private:
 
 SymbolTable::SymbolTable()
 {
+
 }
 
 SymbolTable::~SymbolTable()

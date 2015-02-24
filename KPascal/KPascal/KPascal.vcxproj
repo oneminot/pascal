@@ -70,6 +70,7 @@
   <ItemGroup>
     <ClInclude Include="Keyword.h" />
     <ClInclude Include="Lexer.h" />
+    <ClInclude Include="ParameterData.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Production.h" />
     <ClInclude Include="ReservedKeyword.h" />
