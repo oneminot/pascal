@@ -1,10 +1,12 @@
 ﻿#include <iostream>
 #include "Lexer.h"
+#include "SymbolTable.h"
 
 #include <map>
 
 KPascal::Lexer lexer;
 KPascal::Token token;
+KPascal::SymbolTable symbol;
 
 const int size = 11;
 int tokenloc = 0;
