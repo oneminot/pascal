@@ -2,8 +2,11 @@
 #define ParameterData_H_
 #include <string>
 #include "Variable.h"
-struct ParameterData : Variable
+namespace KPascal
 {
-	bool isPassedByReference;
-};
+	struct ParameterData : KPascal::Variable
+	{
+		bool isPassedByReference;
+	};
+}
 #endif // !ParameterData_H_

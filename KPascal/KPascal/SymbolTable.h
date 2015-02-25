@@ -5,8 +5,11 @@
 #include "ParameterData.h"
 #include "LocalVariable.h"
 #include "VariableData.h"
-struct SymbolTable
+namespace KPascal
 {
-	std::map <std::string, VariableData> Table;
-};
+	struct SymbolTable
+	{
+		std::map <std::string, VariableData> Table;
+	};
+}
 #endif // !SymbolTable_H_
