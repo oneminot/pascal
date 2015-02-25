@@ -3,6 +3,7 @@
 #include "SymbolTable.h"
 
 #include <map>
+#include <vector>
 
 KPascal::Lexer lexer;
 KPascal::Token token;
@@ -11,6 +12,9 @@ KPascal::SymbolTable symbol;
 const int size = 11;
 int tokenloc = 0;
 int numberoftokens = 1;
+
+std::vector<std::string> temporaryVector;
+
 void factor();
 void expr();
 void term();
