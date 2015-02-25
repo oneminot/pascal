@@ -70,10 +70,15 @@
   <ItemGroup>
     <ClInclude Include="Keyword.h" />
     <ClInclude Include="Lexer.h" />
+    <ClInclude Include="LocalVariable.h" />
+    <ClInclude Include="ParameterData.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Production.h" />
     <ClInclude Include="ReservedKeyword.h" />
+    <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="Token.h" />
+    <ClInclude Include="Variable.h" />
+    <ClInclude Include="VariableData.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="dictation.txt" />
