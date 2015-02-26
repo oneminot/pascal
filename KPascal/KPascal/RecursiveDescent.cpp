@@ -523,6 +523,7 @@ void program()
 		}
 		else { HasError(); }
 	}
+	else { HasError(); }
 }
 
 void main()
