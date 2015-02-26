@@ -300,6 +300,8 @@ void Varlist()
 		{
 			//we have a variable 
 			lexer.getToken(token);
+			symbol.Table[token.value].type = token.type;
+			//symbol.Table[token.value].size = 
 			Varlist();
 		}
 	}
