@@ -416,7 +416,7 @@ void Proc()
 					lexer.getToken(token);
 					Localvar();
 					block();
-					lexer.getToken(token);
+					//lexer.getToken(token);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
