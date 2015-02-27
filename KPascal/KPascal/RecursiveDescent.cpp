@@ -208,6 +208,20 @@ void Datatype()
 {
 	if (token.value == "boolean" || token.value == "integer")
 	{
+		for each (std::string myTokenValue in temporaryVector)
+		{
+			if (symbol.Table.find(myTokenValue) == symbol.Table.end())
+			{
+				if (token.value == "boolean")
+				{
+					symbol.Table[myTokenValue].size = 1;
+				}
+				else if (token.value == "integer")
+				{
+					symbol.Table[myTokenValue].size = 4;
+				}
+			}
+		}
 		lexer.getToken(token);
 	}
 	else { HasError(); }
@@ -304,11 +318,6 @@ void Vari()
 		//we have a variable 
 		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
-		//if (symbol.Table.find(token.value) == symbol.Table.end())
-		//{
-		//	std::cout << "You found waldo" << std::endl;
-
-		//}
 		Varlist();
 		if (token.value == ":")
 		{
