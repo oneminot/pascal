@@ -220,8 +220,17 @@ void Datatype()
 				{
 					symbol.Table[myTokenValue].size = 4;
 				}
+				symbol.Table[myTokenValue].isMethod = false;
+				symbol.Table[myTokenValue].type = token.value;
+				symbol.Table[myTokenValue].offset = GlobalOffset;
+				GlobalOffset += symbol.Table[myTokenValue].size;
+			}
+			else
+			{
+				std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
 			}
 		}
+		temporaryVector.clear();
 		lexer.getToken(token);
 	}
 	else { HasError(); }
