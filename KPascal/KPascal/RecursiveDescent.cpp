@@ -203,12 +203,10 @@ void mstat()
 void block()
 {
 	if (token.value == "begin") {
-		tokenloc++;
 		lexer.getToken(token);
 		mstat();
 		if (token.value == "end")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 		}
 		else { HasError(); }
@@ -227,15 +225,20 @@ void Datatype()
 
 void Varprod()
 {
-	Varlist();
-	lexer.getToken(token);
-	if (token.value == ":")
+	if (token.sType == "word" && !token.isKeyword)
 	{
 		lexer.getToken(token);
-		Datatype();
-		if (token.value == ";")
+		Varlist();
+		//lexer.getToken(token);
+		if (token.value == ":")
 		{
-			Varprodprime();
+			lexer.getToken(token);
+			Datatype();
+			if (token.value == ";")
+			{
+				Varprodprime();
+			}
+			else { HasError(); }
 		}
 		else { HasError(); }
 	}
@@ -300,7 +303,6 @@ void Varlist()
 
 void Vari()
 {
-
 	if (!token.isKeyword)
 	{
 		//we have a variable 
@@ -308,7 +310,6 @@ void Vari()
 		if (symbol.Table.find(token.value) == symbol.Table.end())
 		{
 			std::cout << "You found waldo" << std::endl;
-			system("pause");
 		}
 		Varlist();
 		if (token.value == ":")
