@@ -191,7 +191,8 @@ void mstat()
 
 void block()
 {
-	if (token.value == "begin") {
+	if (token.value == "begin") 
+	{
 		lexer.getToken(token);
 		mstat();
 		if (token.value == "end")
@@ -242,6 +243,8 @@ void Varprodprime()
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
+			//we have a variable 
+			temporaryVector.push_back(token.value);
 			lexer.getToken(token);
 			Varlist();
 			if (token.value == ":")
@@ -261,6 +264,8 @@ void Varprodprime()
 	}
 	else if (!token.isKeyword && token.sType == "word")
 	{
+		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
 		Varlist();
 		if (token.value == ":")
@@ -285,6 +290,7 @@ void Varlist()
 		if (!token.isKeyword)
 		{
 			//we have a variable 
+			temporaryVector.push_back(token.value);
 			lexer.getToken(token);
 			Varlist();
 		}
@@ -296,12 +302,13 @@ void Vari()
 	if (!token.isKeyword)
 	{
 		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
-		if (symbol.Table.find(token.value) == symbol.Table.end())
-		{
-			std::cout << "You found waldo" << std::endl;
+		//if (symbol.Table.find(token.value) == symbol.Table.end())
+		//{
+		//	std::cout << "You found waldo" << std::endl;
 
-		}
+		//}
 		Varlist();
 		if (token.value == ":")
 		{
@@ -333,6 +340,8 @@ void PLprime()
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
+			//we have a variable 
+			temporaryVector.push_back(token.value);
 			lexer.getToken(token);
 			Varlist();
 			if (token.value == ":")
@@ -345,6 +354,8 @@ void PLprime()
 	}
 	else if (!token.isKeyword)
 	{
+		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
 		Varlist();
 		if (token.value == ":")
@@ -373,6 +384,8 @@ void Plist()
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
+			//we have a variable 
+			temporaryVector.push_back(token.value);
 			lexer.getToken(token);
 			Varlist();
 			if (token.value == ":")
@@ -385,6 +398,8 @@ void Plist()
 	}
 	else if (!token.isKeyword)
 	{
+		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
 		Varlist();
 		if (token.value == ":")
@@ -401,6 +416,8 @@ void Proc()
 	//we have a variable;
 	if (!token.isKeyword && token.sType == "word")
 	{
+		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
 		//we should get a left parenthesis now 
 		if (token.value == "(")
@@ -436,6 +453,7 @@ void Proc()
 void Func()
 {
 	//we have a variable;
+	temporaryVector.push_back(token.value);
 	lexer.getToken(token);
 	//we have a left parenthesis 
 	if (token.value == "(")
