@@ -1,10 +1,13 @@
 #ifndef Variable_H_
 #define Variable_H_
 #include <string>
-struct Variable
+namespace KPascal
 {
-	std::string type;
-	int size;
-	int offset;
-};
+	struct Variable
+	{
+		std::string type;
+		int size;
+		int offset;
+	};
+}
 #endif // !Variable_H_

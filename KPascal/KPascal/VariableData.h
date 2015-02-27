@@ -4,12 +4,15 @@
 #include <map>
 #include "LocalVariable.h"
 #include "ParameterData.h"
-struct VariableData
+namespace KPascal
 {
-	std::string type;
-	int size;
-	int offset;
-	std::map<std::string, ParameterData> parameters;
-	std::map<std::string, LocalVariable> localvariables;
-};
+	struct VariableData
+	{
+		std::string type;
+		int size;
+		int offset;
+		std::map<std::string, KPascal::ParameterData> parameters;
+		std::map<std::string, KPascal::LocalVariable> localvariables;
+	};
+}
 #endif // !VariableData_H_
