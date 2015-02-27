@@ -8,6 +8,7 @@ namespace KPascal
 		std::string type;
 		int size;
 		int offset;
+		bool isMethod;
 	};
 }
 #endif // !Variable_H_
