@@ -11,6 +11,8 @@ KPascal::SymbolTable symbol;
 
 std::vector<std::string> temporaryVector;
 
+int GlobalOffset = 0;
+
 void factor();
 void expr();
 void term();
@@ -19,6 +21,11 @@ void stat();
 void Varlist();
 void Varprodprime();
 void PLend();
+
+bool ShoveTokenIntoSymbolTable()
+{
+	return false;
+}
 
 void HasError()
 {
