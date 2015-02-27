@@ -300,8 +300,6 @@ void Varlist()
 		{
 			//we have a variable 
 			lexer.getToken(token);
-			symbol.Table[token.value].type = token.type;
-			//symbol.Table[token.value].size = 
 			Varlist();
 		}
 	}
@@ -309,10 +307,16 @@ void Varlist()
 
 void Vari()
 {
+
 	if (!token.isKeyword)
 	{
 		//we have a variable 
 		lexer.getToken(token);
+		if (symbol.Table.find(token.value) == symbol.Table.end())
+		{
+			std::cout << "You found waldo" << std::endl;
+			system("pause");
+		}
 		Varlist();
 		if (token.value == ":")
 		{
