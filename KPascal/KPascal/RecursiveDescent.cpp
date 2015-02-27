@@ -61,7 +61,7 @@ void factor()
 			HasError();
 		}
 	}
-	else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword)  || token.sType == "integer")
+	else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 	{
 		tokenloc++;
 		lexer.getToken(token);
@@ -202,8 +202,7 @@ void mstat()
 
 void block()
 {
-	if (token.value == "begin")
-	{
+	if (token.value == "begin") {
 		tokenloc++;
 		lexer.getToken(token);
 		mstat();
@@ -212,15 +211,9 @@ void block()
 			tokenloc++;
 			lexer.getToken(token);
 		}
-		else
-		{
-			HasError();
-		}
+		else { HasError(); }
 	}
-	else
-	{
-		HasError();
-	}
+	else { HasError(); }
 }
 
 void Datatype()
@@ -509,7 +502,7 @@ void PFV()
 
 void program()
 {
-	if (token.value == "program")
+	if (token.value == "program") 
 	{
 		//this is the program name 
 		lexer.getToken(token);
