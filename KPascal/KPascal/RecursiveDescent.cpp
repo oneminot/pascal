@@ -218,6 +218,7 @@ void Varprod()
 			Datatype();
 			if (token.value == ";")
 			{
+				lexer.getToken(token);
 				Varprodprime();
 			}
 			else { HasError(); }
@@ -445,7 +446,6 @@ void Func()
 				{
 					lexer.getToken(token);
 					Localvar();
-					lexer.getToken(token);
 					block();
 					if (token.value == ";")
 					{
