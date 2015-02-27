@@ -9,10 +9,6 @@ KPascal::Lexer lexer;
 KPascal::Token token;
 KPascal::SymbolTable symbol;
 
-const int size = 11;
-int tokenloc = 0;
-int numberoftokens = 1;
-
 std::vector<std::string> temporaryVector;
 
 void factor();
@@ -35,7 +31,6 @@ void factorprime()
 {
 	if (token.value == "*" || token.value == ")")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		factor();
 		factorprime();
@@ -47,12 +42,10 @@ void factor()
 
 	if (token.value == "(")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		expr();
 		if (token.value == ")")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 			factorprime();
 		}
@@ -63,7 +56,6 @@ void factor()
 	}
 	else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		factorprime();
 	}
@@ -78,7 +70,6 @@ void termprime()
 {
 	if (token.value == "+" || token.value == "-")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		term();
 		termprime();
@@ -100,13 +91,11 @@ void bexprprime()
 {
 	if (token.value == "=")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		expr();
 	}
 	else if (token.value == "<")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		expr();
 	}
@@ -131,7 +120,6 @@ void statprime()
 {
 	if (token.value == "else")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		stat();
 	}
@@ -142,11 +130,9 @@ void stat()
 	// looking for a variable 
 	if (token.sType == "word" && !token.isKeyword)
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		if (token.value == ":=")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 			expr();
 		}
@@ -157,12 +143,10 @@ void stat()
 	}
 	else if (token.value == "begin")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		mstat();
 		if (token.value == "end")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 		}
 		else
@@ -172,12 +156,10 @@ void stat()
 	}
 	else if (token.value == "if")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		bexpr();
 		if (token.value == "then")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 			stat();
 			statprime();
@@ -310,6 +292,7 @@ void Vari()
 		if (symbol.Table.find(token.value) == symbol.Table.end())
 		{
 			std::cout << "You found waldo" << std::endl;
+
 		}
 		Varlist();
 		if (token.value == ":")
@@ -516,7 +499,6 @@ void program()
 			block();
 			if (token.value == ".")
 			{
-				tokenloc++;
 				lexer.getToken(token);
 			}
 			else { HasError(); }
