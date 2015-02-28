@@ -9,11 +9,9 @@ KPascal::Lexer lexer;
 KPascal::Token token;
 KPascal::SymbolTable symbol;
 
-const int size = 11;
-int tokenloc = 0;
-int numberoftokens = 1;
-
 std::vector<std::string> temporaryVector;
+
+int GlobalOffset = 0;
 
 void factor();
 void expr();
@@ -23,6 +21,11 @@ void stat();
 void Varlist();
 void Varprodprime();
 void PLend();
+
+bool ShoveTokenIntoSymbolTable()
+{
+	return false;
+}
 
 void HasError()
 {
@@ -35,7 +38,6 @@ void factorprime()
 {
 	if (token.value == "*" || token.value == ")")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		factor();
 		factorprime();
@@ -47,12 +49,10 @@ void factor()
 
 	if (token.value == "(")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		expr();
 		if (token.value == ")")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 			factorprime();
 		}
@@ -61,9 +61,8 @@ void factor()
 			HasError();
 		}
 	}
-	else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword)  || token.sType == "integer")
+	else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		factorprime();
 	}
@@ -78,7 +77,6 @@ void termprime()
 {
 	if (token.value == "+" || token.value == "-")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		term();
 		termprime();
@@ -100,13 +98,11 @@ void bexprprime()
 {
 	if (token.value == "=")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		expr();
 	}
 	else if (token.value == "<")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		expr();
 	}
@@ -131,7 +127,6 @@ void statprime()
 {
 	if (token.value == "else")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		stat();
 	}
@@ -142,11 +137,9 @@ void stat()
 	// looking for a variable 
 	if (token.sType == "word" && !token.isKeyword)
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		if (token.value == ":=")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 			expr();
 		}
@@ -157,12 +150,10 @@ void stat()
 	}
 	else if (token.value == "begin")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		mstat();
 		if (token.value == "end")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 		}
 		else
@@ -172,12 +163,10 @@ void stat()
 	}
 	else if (token.value == "if")
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		bexpr();
 		if (token.value == "then")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 			stat();
 			statprime();
@@ -202,31 +191,46 @@ void mstat()
 
 void block()
 {
-	if (token.value == "begin")
+	if (token.value == "begin") 
 	{
-		tokenloc++;
 		lexer.getToken(token);
 		mstat();
 		if (token.value == "end")
 		{
-			tokenloc++;
 			lexer.getToken(token);
 		}
-		else
-		{
-			HasError();
-		}
+		else { HasError(); }
 	}
-	else
-	{
-		HasError();
-	}
+	else { HasError(); }
 }
 
 void Datatype()
 {
 	if (token.value == "boolean" || token.value == "integer")
 	{
+		for each (std::string myTokenValue in temporaryVector)
+		{
+			if (symbol.Table.find(myTokenValue) == symbol.Table.end())
+			{
+				if (token.value == "boolean")
+				{
+					symbol.Table[myTokenValue].size = 1;
+				}
+				else if (token.value == "integer")
+				{
+					symbol.Table[myTokenValue].size = 4;
+				}
+				symbol.Table[myTokenValue].isMethod = false;
+				symbol.Table[myTokenValue].type = token.value;
+				symbol.Table[myTokenValue].offset = GlobalOffset;
+				GlobalOffset += symbol.Table[myTokenValue].size;
+			}
+			else
+			{
+				std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
+			}
+		}
+		temporaryVector.clear();
 		lexer.getToken(token);
 	}
 	else { HasError(); }
@@ -234,15 +238,21 @@ void Datatype()
 
 void Varprod()
 {
-	Varlist();
-	lexer.getToken(token);
-	if (token.value == ":")
+	if (token.sType == "word" && !token.isKeyword)
 	{
 		lexer.getToken(token);
-		Datatype();
-		if (token.value == ";")
+		Varlist();
+		//lexer.getToken(token);
+		if (token.value == ":")
 		{
-			Varprodprime();
+			lexer.getToken(token);
+			Datatype();
+			if (token.value == ";")
+			{
+				lexer.getToken(token);
+				Varprodprime();
+			}
+			else { HasError(); }
 		}
 		else { HasError(); }
 	}
@@ -256,6 +266,8 @@ void Varprodprime()
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
+			//we have a variable 
+			temporaryVector.push_back(token.value);
 			lexer.getToken(token);
 			Varlist();
 			if (token.value == ":")
@@ -275,6 +287,8 @@ void Varprodprime()
 	}
 	else if (!token.isKeyword && token.sType == "word")
 	{
+		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
 		Varlist();
 		if (token.value == ":")
@@ -299,6 +313,7 @@ void Varlist()
 		if (!token.isKeyword)
 		{
 			//we have a variable 
+			temporaryVector.push_back(token.value);
 			lexer.getToken(token);
 			Varlist();
 		}
@@ -307,16 +322,11 @@ void Varlist()
 
 void Vari()
 {
-
 	if (!token.isKeyword)
 	{
 		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
-		if (symbol.Table.find(token.value) == symbol.Table.end())
-		{
-			std::cout << "You found waldo" << std::endl;
-			system("pause");
-		}
 		Varlist();
 		if (token.value == ":")
 		{
@@ -348,6 +358,8 @@ void PLprime()
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
+			//we have a variable 
+			temporaryVector.push_back(token.value);
 			lexer.getToken(token);
 			Varlist();
 			if (token.value == ":")
@@ -360,6 +372,8 @@ void PLprime()
 	}
 	else if (!token.isKeyword)
 	{
+		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
 		Varlist();
 		if (token.value == ":")
@@ -388,6 +402,8 @@ void Plist()
 		lexer.getToken(token);
 		if (!token.isKeyword)
 		{
+			//we have a variable 
+			temporaryVector.push_back(token.value);
 			lexer.getToken(token);
 			Varlist();
 			if (token.value == ":")
@@ -400,6 +416,8 @@ void Plist()
 	}
 	else if (!token.isKeyword)
 	{
+		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
 		Varlist();
 		if (token.value == ":")
@@ -416,6 +434,8 @@ void Proc()
 	//we have a variable;
 	if (!token.isKeyword && token.sType == "word")
 	{
+		//we have a variable 
+		temporaryVector.push_back(token.value);
 		lexer.getToken(token);
 		//we should get a left parenthesis now 
 		if (token.value == "(")
@@ -431,7 +451,7 @@ void Proc()
 					lexer.getToken(token);
 					Localvar();
 					block();
-					lexer.getToken(token);
+					//lexer.getToken(token);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
@@ -451,6 +471,7 @@ void Proc()
 void Func()
 {
 	//we have a variable;
+	temporaryVector.push_back(token.value);
 	lexer.getToken(token);
 	//we have a left parenthesis 
 	if (token.value == "(")
@@ -468,7 +489,6 @@ void Func()
 				{
 					lexer.getToken(token);
 					Localvar();
-					lexer.getToken(token);
 					block();
 					if (token.value == ";")
 					{
@@ -509,7 +529,7 @@ void PFV()
 
 void program()
 {
-	if (token.value == "program")
+	if (token.value == "program") 
 	{
 		//this is the program name 
 		lexer.getToken(token);
@@ -522,7 +542,6 @@ void program()
 			block();
 			if (token.value == ".")
 			{
-				tokenloc++;
 				lexer.getToken(token);
 			}
 			else { HasError(); }
