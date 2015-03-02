@@ -26,7 +26,7 @@ namespace KPascal
 		void HasError()
 		{
 			std::cout << "Error" << std::endl;
-			system("pause");
+			std::cin.get();
 			exit(0);
 		}
 
