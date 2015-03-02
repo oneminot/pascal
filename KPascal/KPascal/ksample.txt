@@ -1,14 +1,14 @@
 program HelloWorld;
 
-var global:integer;
+var global,notglobal:integer;
 
-function abs(num:integer):integer;
+function global(num:integer):integer;
 var temp:integer;
 begin
     if num < 0 then
-        abs:= num*1
+        global:= num*1
     else
-       abs:=num;
+       global:=num;
 end;
 begin
     global:=5;
