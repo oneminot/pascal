@@ -23,11 +23,20 @@ namespace KPascal
 			return false;
 		}
 
-		void HasError()
+		void HasError(std::string FailingTokenValue = "")
 		{
-			std::cout << "Error" << std::endl;
-			std::cin.get();
-			exit(0);
+			if (FailingTokenValue == "")
+			{
+				std::cout << "Error in who knows what method with who knows what token" << std::endl;
+				std::cin.get();
+				exit(0);
+			}
+			else 
+			{
+				std::cout << "Error " << " due to " << FailingTokenValue << std::endl;
+				std::cin.get();
+				exit(0);
+			}
 		}
 
 		void factorprime()
@@ -54,7 +63,7 @@ namespace KPascal
 				}
 				else
 				{
-					HasError();
+					HasError(token.value);
 				}
 			}
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
@@ -64,7 +73,7 @@ namespace KPascal
 			}
 			else
 			{
-				HasError();
+				HasError(token.value);
 			}
 		}
 
@@ -109,7 +118,7 @@ namespace KPascal
 			}
 			else
 			{
-				HasError();
+				HasError(token.value);
 			}
 		}
 
@@ -141,7 +150,7 @@ namespace KPascal
 				}
 				else
 				{
-					HasError();
+					HasError(token.value);
 				}
 			}
 			else if (token.value == "begin")
@@ -154,7 +163,7 @@ namespace KPascal
 				}
 				else
 				{
-					HasError();
+					HasError(token.value);
 				}
 			}
 			else if (token.value == "if")
@@ -195,9 +204,9 @@ namespace KPascal
 				{
 					lexer.getToken(token);
 				}
-				else { HasError(); }
+				else { HasError(token.value); }
 			}
-			else { HasError(); }
+			else { HasError(token.value); }
 		}
 
 		void Datatype()
@@ -229,7 +238,7 @@ namespace KPascal
 				temporaryVector.clear();
 				lexer.getToken(token);
 			}
-			else { HasError(); }
+			else { HasError(token.value); }
 		}
 
 		void Varprod()
@@ -248,11 +257,11 @@ namespace KPascal
 						lexer.getToken(token);
 						Varprodprime();
 					}
-					else { HasError(); }
+					else { HasError(token.value); }
 				}
-				else { HasError(); }
+				else { HasError(token.value); }
 			}
-			else { HasError(); }
+			else { HasError(token.value); }
 		}
 
 		void Varprodprime()
@@ -275,11 +284,11 @@ namespace KPascal
 							lexer.getToken(token);
 							Varprodprime();
 						}
-						else { HasError(); }
+						else { HasError(token.value); }
 					}
-					else { HasError(); }
+					else { HasError(token.value); }
 				}
-				else { HasError(); }
+				else { HasError(token.value); }
 			}
 			else if (!token.isKeyword && token.sType == "word")
 			{
@@ -297,7 +306,7 @@ namespace KPascal
 						Varprodprime();
 					}
 				}
-				else { HasError(); }
+				else { HasError(token.value); }
 			}
 		}
 
@@ -333,7 +342,7 @@ namespace KPascal
 						lexer.getToken(token);
 						Varprodprime();
 					}
-					else { HasError(); }
+					else { HasError(token.value); }
 				}
 			}
 		}
@@ -379,7 +388,7 @@ namespace KPascal
 					PLend();
 				}
 			}
-			else { HasError(); }
+			else { HasError(token.value); }
 		}
 
 		void PLend()
@@ -452,15 +461,15 @@ namespace KPascal
 							{
 								lexer.getToken(token);
 							}
-							else { HasError(); }
+							else { HasError(token.value); }
 						}
-						else { HasError(); }
+						else { HasError(token.value); }
 					}
-					else { HasError(); }
+					else { HasError(token.value); }
 				}
-				else { HasError(); }
+				else { HasError(token.value); }
 			}
-			else { HasError(); }
+			else { HasError(token.value); }
 		}
 
 		// function abs(num:integer):integer;
@@ -490,15 +499,15 @@ namespace KPascal
 							{
 								lexer.getToken(token);
 							}
-							else { HasError(); }
+							else { HasError(token.value); }
 						}
-						else { HasError(); }
+						else { HasError(token.value); }
 					}
-					else { HasError(); }
+					else { HasError(token.value); }
 				}
-				else { HasError(); }
+				else { HasError(token.value); }
 			}
-			else { HasError(); }
+			else { HasError(token.value); }
 		}
 
 		void PFV()
@@ -539,11 +548,11 @@ namespace KPascal
 					{
 						lexer.getToken(token);
 					}
-					else { HasError(); }
+					else { HasError(token.value); }
 				}
-				else { HasError(); }
+				else { HasError(token.value); }
 			}
-			else { HasError(); }
+			else { HasError(token.value); }
 		}
 	};
 }
