@@ -28,15 +28,15 @@ namespace KPascal
 			if (FailingTokenValue == "")
 			{
 				std::cout << "Error in who knows what method with who knows what token" << std::endl;
-				std::cin.get();
-				exit(0);
+
 			}
 			else 
 			{
 				std::cout << "Error " << " due to " << FailingTokenValue << std::endl;
-				std::cin.get();
-				exit(0);
 			}
+			std::cout << "Press ENTER to quit." << std::endl;
+			std::cin.get();
+			exit(1);
 		}
 
 		void factorprime()
