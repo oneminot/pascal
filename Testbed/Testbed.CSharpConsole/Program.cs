@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,16 +9,19 @@ namespace Testbed.CSharpConsole
 {
     class Program
     {
+        static readonly string Filename = "..\\..\\input.txt";
+        static string GetFileContents(string Filename)
+        {
+            string line;
+            using (StreamReader reader = new StreamReader(Filename))
+            {
+                line = reader.ReadLine();
+            }
+            return line;
+        }
         static void Main(string[] args)
         {
-            // declare an implicitly-typed variable but don't initialize it
-            // notice that the ide will say that Implicitly-typed local variables must be initialized
-            var x = 5;
-            if (x >= 5)
-            {
-                // is the compiler smart enough to not compile this? 
-                Console.WriteLine("Begin world domination for evil not for good!");
-            }
+            string input = GetFileContents(Filename);
         }
     }
 }
