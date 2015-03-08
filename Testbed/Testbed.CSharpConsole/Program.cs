@@ -34,7 +34,6 @@ namespace Testbed.CSharpConsole
                 Console.WriteLine(e.ToString());
                 return 0;
             }
-
         }
         static void Main(string[] args)
         {
