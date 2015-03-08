@@ -10,18 +10,35 @@ namespace Testbed.CSharpConsole
     class Program
     {
         static readonly string Filename = "..\\..\\input.txt";
-        static string GetFileContents(string Filename)
+        static UInt16 GetFileContents(string Filename)
         {
             string line;
             using (StreamReader reader = new StreamReader(Filename))
             {
                 line = reader.ReadLine();
             }
-            return line;
+            try
+            {
+                UInt16 request = Convert.ToUInt16(line);
+                return request;
+            }
+            catch (OverflowException e)
+            {
+                Console.WriteLine("Overflow exception");
+                Console.WriteLine(e.ToString());
+                return 0;
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine("Overflow exception");
+                Console.WriteLine(e.ToString());
+                return 0;
+            }
+
         }
         static void Main(string[] args)
         {
-            string input = GetFileContents(Filename);
+            UInt16 input = GetFileContents(Filename);
         }
     }
 }
