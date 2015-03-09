@@ -22,13 +22,10 @@
 //{
 //	doit(5,y);
 //}
-
+#define ever (;;);
 #include <iostream>
 int main()
 {
-	if (3 > 4)
-	{
-		return 1;
-	}
+	for ever
 	return 0;
 }
