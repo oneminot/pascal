@@ -9,7 +9,31 @@ namespace Testbed.CSharpConsole
 {
     class Program
     {
-        static readonly string Filename = "..\\..\\input.txt";
+        static readonly string InputFilename = "..\\..\\input.txt";
+        static readonly string OutputFilename = "..\\..\\output.txt";
+        void PrintE(int input)
+        {
+            string[] eLine = new string[5];
+            for (int i = 0; i < 5; i++)
+            {
+                if (i == 1 || i == 4)
+                {
+                    eLine[i] = "EEEEE";
+                }
+                if (i == 2)
+                {
+                    eLine[i] == "EEEE";
+                }
+                if (i == 1 || i == 3)
+                {
+                    eLine[1] = "E";
+                }
+            }
+            using (StreamWriter writer = new StreamWriter(OutputFilename))
+            {
+
+            }
+        }
         static UInt16 GetFileContents(string Filename)
         {
             string line;
@@ -37,7 +61,8 @@ namespace Testbed.CSharpConsole
         }
         static void Main(string[] args)
         {
-            UInt16 input = GetFileContents(Filename);
+            UInt16 input = GetFileContents(InputFilename);
+
         }
     }
 }
