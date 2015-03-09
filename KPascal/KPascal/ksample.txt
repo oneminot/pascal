@@ -2,7 +2,7 @@ program HelloWorld;
 
 var global,notglobal:integer;
 
-function global(num:integer):integer;
+function abs(num:integer):integer;
 var temp:integer;
 begin
     if num < 0 then

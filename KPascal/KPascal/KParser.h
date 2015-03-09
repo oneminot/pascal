@@ -31,7 +31,7 @@ namespace KPascal
 				std::cout << "Error in who knows what method with who knows what token" << std::endl;
 
 			}
-			else 
+			else
 			{
 				std::cout << "Error due to " << FailingTokenValue << std::endl;
 			}
@@ -212,9 +212,9 @@ namespace KPascal
 
 		void Datatype(bool IsGlobalVariable = false)
 		{
-			if (IsGlobalVariable)
+			if (token.value == "boolean" || token.value == "integer")
 			{
-				if (token.value == "boolean" || token.value == "integer")
+				if (IsGlobalVariable)
 				{
 					for each (std::string myTokenValue in temporaryVector)
 					{
@@ -241,8 +241,12 @@ namespace KPascal
 					temporaryVector.clear();
 					lexer.getToken(token);
 				}
-				else { HasError(token.value); }
+				else
+				{
+					//This is where we handle the data type in a method 
+				}
 			}
+			else { HasError(token.value); }
 		}
 
 		void Varprod()
@@ -418,7 +422,7 @@ namespace KPascal
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype();
+						Datatype(false);
 						PLend();
 					}
 				}
