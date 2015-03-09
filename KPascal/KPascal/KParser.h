@@ -210,7 +210,7 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Datatype(bool IsGlobalVariable = false, std::string MethodName = "")
+		void Datatype(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false)
 		{
 			if (token.value == "boolean" || token.value == "integer")
 			{
@@ -241,9 +241,29 @@ namespace KPascal
 					temporaryVector.clear();
 					lexer.getToken(token);
 				}
+				else if (MethodName != "" && IsReturnValue == false)
+				{
+					//This is where we handle the parameters of the method 
+					for each (std::string myTokenValue in temporaryVector)
+					{
+						if (symbol.Table[MethodName].parameters.find(myTokenValue) == symbol.Table[MethodName].parameters.end())
+						{
+							if (token.value == "boolean")
+							{
+								symbol.Table[MethodName].parameters[myTokenValue].size = 1;
+							}
+							if (token.value == "integer")
+							{
+								symbol.Table[MethodName].parameters[myTokenValue].size = 4;
+							}
+							symbol.Table[MethodName].parameters[myTokenValue].type = token.value;
+						}
+					}
+				}
 				else
 				{
-					//This is where we handle the data type in a method 
+					//This is where we get the return type of the method 
+					//We should only get here from Func() never from Proc() 
 				}
 			}
 			else { HasError(token.value); }
@@ -408,7 +428,7 @@ namespace KPascal
 			}
 		}
 
-		void Plist()
+		void Plist(std::string MethodName = "")
 		{
 			if (token.value == "var")
 			{
@@ -422,22 +442,24 @@ namespace KPascal
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype(false);
+						Datatype(false, MethodName);
 						PLend();
 					}
 				}
 			}
-			else if (!token.isKeyword)
+			else if (!token.isKeyword && MethodName != "")
 			{
-				//we have a variable 
-				temporaryVector.push_back(token.value);
-				lexer.getToken(token);
-				Varlist();
-				if (token.value == ":")
+				//we have a local variable 
+				if (symbol.Table[MethodName].localvariables.find(token.value) == symbol.Table[MethodName].localvariables.end())
 				{
 					lexer.getToken(token);
-					Datatype();
-					PLend();
+					Varlist();
+					if (token.value == ":")
+					{
+						lexer.getToken(token);
+						Datatype(false, MethodName);
+						PLend();
+					}
 				}
 			}
 		}
@@ -503,14 +525,14 @@ namespace KPascal
 			if (token.value == "(")
 			{
 				lexer.getToken(token);
-				Plist();
+				Plist(myTokenValue);
 				if (token.value == ")")
 				{
 					lexer.getToken(token);
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype();
+						Datatype(false, myTokenValue, true);
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
