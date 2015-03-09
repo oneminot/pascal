@@ -32,7 +32,7 @@ namespace KPascal
 			}
 			else 
 			{
-				std::cout << "Error " << " due to " << FailingTokenValue << std::endl;
+				std::cout << "Error due to " << FailingTokenValue << std::endl;
 			}
 			std::cout << "Press ENTER to quit." << std::endl;
 			std::cin.get();
