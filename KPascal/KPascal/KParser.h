@@ -17,6 +17,7 @@ namespace KPascal
 		std::vector<std::string> temporaryVector;
 
 		int GlobalOffset = 0;
+		bool isGlobalVariable = false;
 
 		bool ShoveTokenIntoSymbolTable()
 		{
@@ -209,36 +210,39 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Datatype()
+		void Datatype(bool IsGlobalVariable = false)
 		{
-			if (token.value == "boolean" || token.value == "integer")
+			if (IsGlobalVariable)
 			{
-				for each (std::string myTokenValue in temporaryVector)
+				if (token.value == "boolean" || token.value == "integer")
 				{
-					if (symbol.Table.find(myTokenValue) == symbol.Table.end())
+					for each (std::string myTokenValue in temporaryVector)
 					{
-						if (token.value == "boolean")
+						if (symbol.Table.find(myTokenValue) == symbol.Table.end())
 						{
-							symbol.Table[myTokenValue].size = 1;
+							if (token.value == "boolean")
+							{
+								symbol.Table[myTokenValue].size = 1;
+							}
+							else if (token.value == "integer")
+							{
+								symbol.Table[myTokenValue].size = 4;
+							}
+							symbol.Table[myTokenValue].isMethod = false;
+							symbol.Table[myTokenValue].type = token.value;
+							symbol.Table[myTokenValue].offset = GlobalOffset;
+							GlobalOffset += symbol.Table[myTokenValue].size;
 						}
-						else if (token.value == "integer")
+						else
 						{
-							symbol.Table[myTokenValue].size = 4;
+							std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
 						}
-						symbol.Table[myTokenValue].isMethod = false;
-						symbol.Table[myTokenValue].type = token.value;
-						symbol.Table[myTokenValue].offset = GlobalOffset;
-						GlobalOffset += symbol.Table[myTokenValue].size;
 					}
-					else
-					{
-						std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
-					}
+					temporaryVector.clear();
+					lexer.getToken(token);
 				}
-				temporaryVector.clear();
-				lexer.getToken(token);
+				else { HasError(token.value); }
 			}
-			else { HasError(token.value); }
 		}
 
 		void Varprod()
@@ -475,8 +479,21 @@ namespace KPascal
 		// function abs(num:integer):integer;
 		void Func()
 		{
-			//we have a variable;
-			temporaryVector.push_back(token.value);
+			std::string myTokenValue = token.value;
+			if (symbol.Table.find(myTokenValue) == symbol.Table.end())
+			{
+				// we can replace the size by the size of the return value later 
+				symbol.Table[myTokenValue].size = 0;
+				symbol.Table[myTokenValue].isMethod = false;
+				symbol.Table[myTokenValue].type = token.value;
+				symbol.Table[myTokenValue].offset = GlobalOffset;
+				GlobalOffset += symbol.Table[myTokenValue].size;
+			}
+			else
+			{
+				std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
+				HasError();
+			}
 			lexer.getToken(token);
 			//we have a left parenthesis 
 			if (token.value == "(")
