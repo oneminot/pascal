@@ -492,7 +492,7 @@ namespace KPascal
 			else
 			{
 				std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
-				HasError();
+				HasError(myTokenValue);
 			}
 			lexer.getToken(token);
 			//we have a left parenthesis 
