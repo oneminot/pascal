@@ -17,7 +17,7 @@ namespace KPascal
 		std::vector<std::string> temporaryVector;
 
 		int GlobalOffset = 0;
-		bool isGlobalVariable = false;
+		//bool isGlobalVariable = false;
 
 		bool ShoveTokenIntoSymbolTable()
 		{
@@ -340,7 +340,7 @@ namespace KPascal
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype();
+					Datatype(true);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
