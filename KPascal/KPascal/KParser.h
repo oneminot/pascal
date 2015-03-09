@@ -210,7 +210,7 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Datatype(bool IsGlobalVariable = false)
+		void Datatype(bool IsGlobalVariable = false, std::string MethodName = "")
 		{
 			if (token.value == "boolean" || token.value == "integer")
 			{
