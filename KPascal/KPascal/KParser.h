@@ -257,9 +257,9 @@ namespace KPascal
 								symbol.Table[MethodName].parameters[myTokenValue].size = 4;
 							}
 							symbol.Table[MethodName].parameters[myTokenValue].type = token.value;
-							symbol.Table[MethodName].parameters[myTokenValue].offset = symbol.Table[MethodName].offset;
+							symbol.Table[MethodName].parameters[myTokenValue].offset = symbol.Table[MethodName].size;
 							symbol.Table[MethodName].parameters[myTokenValue].isPassedByReference = IsPassedByReference;
-							symbol.Table[MethodName].offset += symbol.Table[myTokenValue].parameters[myTokenValue].size;
+							symbol.Table[MethodName].size += symbol.Table[MethodName].parameters[myTokenValue].size;;
 						}
 					}
 					temporaryVector.clear();
