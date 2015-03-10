@@ -277,7 +277,7 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Varprod()
+		void Varprod(std::string MethodName = "", bool IsPassedByReference = false)
 		{
 			if (token.sType == "word" && !token.isKeyword)
 			{
@@ -287,7 +287,7 @@ namespace KPascal
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype();
+					Datatype(false, MethodName, false, IsPassedByReference);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
@@ -383,12 +383,12 @@ namespace KPascal
 			}
 		}
 
-		void Localvar()
+		void Localvar(std::string MethodName = "", bool IsPassedByReference = false)
 		{
 			if (token.value == "var")
 			{
 				lexer.getToken(token);
-				Varprod();
+				Varprod(MethodName, IsPassedByReference);
 			}
 		}
 
@@ -473,6 +473,21 @@ namespace KPascal
 		void Proc()
 		{
 			//we have a variable;
+			std::string myTokenValue = token.value;
+			if (symbol.Table.find(myTokenValue) == symbol.Table.end())
+			{
+				// we can replace the size by the size of the return value later 
+				symbol.Table[myTokenValue].size = 0;
+				symbol.Table[myTokenValue].isMethod = false;
+				symbol.Table[myTokenValue].type = token.value;
+				symbol.Table[myTokenValue].offset = GlobalOffset;
+				GlobalOffset += symbol.Table[myTokenValue].size;
+			}
+			else
+			{
+				std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
+				HasError(myTokenValue);
+			}
 			if (!token.isKeyword && token.sType == "word")
 			{
 				//we have a variable 
@@ -542,7 +557,7 @@ namespace KPascal
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Localvar();
+							Localvar(myTokenValue);
 							block();
 							if (token.value == ";")
 							{
