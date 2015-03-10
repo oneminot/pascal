@@ -210,7 +210,7 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Datatype(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false)
+		void Datatype(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false, bool IsPassedByReference = false)
 		{
 			if (token.value == "boolean" || token.value == "integer")
 			{
@@ -257,13 +257,21 @@ namespace KPascal
 								symbol.Table[MethodName].parameters[myTokenValue].size = 4;
 							}
 							symbol.Table[MethodName].parameters[myTokenValue].type = token.value;
+							symbol.Table[MethodName].parameters[myTokenValue].offset = symbol.Table[MethodName].offset;
+							symbol.Table[MethodName].parameters[myTokenValue].isPassedByReference = IsPassedByReference;
+							symbol.Table[MethodName].offset += symbol.Table[myTokenValue].parameters[myTokenValue].size;
 						}
 					}
+					temporaryVector.clear();
+					lexer.getToken(token);
 				}
 				else
 				{
 					//This is where we get the return type of the method 
 					//We should only get here from Func() never from Proc() 
+					symbol.Table[MethodName].isMethod = true;
+					symbol.Table[MethodName].type = token.value;
+					lexer.getToken(token);
 				}
 			}
 			else { HasError(token.value); }
@@ -450,16 +458,14 @@ namespace KPascal
 			else if (!token.isKeyword && MethodName != "")
 			{
 				//we have a local variable 
-				if (symbol.Table[MethodName].localvariables.find(token.value) == symbol.Table[MethodName].localvariables.end())
+				temporaryVector.push_back(token.value);
+				lexer.getToken(token);
+				Varlist();
+				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Varlist();
-					if (token.value == ":")
-					{
-						lexer.getToken(token);
-						Datatype(false, MethodName);
-						PLend();
-					}
+					Datatype(false, MethodName);
+					PLend();
 				}
 			}
 		}
