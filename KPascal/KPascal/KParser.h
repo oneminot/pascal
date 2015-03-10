@@ -17,7 +17,7 @@ namespace KPascal
 		std::vector<std::string> temporaryVector;
 
 		int GlobalOffset = 0;
-		bool isGlobalVariable = false;
+		//bool isGlobalVariable = false;
 
 		bool ShoveTokenIntoSymbolTable()
 		{
@@ -31,7 +31,7 @@ namespace KPascal
 				std::cout << "Error in who knows what method with who knows what token" << std::endl;
 
 			}
-			else 
+			else
 			{
 				std::cout << "Error due to " << FailingTokenValue << std::endl;
 			}
@@ -210,11 +210,11 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Datatype(bool IsGlobalVariable = false)
+		void Datatype(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false, bool IsPassedByReference = false)
 		{
-			if (IsGlobalVariable)
+			if (token.value == "boolean" || token.value == "integer")
 			{
-				if (token.value == "boolean" || token.value == "integer")
+				if (IsGlobalVariable)
 				{
 					for each (std::string myTokenValue in temporaryVector)
 					{
@@ -241,8 +241,40 @@ namespace KPascal
 					temporaryVector.clear();
 					lexer.getToken(token);
 				}
-				else { HasError(token.value); }
+				else if (MethodName != "" && IsReturnValue == false)
+				{
+					//This is where we handle the parameters of the method 
+					for each (std::string myTokenValue in temporaryVector)
+					{
+						if (symbol.Table[MethodName].parameters.find(myTokenValue) == symbol.Table[MethodName].parameters.end())
+						{
+							if (token.value == "boolean")
+							{
+								symbol.Table[MethodName].parameters[myTokenValue].size = 1;
+							}
+							if (token.value == "integer")
+							{
+								symbol.Table[MethodName].parameters[myTokenValue].size = 4;
+							}
+							symbol.Table[MethodName].parameters[myTokenValue].type = token.value;
+							symbol.Table[MethodName].parameters[myTokenValue].offset = symbol.Table[MethodName].offset;
+							symbol.Table[MethodName].parameters[myTokenValue].isPassedByReference = IsPassedByReference;
+							symbol.Table[MethodName].offset += symbol.Table[myTokenValue].parameters[myTokenValue].size;
+						}
+					}
+					temporaryVector.clear();
+					lexer.getToken(token);
+				}
+				else
+				{
+					//This is where we get the return type of the method 
+					//We should only get here from Func() never from Proc() 
+					symbol.Table[MethodName].isMethod = true;
+					symbol.Table[MethodName].type = token.value;
+					lexer.getToken(token);
+				}
 			}
+			else { HasError(token.value); }
 		}
 
 		void Varprod()
@@ -340,7 +372,7 @@ namespace KPascal
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype();
+					Datatype(true);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
@@ -404,7 +436,7 @@ namespace KPascal
 			}
 		}
 
-		void Plist()
+		void Plist(std::string MethodName = "")
 		{
 			if (token.value == "var")
 			{
@@ -418,21 +450,21 @@ namespace KPascal
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype();
+						Datatype(false, MethodName);
 						PLend();
 					}
 				}
 			}
-			else if (!token.isKeyword)
+			else if (!token.isKeyword && MethodName != "")
 			{
-				//we have a variable 
+				//we have a local variable 
 				temporaryVector.push_back(token.value);
 				lexer.getToken(token);
 				Varlist();
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype();
+					Datatype(false, MethodName);
 					PLend();
 				}
 			}
@@ -492,21 +524,21 @@ namespace KPascal
 			else
 			{
 				std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
-				HasError();
+				HasError(myTokenValue);
 			}
 			lexer.getToken(token);
 			//we have a left parenthesis 
 			if (token.value == "(")
 			{
 				lexer.getToken(token);
-				Plist();
+				Plist(myTokenValue);
 				if (token.value == ")")
 				{
 					lexer.getToken(token);
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype();
+						Datatype(false, myTokenValue, true);
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
