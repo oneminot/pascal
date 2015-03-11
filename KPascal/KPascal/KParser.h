@@ -216,7 +216,7 @@ namespace KPascal
 			{
 				if (IsGlobalVariable)
 				{
-					for each (std::string myTokenValue in temporaryVector)
+					for (auto myTokenValue : temporaryVector)
 					{
 						if (symbol.Table.find(myTokenValue) == symbol.Table.end())
 						{
@@ -244,7 +244,7 @@ namespace KPascal
 				else if (MethodName != "" && IsReturnValue == false)
 				{
 					//This is where we handle the parameters of the method 
-					for each (std::string myTokenValue in temporaryVector)
+					for (auto myTokenValue : temporaryVector)
 					{
 						if (symbol.Table[MethodName].parameters.find(myTokenValue) == symbol.Table[MethodName].parameters.end())
 						{
