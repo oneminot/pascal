@@ -4,7 +4,6 @@ var notglobal:integer;
 
 function abs(num:integer):integer;
 var temp:integer;
-var temp:integer;
 begin
     if num < 0 then
         num:= num*1
