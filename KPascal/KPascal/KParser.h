@@ -265,7 +265,7 @@ namespace KPascal
 					temporaryVector.clear();
 					lexer.getToken(token);
 				}
-				else
+				else if (MethodName != "")
 				{
 					//This is where we get the return type of the method 
 					//We should only get here from Func() never from Proc() 
