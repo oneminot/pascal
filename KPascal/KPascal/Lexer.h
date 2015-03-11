@@ -121,6 +121,7 @@ namespace KPascal
 				else if (currentState == 99)
 				{
 					std::cout << "oops";
+					std::cin.get();
 					exit(1);
 				}
 				fin.get();
