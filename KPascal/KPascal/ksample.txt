@@ -1,7 +1,8 @@
 program HelloWorld;
 
 var notglobal:integer;
-
+var x:boolean;
+var y:boolean;
 function abs(num:integer):integer;
 var temp:integer;
 begin
@@ -12,7 +13,6 @@ begin
 end;
 procedure test(var p1:integer);
 var localint : integer;
-var global : integer;
 begin
     global:=0;
     localint:=0;

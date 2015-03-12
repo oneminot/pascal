@@ -277,7 +277,7 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Varprod(std::string MethodName = "", bool IsPassedByReference = false)
+		void Varprod(bool IsGlobalVariable = false, std::string MethodName = "", bool IsPassedByReference = false)
 		{
 			if (token.sType == "word" && !token.isKeyword)
 			{
@@ -291,7 +291,7 @@ namespace KPascal
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
-						Varprodprime();
+						Varprodprime(IsGlobalVariable, MethodName);
 					}
 					else { HasError(token.value); }
 				}
@@ -300,7 +300,7 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Varprodprime()
+		void Varprodprime(bool IsGlobalVariable = false, std::string MethodName = "")
 		{
 			if (token.value == "var")
 			{
@@ -314,11 +314,11 @@ namespace KPascal
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype();
+						Datatype(IsGlobalVariable, MethodName, false);
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Varprodprime();
+							Varprodprime(IsGlobalVariable, MethodName);
 						}
 						else { HasError(token.value); }
 					}
@@ -361,7 +361,7 @@ namespace KPascal
 			}
 		}
 
-		void Vari()
+		void Vari(bool IsGlobalVariable = false, std::string MethodName = "")
 		{
 			if (!token.isKeyword)
 			{
@@ -372,23 +372,23 @@ namespace KPascal
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype(true);
+					Datatype(IsGlobalVariable);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
-						Varprodprime();
+						Varprodprime(IsGlobalVariable, MethodName);
 					}
 					else { HasError(token.value); }
 				}
 			}
 		}
 
-		void Localvar(std::string MethodName = "", bool IsPassedByReference = false)
+		void Localvar(bool IsGlobalVariable = false, std::string MethodName = "", bool IsPassedByReference = false)
 		{
 			if (token.value == "var")
 			{
 				lexer.getToken(token);
-				Varprod(MethodName, IsPassedByReference);
+				Varprod(IsGlobalVariable, MethodName, IsPassedByReference);
 			}
 		}
 
@@ -505,7 +505,7 @@ namespace KPascal
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Localvar(myTokenValue);
+							Localvar(false, myTokenValue);
 							block();
 							//lexer.getToken(token);
 							if (token.value == ";")
@@ -557,7 +557,7 @@ namespace KPascal
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Localvar(myTokenValue);
+							Localvar(false, myTokenValue);
 							block();
 							if (token.value == ";")
 							{
@@ -574,25 +574,25 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void PFV()
+		void PFV(bool IsGlobalVariable = false, std::string MethodName = "")
 		{
 			if (token.value == "var")
 			{
 				lexer.getToken(token);
-				Vari();
-				PFV();
+				Vari(IsGlobalVariable, MethodName);
+				PFV(IsGlobalVariable, MethodName);
 			}
 			else if (token.value == "procedure")
 			{
 				lexer.getToken(token);
 				Proc();
-				PFV();
+				PFV(IsGlobalVariable, MethodName);
 			}
 			else if (token.value == "function")
 			{
 				lexer.getToken(token);
 				Func();
-				PFV();
+				PFV(IsGlobalVariable, MethodName);
 			}
 		}
 		void program()
@@ -606,7 +606,7 @@ namespace KPascal
 				if (token.value == ";")
 				{
 					lexer.getToken(token);
-					PFV();
+					PFV(true);
 					block();
 					if (token.value == ".")
 					{
