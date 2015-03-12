@@ -450,7 +450,7 @@ namespace KPascal
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype(false, MethodName);
+						Datatype(false, MethodName, false, true);
 						PLend();
 					}
 				}
