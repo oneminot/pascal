@@ -214,7 +214,7 @@ namespace KPascal
 		{
 			if (token.value == "boolean" || token.value == "integer")
 			{
-				if (IsGlobalVariable)
+				if (IsGlobalVariable && MethodName == "")
 				{
 					for (auto myTokenValue : temporaryVector)
 					{
