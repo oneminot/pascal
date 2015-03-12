@@ -216,7 +216,7 @@ namespace KPascal
 			{
 				if (IsGlobalVariable)
 				{
-					for each (std::string myTokenValue in temporaryVector)
+					for (auto myTokenValue : temporaryVector)
 					{
 						if (symbol.Table.find(myTokenValue) == symbol.Table.end())
 						{
@@ -244,7 +244,7 @@ namespace KPascal
 				else if (MethodName != "" && IsReturnValue == false)
 				{
 					//This is where we handle the parameters of the method 
-					for each (std::string myTokenValue in temporaryVector)
+					for (auto myTokenValue : temporaryVector)
 					{
 						if (symbol.Table[MethodName].parameters.find(myTokenValue) == symbol.Table[MethodName].parameters.end())
 						{
@@ -257,15 +257,15 @@ namespace KPascal
 								symbol.Table[MethodName].parameters[myTokenValue].size = 4;
 							}
 							symbol.Table[MethodName].parameters[myTokenValue].type = token.value;
-							symbol.Table[MethodName].parameters[myTokenValue].offset = symbol.Table[MethodName].offset;
+							symbol.Table[MethodName].parameters[myTokenValue].offset = symbol.Table[MethodName].size;
 							symbol.Table[MethodName].parameters[myTokenValue].isPassedByReference = IsPassedByReference;
-							symbol.Table[MethodName].offset += symbol.Table[myTokenValue].parameters[myTokenValue].size;
+							symbol.Table[MethodName].size += symbol.Table[MethodName].parameters[myTokenValue].size;;
 						}
 					}
 					temporaryVector.clear();
 					lexer.getToken(token);
 				}
-				else
+				else if (MethodName != "")
 				{
 					//This is where we get the return type of the method 
 					//We should only get here from Func() never from Proc() 
@@ -277,7 +277,7 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Varprod()
+		void Varprod(std::string MethodName = "", bool IsPassedByReference = false)
 		{
 			if (token.sType == "word" && !token.isKeyword)
 			{
@@ -287,7 +287,7 @@ namespace KPascal
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype();
+					Datatype(false, MethodName, false, IsPassedByReference);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
@@ -383,12 +383,12 @@ namespace KPascal
 			}
 		}
 
-		void Localvar()
+		void Localvar(std::string MethodName = "", bool IsPassedByReference = false)
 		{
 			if (token.value == "var")
 			{
 				lexer.getToken(token);
-				Varprod();
+				Varprod(MethodName, IsPassedByReference);
 			}
 		}
 
@@ -450,7 +450,7 @@ namespace KPascal
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype(false, MethodName);
+						Datatype(false, MethodName, false, true);
 						PLend();
 					}
 				}
@@ -473,6 +473,21 @@ namespace KPascal
 		void Proc()
 		{
 			//we have a variable;
+			std::string myTokenValue = token.value;
+			if (symbol.Table.find(myTokenValue) == symbol.Table.end())
+			{
+				// we can replace the size by the size of the return value later 
+				symbol.Table[myTokenValue].size = 0;
+				symbol.Table[myTokenValue].isMethod = false;
+				symbol.Table[myTokenValue].type = token.value;
+				symbol.Table[myTokenValue].offset = GlobalOffset;
+				GlobalOffset += symbol.Table[myTokenValue].size;
+			}
+			else
+			{
+				std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
+				HasError(myTokenValue);
+			}
 			if (!token.isKeyword && token.sType == "word")
 			{
 				//we have a variable 
@@ -482,7 +497,7 @@ namespace KPascal
 				if (token.value == "(")
 				{
 					lexer.getToken(token);
-					Plist();
+					Plist(myTokenValue);
 					//we should have a right parenthesis now
 					if (token.value == ")")
 					{
@@ -490,7 +505,7 @@ namespace KPascal
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Localvar();
+							Localvar(myTokenValue);
 							block();
 							//lexer.getToken(token);
 							if (token.value == ";")
@@ -542,7 +557,7 @@ namespace KPascal
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Localvar();
+							Localvar(myTokenValue);
 							block();
 							if (token.value == ";")
 							{

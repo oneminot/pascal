@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>KParser.h</itemPath>
+      <itemPath>Keyword.h</itemPath>
+      <itemPath>Lexer.h</itemPath>
+      <itemPath>LocalVariable.h</itemPath>
+      <itemPath>ParameterData.h</itemPath>
+      <itemPath>Parser.h</itemPath>
+      <itemPath>Production.h</itemPath>
+      <itemPath>ReservedKeyword.h</itemPath>
+      <itemPath>SymbolTable.h</itemPath>
+      <itemPath>Token.h</itemPath>
+      <itemPath>Variable.h</itemPath>
+      <itemPath>VariableData.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+      <itemPath>NatGrammar.txt</itemPath>
+      <itemPath>dfa.txt</itemPath>
+      <itemPath>dictation.txt</itemPath>
+      <itemPath>kPascalSample.txt</itemPath>
+      <itemPath>keyword.txt</itemPath>
+      <itemPath>ksample.txt</itemPath>
+      <itemPath>production.txt</itemPath>
+      <itemPath>reservedkeywords.txt</itemPath>
+      <itemPath>sample.txt</itemPath>
+      <itemPath>table.txt</itemPath>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>KPascal-Makefile.mk</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <projectmakefile>KPascal-Makefile.mk</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <commandLine>-std=c++11</commandLine>
+        </ccTool>
+      </compileType>
+      <item path="KParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Keyword.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lexer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="LocalVariable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NatGrammar.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ParameterData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Production.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ReservedKeyword.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SymbolTable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Variable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="VariableData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dfa.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dictation.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="kPascalSample.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="keyword.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ksample.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="production.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="reservedkeywords.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sample.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="table.txt" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="KParser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Keyword.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Lexer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="LocalVariable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NatGrammar.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ParameterData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Parser.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Production.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ReservedKeyword.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="SymbolTable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Token.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Variable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="VariableData.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dfa.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="dictation.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="kPascalSample.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="keyword.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="ksample.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="production.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="reservedkeywords.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="sample.txt" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="table.txt" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
