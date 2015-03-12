@@ -3,7 +3,7 @@ program HelloWorld;
 var notglobal:integer;
 var x:boolean;
 var y:boolean;
-function abs(num,num1:integer):integer;
+function abs(num,num1:integer; b:boolean):integer;
 var temp, temp1:integer;
 begin
     if num < 0 then
