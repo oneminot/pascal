@@ -3,6 +3,8 @@ program HelloWorld;
 var notglobal:integer;
 function abs(num:integer):integer;
 var temp:integer;
+var x:boolean;
+var y:boolean;
 begin
     if num < 0 then
         num:= num*1
@@ -18,8 +20,6 @@ begin
     p2 := localint;
     p3 := localint;
 end;
-var x:boolean;
-var y:boolean;
 begin
 	global:=5;
 end.
