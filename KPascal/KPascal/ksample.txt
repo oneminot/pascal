@@ -10,7 +10,7 @@ begin
     else
        num:=num;
 end;
-procedure test(var p1:integer; p2,p3:integer);
+procedure test(var p1:integer);
 var localint : integer;
 var global : integer;
 begin

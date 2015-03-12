@@ -497,7 +497,7 @@ namespace KPascal
 				if (token.value == "(")
 				{
 					lexer.getToken(token);
-					Plist();
+					Plist(myTokenValue);
 					//we should have a right parenthesis now
 					if (token.value == ")")
 					{
@@ -505,7 +505,7 @@ namespace KPascal
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Localvar();
+							Localvar(myTokenValue);
 							block();
 							//lexer.getToken(token);
 							if (token.value == ";")
