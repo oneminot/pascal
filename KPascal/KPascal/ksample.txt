@@ -1,10 +1,10 @@
 program HelloWorld;
 
 var notglobal:integer;
-function abs(num:integer):integer;
-var temp:integer;
 var x:boolean;
 var y:boolean;
+function abs(num,num1:integer):integer;
+var temp, temp1:integer;
 begin
     if num < 0 then
         num:= num*1
@@ -13,6 +13,9 @@ begin
 end;
 procedure test(var p1:integer);
 var localint : integer;
+var notglobal:integer;
+var x:boolean;
+var y:boolean;
 begin
     global:=0;
     localint:=0;
