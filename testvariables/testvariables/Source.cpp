@@ -1,31 +1,17 @@
-//
-//#include <iostream>
-//
-//using namespace std;
-//int y=10;
-//
-//int doit(int x,int & q)
-//{
-//	int z=22;
-//	int w=23;
-//	if (x>0)
-//	{
-//		return doit(x-1,q)+1;
-//	}
-//	else
-//	{
-//		return 1;
-//	}
-//}
-//
-//void main()
-//{
-//	doit(5,y);
-//}
-#define ever (;;);
-#include <iostream>
+#include <fstream>
+#include <string>
+#include <map>
 int main()
 {
-	for ever
-	return 0;
+	const std::string input = "E.in";
+	std::ifstream fin(input);
+	std::map<char, int> letters;
+	for (char i = 'a'; i < 'z'; i++)
+	{
+		letters.insert(std::pair<char, int>(i, 0));
+	}
+	for (size_t i = 0; i < 35; i++)
+	{
+
+	}
 }
