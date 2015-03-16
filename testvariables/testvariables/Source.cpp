@@ -4,14 +4,16 @@
 int main()
 {
 	const std::string input = "E.in";
+	const std::string output = "E.out";
+	std::string line;
 	std::ifstream fin(input);
 	std::map<char, int> letters;
-	for (char i = 'a'; i < 'z'; i++)
+	while (!fin.eof())
 	{
-		letters.insert(std::pair<char, int>(i, 0));
-	}
-	for (size_t i = 0; i < 35; i++)
-	{
-
+		std::getline(fin, line);
+		if (line == "*")
+		{
+			break;
+		}
 	}
 }
