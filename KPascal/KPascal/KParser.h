@@ -195,7 +195,7 @@ namespace KPascal
 			mstatprime();
 		}
 
-		void block()
+		void Block()
 		{
 			if (token.value == "begin")
 			{
@@ -531,7 +531,7 @@ namespace KPascal
 						{
 							lexer.getToken(token);
 							Localvar(false, myTokenValue, false, true);
-							block();
+							Block();
 							//lexer.getToken(token);
 							if (token.value == ";")
 							{
@@ -583,7 +583,7 @@ namespace KPascal
 						{
 							lexer.getToken(token);
 							Localvar(false, myTokenValue, false, true);
-							block();
+							Block();
 							if (token.value == ";")
 							{
 								lexer.getToken(token);
@@ -632,7 +632,7 @@ namespace KPascal
 				{
 					lexer.getToken(token);
 					PFV(true);
-					block();
+					Block();
 					if (token.value == ".")
 					{
 						lexer.getToken(token);
