@@ -129,35 +129,39 @@ namespace KPascal
 			BooleanExpressionPrime();
 		}
 
-		void StatementPrime()
+		void StatementPrime(std::string MethodName = "")
 		{
 			if (token.value == "else")
 			{
 				lexer.getToken(token);
-				Statement();
+				Statement(MethodName);
 			}
 		}
 
-		void Statement()
+		void Statement(std::string MethodName = "")
 		{
 			// looking for a variable 
 			if (token.sType == "word" && !token.isKeyword)
 			{
-				lexer.getToken(token);
-				if (token.value == ":=")
+				//make sure the variable is in the symbol table 
+				if (true)
 				{
 					lexer.getToken(token);
-					Expression();
-				}
-				else
-				{
-					HasError(token.value);
+					if (token.value == ":=")
+					{
+						lexer.getToken(token);
+						Expression();
+					}
+					else
+					{
+						HasError(token.value);
+					}
 				}
 			}
 			else if (token.value == "begin")
 			{
 				lexer.getToken(token);
-				MultipleStatement();
+				MultipleStatement(MethodName);
 				if (token.value == "end")
 				{
 					lexer.getToken(token);
@@ -174,33 +178,33 @@ namespace KPascal
 				if (token.value == "then")
 				{
 					lexer.getToken(token);
-					Statement();
-					StatementPrime();
+					Statement(MethodName);
+					StatementPrime(MethodName);
 				}
 			}
 		}
 
-		void MultipleStatementPrime()
+		void MultipleStatementPrime(std::string MethodName = "")
 		{
 			if (token.value == ";")
 			{
 				lexer.getToken(token);
-				MultipleStatement();
+				MultipleStatement(MethodName);
 			}
 		}
 
-		void MultipleStatement()
+		void MultipleStatement(std::string MethodName = "")
 		{
-			Statement();
-			MultipleStatementPrime();
+			Statement(MethodName);
+			MultipleStatementPrime(MethodName);
 		}
 
-		void Block()
+		void Block(std::string MethodName = "")
 		{
 			if (token.value == "begin")
 			{
 				lexer.getToken(token);
-				MultipleStatement();
+				MultipleStatement(MethodName);
 				if (token.value == "end")
 				{
 					lexer.getToken(token);
@@ -531,7 +535,7 @@ namespace KPascal
 						{
 							lexer.getToken(token);
 							LocalVariable(false, myTokenValue, false, true);
-							Block();
+							Block(myTokenValue);
 							//lexer.getToken(token);
 							if (token.value == ";")
 							{
@@ -583,7 +587,7 @@ namespace KPascal
 						{
 							lexer.getToken(token);
 							LocalVariable(false, myTokenValue, false, true);
-							Block();
+							Block(myTokenValue);
 							if (token.value == ";")
 							{
 								lexer.getToken(token);
