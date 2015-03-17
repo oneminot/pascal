@@ -132,6 +132,7 @@ namespace KPascal
 					}
 					else { HasError(token.value); }
 				}
+				else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 			}
 			else if (token.value == "begin")
 			{
