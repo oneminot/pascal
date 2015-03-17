@@ -17,12 +17,6 @@ namespace KPascal
 		std::vector<std::string> temporaryVector;
 
 		int GlobalOffset = 0;
-		//bool isGlobalVariable = false;
-
-		bool ShoveTokenIntoSymbolTable()
-		{
-			return false;
-		}
 
 		void HasError(std::string FailingTokenValue = "")
 		{
