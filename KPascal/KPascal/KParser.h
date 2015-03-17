@@ -122,7 +122,11 @@ namespace KPascal
 			if (token.sType == "word" && !token.isKeyword)
 			{
 				//make sure the variable is in the symbol table 
-				if ((MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end() && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end()) && symbol.Table.find(token.value) != symbol.Table.end())
+				bool IsVariableInParameterList = MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end();
+				bool IsVariableInLocalVariableList = MethodName != "" && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end();
+				// the name of the method should already be in the Global Variable List because it should be in the symbol table 
+				bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
+				if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 				{
 					lexer.getToken(token);
 					if (token.value == ":=")
