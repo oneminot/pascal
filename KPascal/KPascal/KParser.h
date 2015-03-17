@@ -144,7 +144,7 @@ namespace KPascal
 			if (token.sType == "word" && !token.isKeyword)
 			{
 				//make sure the variable is in the symbol table 
-				if (true)
+				if ((MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end() && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end()) && symbol.Table.find(token.value) != symbol.Table.end())
 				{
 					lexer.getToken(token);
 					if (token.value == ":=")
