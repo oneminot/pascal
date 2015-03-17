@@ -26,15 +26,8 @@ namespace KPascal
 
 		void HasError(std::string FailingTokenValue = "")
 		{
-			if (FailingTokenValue == "")
-			{
-				std::cout << "Error in who knows what method with who knows what token" << std::endl;
-
-			}
-			else
-			{
-				std::cout << "Error due to " << FailingTokenValue << std::endl;
-			}
+			if (FailingTokenValue == "") { std::cout << "Error in who knows what method with who knows what token" << std::endl; }
+			else { std::cout << "Error due to " << FailingTokenValue << std::endl; }
 			std::cout << "Press ENTER to quit." << std::endl;
 			std::cin.get();
 			exit(1);
@@ -62,20 +55,14 @@ namespace KPascal
 					lexer.getToken(token);
 					FactorPrime();
 				}
-				else
-				{
-					HasError(token.value);
-				}
+				else { HasError(token.value); }
 			}
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 			{
 				lexer.getToken(token);
 				FactorPrime();
 			}
-			else
-			{
-				HasError(token.value);
-			}
+			else { HasError(token.value); }
 		}
 
 
@@ -117,10 +104,7 @@ namespace KPascal
 				lexer.getToken(token);
 				Expression();
 			}
-			else
-			{
-				HasError(token.value);
-			}
+			else { HasError(token.value); }
 		}
 
 		void BooleanExpression()
@@ -152,10 +136,7 @@ namespace KPascal
 						lexer.getToken(token);
 						Expression();
 					}
-					else
-					{
-						HasError(token.value);
-					}
+					else { HasError(token.value); }
 				}
 			}
 			else if (token.value == "begin")
@@ -166,10 +147,7 @@ namespace KPascal
 				{
 					lexer.getToken(token);
 				}
-				else
-				{
-					HasError(token.value);
-				}
+				else { HasError(token.value); }
 			}
 			else if (token.value == "if")
 			{
