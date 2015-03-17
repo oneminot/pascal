@@ -40,27 +40,27 @@ namespace KPascal
 			exit(1);
 		}
 
-		void factorprime()
+		void Factorprime()
 		{
 			if (token.value == "*" || token.value == ")")
 			{
 				lexer.getToken(token);
-				factor();
-				factorprime();
+				Factor();
+				Factorprime();
 			}
 		}
 
-		void factor()
+		void Factor()
 		{
 
 			if (token.value == "(")
 			{
 				lexer.getToken(token);
-				expr();
+				Expr();
 				if (token.value == ")")
 				{
 					lexer.getToken(token);
-					factorprime();
+					Factorprime();
 				}
 				else
 				{
@@ -70,7 +70,7 @@ namespace KPascal
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 			{
 				lexer.getToken(token);
-				factorprime();
+				Factorprime();
 			}
 			else
 			{
@@ -79,43 +79,43 @@ namespace KPascal
 		}
 
 
-		void termprime()
+		void Termprime()
 		{
 			if (token.value == "+" || token.value == "-")
 			{
 				lexer.getToken(token);
-				term();
-				termprime();
+				Term();
+				Termprime();
 			}
 		}
 
-		void term()
+		void Term()
 		{
-			factor();
-			termprime();
+			Factor();
+			Termprime();
 		}
 
-		void expr()
+		void Expr()
 		{
-			term();
+			Term();
 		}
 
-		void bexprprime()
+		void Bexprprime()
 		{
 			if (token.value == "=")
 			{
 				lexer.getToken(token);
-				expr();
+				Expr();
 			}
 			else if (token.value == "<")
 			{
 				lexer.getToken(token);
-				expr();
+				Expr();
 			}
 			else if (token.value == ">")
 			{
 				lexer.getToken(token);
-				expr();
+				Expr();
 			}
 			else
 			{
@@ -123,22 +123,22 @@ namespace KPascal
 			}
 		}
 
-		void bexpr()
+		void Bexpr()
 		{
-			expr();
-			bexprprime();
+			Expr();
+			Bexprprime();
 		}
 
-		void statprime()
+		void Statprime()
 		{
 			if (token.value == "else")
 			{
 				lexer.getToken(token);
-				stat();
+				Stat();
 			}
 		}
 
-		void stat()
+		void Stat()
 		{
 			// looking for a variable 
 			if (token.sType == "word" && !token.isKeyword)
@@ -147,7 +147,7 @@ namespace KPascal
 				if (token.value == ":=")
 				{
 					lexer.getToken(token);
-					expr();
+					Expr();
 				}
 				else
 				{
@@ -157,7 +157,7 @@ namespace KPascal
 			else if (token.value == "begin")
 			{
 				lexer.getToken(token);
-				mstat();
+				Mstat();
 				if (token.value == "end")
 				{
 					lexer.getToken(token);
@@ -170,29 +170,29 @@ namespace KPascal
 			else if (token.value == "if")
 			{
 				lexer.getToken(token);
-				bexpr();
+				Bexpr();
 				if (token.value == "then")
 				{
 					lexer.getToken(token);
-					stat();
-					statprime();
+					Stat();
+					Statprime();
 				}
 			}
 		}
 
-		void mstatprime()
+		void Mstatprime()
 		{
 			if (token.value == ";")
 			{
 				lexer.getToken(token);
-				mstat();
+				Mstat();
 			}
 		}
 
-		void mstat()
+		void Mstat()
 		{
-			stat();
-			mstatprime();
+			Stat();
+			Mstatprime();
 		}
 
 		void Block()
@@ -200,7 +200,7 @@ namespace KPascal
 			if (token.value == "begin")
 			{
 				lexer.getToken(token);
-				mstat();
+				Mstat();
 				if (token.value == "end")
 				{
 					lexer.getToken(token);
