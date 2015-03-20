@@ -1,11 +1,12 @@
 program HelloWorld;
 var global : integer;
 function abs(num,num1:integer; b:boolean) : integer;
+var global,notglobal:integer;
 begin
     if num < 0 then
-        num:= num*1
+        num:= global*1
     else
-       num:=num;
+       num:=b;
 end;
 begin
 	global:=5;
