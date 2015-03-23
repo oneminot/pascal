@@ -132,7 +132,28 @@ namespace KPascal
 					if (token.value == ":=")
 					{
 						lexer.getToken(token);
-						Expression();
+						if (token.sType == "word" && !token.isKeyword)
+						{
+							//make sure the variable is in the symbol table 
+							bool IsVariableInParameterList = MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end();
+							bool IsVariableInLocalVariableList = MethodName != "" && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end();
+							// the name of the method should already be in the Global Variable List because it should be in the symbol table 
+							bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
+							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
+							{
+								Expression();
+							}
+							else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
+						}
+						else if (token.sType == "integer")
+						{
+							Expression();
+						}
+						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
+						{
+							Expression();
+						}
+						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 					}
 					else { HasError(token.value); }
 				}
