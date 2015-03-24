@@ -1,6 +1,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "Lexer.h"
 #include "SymbolTable.h"
 #ifndef KParser_H_
@@ -626,6 +627,9 @@ namespace KPascal
 		{
 			if (token.value == "program")
 			{
+				std::ofstream fout("..\\kAssembly.txt");
+				fout << "sucka!" << std::endl;
+				fout.close();
 				//this is the program name 
 				lexer.getToken(token);
 				//this is the semi colon 
