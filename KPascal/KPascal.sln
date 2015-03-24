@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31206.0
+VisualStudioVersion = 12.0.40302.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "KPascal", "KPascal\KPascal.vcxproj", "{8B2D5A66-7517-4576-96F1-324305F020A6}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AssociativeArray", "AssociativeArray\AssociativeArray.vcxproj", "{7921AD29-7BFF-4861-A466-0EFEE1DAC1EE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kasm", "Kasm\Kasm.vcxproj", "{261EADF8-560B-41CB-8A2F-54D37A945F05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7921AD29-7BFF-4861-A466-0EFEE1DAC1EE}.Debug|Win32.Build.0 = Debug|Win32
 		{7921AD29-7BFF-4861-A466-0EFEE1DAC1EE}.Release|Win32.ActiveCfg = Release|Win32
 		{7921AD29-7BFF-4861-A466-0EFEE1DAC1EE}.Release|Win32.Build.0 = Release|Win32
+		{261EADF8-560B-41CB-8A2F-54D37A945F05}.Debug|Win32.ActiveCfg = Debug|Win32
+		{261EADF8-560B-41CB-8A2F-54D37A945F05}.Debug|Win32.Build.0 = Debug|Win32
+		{261EADF8-560B-41CB-8A2F-54D37A945F05}.Release|Win32.ActiveCfg = Release|Win32
+		{261EADF8-560B-41CB-8A2F-54D37A945F05}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
