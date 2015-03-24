@@ -6,12 +6,6 @@ char DataSegment[65536];
 
 int main()
 {
-	std::ifstream fin("..\\kAssembly.txt");
-	std::string line;
-	while (!fin.eof())
-	{
-		std::getline(fin, line);
-	}
 	_asm
 	{
 
