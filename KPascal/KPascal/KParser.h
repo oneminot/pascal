@@ -17,6 +17,7 @@ namespace KPascal
 
 		std::vector<std::string> temporaryVector;
 
+		std::ofstream fout;
 		int GlobalOffset = 0;
 
 		void HasError(std::string FailingTokenValue = "")
@@ -627,9 +628,7 @@ namespace KPascal
 		{
 			if (token.value == "program")
 			{
-				std::ofstream fout("..\\kAssembly.txt");
-				fout << "sucka!" << std::endl;
-				fout.close();
+				fout << "kus was here!" << std::endl;
 				//this is the program name 
 				lexer.getToken(token);
 				//this is the semi colon 
@@ -648,6 +647,15 @@ namespace KPascal
 				else { HasError(token.value); }
 			}
 			else { HasError(token.value); }
+		}
+
+		KParser()
+		{
+			fout.open("..\\kAssembly.txt");
+		}
+		~KParser()
+		{
+			fout.close();
 		}
 	};
 }
