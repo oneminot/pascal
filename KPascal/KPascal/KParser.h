@@ -29,17 +29,17 @@ namespace KPascal
 			exit(1);
 		}
 
-		void FactorPrime()
+		void FactorPrime(std::string MethodName = "")
 		{
 			if (token.value == "*" || token.value == ")")
 			{
 				lexer.getToken(token);
-				Factor();
-				FactorPrime();
+				Factor(MethodName);
+				FactorPrime(MethodName);
 			}
 		}
 
-		void Factor()
+		void Factor(std::string MethodName = "")
 		{
 
 			if (token.value == "(")
@@ -49,63 +49,63 @@ namespace KPascal
 				if (token.value == ")")
 				{
 					lexer.getToken(token);
-					FactorPrime();
+					FactorPrime(MethodName);
 				}
 				else { HasError(token.value); }
 			}
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 			{
 				lexer.getToken(token);
-				FactorPrime();
+				FactorPrime(MethodName);
 			}
 			else { HasError(token.value); }
 		}
 
 
-		void TermPrime()
+		void TermPrime(std::string MethodName = "")
 		{
 			if (token.value == "+" || token.value == "-")
 			{
 				lexer.getToken(token);
-				Term();
-				TermPrime();
+				Term(MethodName);
+				TermPrime(MethodName);
 			}
 		}
 
-		void Term()
+		void Term(std::string MethodName = "")
 		{
-			Factor();
-			TermPrime();
+			Factor(MethodName);
+			TermPrime(MethodName);
 		}
 
-		void Expression()
+		void Expression(std::string MethodName = "")
 		{
-			Term();
+			Term(MethodName);
 		}
 
-		void BooleanExpressionPrime()
+		void BooleanExpressionPrime(std::string MethodName = "")
 		{
 			if (token.value == "=")
 			{
 				lexer.getToken(token);
-				Expression();
+				Expression(MethodName);
 			}
 			else if (token.value == "<")
 			{
 				lexer.getToken(token);
-				Expression();
+				Expression(MethodName);
 			}
 			else if (token.value == ">")
 			{
 				lexer.getToken(token);
-				Expression();
+				Expression(MethodName);
 			}
 			else { HasError(token.value); }
 		}
 
-		void BooleanExpression()
+		void BooleanExpression(std::string MethodName = "")
 		{
-			Expression();
+			Expression(MethodName);
 			BooleanExpressionPrime();
 		}
 
@@ -143,17 +143,17 @@ namespace KPascal
 							bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
 							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 							{
-								Expression();
+								Expression(MethodName);
 							}
 							else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 						}
 						else if (token.sType == "integer")
 						{
-							Expression();
+							Expression(MethodName);
 						}
 						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
 						{
-							Expression();
+							Expression(MethodName);
 						}
 						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 					}
