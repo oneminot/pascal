@@ -29,7 +29,6 @@ int main()
 			add eax, 1
 			mov dword ptr[ebp + 5], eax
 		l1 : mov eax, 0
-
 			 //while y<15 do
 		 l2 : cmp	dword ptr[ebp + 5], 15
 			  // y:=y+1;
