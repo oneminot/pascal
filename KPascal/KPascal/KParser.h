@@ -56,7 +56,6 @@ namespace KPascal
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 			{
 				lexer.getToken(token);
-				fout << "lea eax, DataSegment" << std::endl;
 				FactorPrime(MethodName);
 			}
 			else { HasError(token.value); }
@@ -653,6 +652,8 @@ namespace KPascal
 		KParser()
 		{
 			fout.open("..\\kAssembly.txt");
+			fout << "lea eax, DataSegment" << std::endl;
+			fout << "mov ebp, eax" << std::endl;
 		}
 		~KParser()
 		{
