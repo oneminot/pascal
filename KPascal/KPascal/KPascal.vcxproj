@@ -82,6 +82,7 @@
     <ClInclude Include="VariableData.h" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\kAssembly.txt" />
     <Text Include="dictation.txt" />
     <Text Include="kPascalSample.txt" />
     <Text Include="NatGrammar.txt" />
