@@ -5,7 +5,7 @@ var global,notglobal:integer;
 var bglobal:boolean;
 begin
     if num < 0 then
-        num:= global*1
+        num:= num*1
     else
        num:=global;
 end;

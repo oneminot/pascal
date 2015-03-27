@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -11,20 +11,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{8B2D5A66-7517-4576-96F1-324305F020A6}</ProjectGuid>
-    <RootNamespace>KPascal</RootNamespace>
+    <ProjectGuid>{0AFE7098-83F9-4CFC-9343-73FF5D3C6DB4}</ProjectGuid>
+    <RootNamespace>AssemblerParentheses</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -64,39 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="RecursiveDescent.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Keyword.h" />
-    <ClInclude Include="KParser.h" />
-    <ClInclude Include="Lexer.h" />
-    <ClInclude Include="LocalVariable.h" />
-    <ClInclude Include="ParameterData.h" />
-    <ClInclude Include="Parser.h" />
-    <ClInclude Include="Production.h" />
-    <ClInclude Include="ReservedKeyword.h" />
-    <ClInclude Include="SymbolTable.h" />
-    <ClInclude Include="Token.h" />
-    <ClInclude Include="Variable.h" />
-    <ClInclude Include="VariableData.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\kAssembly.txt" />
-    <Text Include="dictation.txt" />
-    <Text Include="kPascalSample.txt" />
-    <Text Include="NatGrammar.txt" />
-    <Text Include="reservedkeywords.txt" />
-    <Text Include="table.txt" />
-    <Text Include="dfa.txt" />
-    <Text Include="keyword.txt" />
-    <Text Include="ksample.txt" />
-    <Text Include="production.txt" />
-    <Text Include="sample.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ParseTreeAssemblerMultipleRegistersPart1.pdf" />
-    <None Include="ParseTreeAssemblerMultipleRegistersPart2.pdf" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

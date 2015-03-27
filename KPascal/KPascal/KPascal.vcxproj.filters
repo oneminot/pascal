@@ -91,5 +91,16 @@
     <Text Include="kPascalSample.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="..\kAssembly.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ParseTreeAssemblerMultipleRegistersPart1.pdf">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ParseTreeAssemblerMultipleRegistersPart2.pdf">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
