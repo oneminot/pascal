@@ -61,7 +61,6 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-
 		void TermPrime(std::string MethodName = "")
 		{
 			if (token.value == "+" || token.value == "-")
