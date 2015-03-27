@@ -655,8 +655,12 @@ namespace KPascal
 		KParser()
 		{
 			fout.open("..\\kAssembly.txt");
-			fout << "lea eax, DataSegment" << std::endl;
-			fout << "mov ebp, eax" << std::endl;
+			if (fout.is_open())
+			{
+				fout << "lea eax, DataSegment" << std::endl;
+				fout << "mov ebp, eax" << std::endl;
+			}
+			else { std::cout << "Output file is not open." << std::endl; }
 		}
 		~KParser()
 		{
