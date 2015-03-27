@@ -41,7 +41,6 @@ namespace KPascal
 
 		void Factor(std::string MethodName = "")
 		{
-
 			if (token.value == "(")
 			{
 				lexer.getToken(token);
