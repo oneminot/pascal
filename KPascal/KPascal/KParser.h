@@ -625,27 +625,31 @@ namespace KPascal
 		}
 		void Program()
 		{
-			if (token.value == "program")
+			if (fout.is_open())
 			{
-				fout << "kus was here!" << std::endl;
-				//this is the program name 
-				lexer.getToken(token);
-				//this is the semi colon 
-				lexer.getToken(token);
-				if (token.value == ";")
+				if (token.value == "program")
 				{
+					fout << "kus was here!" << std::endl;
+					//this is the program name 
 					lexer.getToken(token);
-					ParameterFunctionVariable(true);
-					Block();
-					if (token.value == ".")
+					//this is the semi colon 
+					lexer.getToken(token);
+					if (token.value == ";")
 					{
 						lexer.getToken(token);
+						ParameterFunctionVariable(true);
+						Block();
+						if (token.value == ".")
+						{
+							lexer.getToken(token);
+						}
+						else { HasError(token.value); }
 					}
 					else { HasError(token.value); }
 				}
 				else { HasError(token.value); }
 			}
-			else { HasError(token.value); }
+			else { std::cout << "Output file is not open. You should never see this error. Please debug." << std::endl; }
 		}
 
 		KParser()
