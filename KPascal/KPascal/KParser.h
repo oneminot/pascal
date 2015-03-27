@@ -629,7 +629,6 @@ namespace KPascal
 			{
 				if (token.value == "program")
 				{
-					fout << "kus was here!" << std::endl;
 					//this is the program name 
 					lexer.getToken(token);
 					//this is the semi colon 
