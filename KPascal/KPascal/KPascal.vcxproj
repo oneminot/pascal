@@ -70,6 +70,7 @@
   <ItemGroup>
     <ClInclude Include="Keyword.h" />
     <ClInclude Include="KParser.h" />
+    <ClInclude Include="KRegister.h" />
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="LocalVariable.h" />
     <ClInclude Include="ParameterData.h" />

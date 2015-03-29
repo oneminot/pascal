@@ -1,1 +1,2 @@
-kus was here!
+lea eax, DataSegment
+mov ebp, eax
