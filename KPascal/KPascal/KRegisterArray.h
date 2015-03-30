@@ -3,8 +3,9 @@
 #define KRegisterArray_H_
 struct KRegisterArray
 {
-	KRegister kRegisters[];
-	bool PopulateRegisters()
+	KRegister kRegisters[6];
+	int currentRegisterIndex;
+	KRegisterArray()
 	{
 		kRegisters[0].RegisterName = "EAX";
 		kRegisters[1].RegisterName = "EBX";
@@ -16,6 +17,7 @@ struct KRegisterArray
 		{
 			kRegisters[i].IsUsed = false;
 		}
+		currentRegisterIndex = 0;
 	}
 };
 #endif // !KRegisterArray_H_
