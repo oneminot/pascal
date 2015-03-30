@@ -62,6 +62,9 @@
     <ClInclude Include="KRegister.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="KRegisterArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="dfa.txt">
