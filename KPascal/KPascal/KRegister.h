@@ -25,11 +25,15 @@ struct KRegister
 
 	//from http://www.eecg.toronto.edu/~amza/www.mindsec.com/files/x86regs.html  
 
-	std::map<std::string, bool> kRegister;
-	kRegister.insert(std::make_pair("EAX", false);
-	kRegister.insert(std::make_pair("EBX", false);
-	kRegister.insert(std::make_pair("ECX", false);
-	kRegister.insert(std::make_pair("EDX", false);
-
+	//std::map<std::string, bool> kRegister;
+	//kRegister.insert(std::make_pair("EAX", false);
+	//kRegister.insert(std::make_pair("EBX", false);
+	//kRegister.insert(std::make_pair("ECX", false);
+	//kRegister.insert(std::make_pair("EDX", false);
+	//kRegister.insert(std::make_pair("ESI", false);
+	//kRegister.insert(std::make_pair("EDI", false);
+	
+	std::string RegisterName;
+	bool IsUsed;
 };
 #endif // !KRegister_H_
