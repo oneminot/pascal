@@ -4,6 +4,7 @@
 #include <fstream>
 #include "Lexer.h"
 #include "SymbolTable.h"
+#include "KRegisterArray.h"
 #ifndef KParser_H_
 #define KParser_H_ 
 namespace KPascal
@@ -14,7 +15,7 @@ namespace KPascal
 		KPascal::Lexer lexer;
 		KPascal::Token token;
 		KPascal::SymbolTable symbol;
-
+		KPascal::KRegisterArray registerArray;
 		std::vector<std::string> temporaryVector;
 
 		std::ofstream fout;
