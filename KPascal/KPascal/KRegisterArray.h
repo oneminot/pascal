@@ -15,7 +15,7 @@ namespace KPascal
 			kRegisters[3].RegisterName = "EDX";
 			kRegisters[4].RegisterName = "ESI";
 			kRegisters[5].RegisterName = "EDI";
-			for (size_t i = 0; i < 5; i++)
+			for (size_t i = 0; i < 6; i++)
 			{
 				kRegisters[i].IsUsed = false;
 			}
