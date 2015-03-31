@@ -1,5 +1,5 @@
 program HelloWorld;
 var global : integer;
 begin
-	global:=5;
+	global:=5+2;
 end.
