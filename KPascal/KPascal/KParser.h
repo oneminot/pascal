@@ -45,6 +45,9 @@ namespace KPascal
 			if (token.value == "(")
 			{
 				lexer.getToken(token);
+				//add this token to the next available register 
+				fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << " " << token.value << std::endl;
+				registerArray.currentRegisterIndex++;
 				Expression();
 				if (token.value == ")")
 				{
