@@ -20,6 +20,7 @@ namespace KPascal
 
 		std::ofstream fout;
 		int GlobalOffset = 0;
+		bool NewRegister = true;
 
 		void HasError(std::string FailingTokenValue = "")
 		{
@@ -30,27 +31,37 @@ namespace KPascal
 			exit(1);
 		}
 
-		void FactorPrime(std::string MethodName = "")
+		std::string FactorPrime(std::string MethodName = "")
 		{
-			if (token.value == "*" || token.value == ")")
+			if (token.value == "*")
 			{
 				lexer.getToken(token);
 				Factor(MethodName);
 				FactorPrime(MethodName);
+				return "*";
+			}
+			else 
+			{
+				return " ";
 			}
 		}
 
 		void Factor(std::string MethodName = "")
 		{
+			std::string LeftSide = "";
+			std::string RightSide = "";
 			if (token.value == "(")
 			{
+				NewRegister = true;
 				lexer.getToken(token);
 				//add this token to the next available register 
-				fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << " " << token.value << std::endl;
-				registerArray.currentRegisterIndex++;
+				/*fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+				registerArray.currentRegisterIndex++;*/
 				Expression();
 				if (token.value == ")")
 				{
+					NewRegister = true;
 					lexer.getToken(token);
 					FactorPrime(MethodName);
 				}
@@ -58,8 +69,9 @@ namespace KPascal
 			}
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 			{
+				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
 				lexer.getToken(token);
-				FactorPrime(MethodName);
+				LeftSide = FactorPrime(MethodName);
 			}
 			else { HasError(token.value); }
 		}
