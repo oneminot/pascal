@@ -66,8 +66,8 @@ namespace KPascal
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 			{
 				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
-				lexer.getToken(token);
 				LeftSide = FactorPrime(MethodName);
+				lexer.getToken(token);
 				if (LeftSide == " ")
 				{
 					return token.value;
@@ -98,7 +98,7 @@ namespace KPascal
 			}
 		}
 
-		std::string Term(std::string MethodName = "")
+		void Term(std::string MethodName = "")
 		{
 			std::string LeftSide = "";
 			std::string RightSide = "";
@@ -112,6 +112,11 @@ namespace KPascal
 				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 				registerArray.currentRegisterIndex++;
 				NewRegister = false;
+			}
+			else if (RightSide == "+")
+			{
+				// add this token to the next available register 
+				fout << "add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 			}
 		}
 
