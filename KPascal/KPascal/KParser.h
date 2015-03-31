@@ -67,16 +67,17 @@ namespace KPascal
 			{
 				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
 				LeftSide = FactorPrime(MethodName);
+				std::string ReturnString = token.value;
+				lexer.getToken(token);
 				if (LeftSide == " ")
 				{
-					return token.value;
+					return ReturnString;
 				}
 				else if (LeftSide == "*")
 				{
 					// I need to add some assembler code here 
 					return " ";
 				}
-				lexer.getToken(token);
 			}
 			else { HasError(token.value); }
 		}
