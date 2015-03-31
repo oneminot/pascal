@@ -1,3 +1,2 @@
 lea eax, DataSegment
 mov ebp, eax
-mov EAX, ;
