@@ -46,7 +46,7 @@ namespace KPascal
 			}
 		}
 
-		void Factor(std::string MethodName = "")
+		std::string Factor(std::string MethodName = "")
 		{
 			std::string LeftSide = "";
 			std::string RightSide = "";
@@ -54,10 +54,6 @@ namespace KPascal
 			{
 				NewRegister = true;
 				lexer.getToken(token);
-				//add this token to the next available register 
-				/*fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
-				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
-				registerArray.currentRegisterIndex++;*/
 				Expression();
 				if (token.value == ")")
 				{
@@ -72,24 +68,51 @@ namespace KPascal
 				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
 				lexer.getToken(token);
 				LeftSide = FactorPrime(MethodName);
+				if (LeftSide == " ")
+				{
+					return token.value;
+				}
+				else if (LeftSide == "*")
+				{
+					// I need to add some assembler code here 
+					return " ";
+				}
 			}
 			else { HasError(token.value); }
 		}
 
-		void TermPrime(std::string MethodName = "")
+		std::string TermPrime(std::string MethodName = "")
 		{
+			std::string LeftSide = "";
 			if (token.value == "+" || token.value == "-")
 			{
 				lexer.getToken(token);
 				Term(MethodName);
-				TermPrime(MethodName);
+				LeftSide = TermPrime(MethodName);
+				// I need to add some more code at some point; assembler code 
+				return token.value;
+			}
+			else
+			{
+				return " ";
 			}
 		}
 
-		void Term(std::string MethodName = "")
+		std::string Term(std::string MethodName = "")
 		{
-			Factor(MethodName);
-			TermPrime(MethodName);
+			std::string LeftSide = "";
+			std::string RightSide = "";
+			LeftSide = Factor(MethodName);
+			// if term prime goes to epsilon, do something 
+			RightSide = TermPrime(MethodName);
+			if (NewRegister && RightSide == " ")
+			{
+				// add this token to the next available register 
+				fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+				registerArray.currentRegisterIndex++;
+				NewRegister = false;
+			}
 		}
 
 		void Expression(std::string MethodName = "")
