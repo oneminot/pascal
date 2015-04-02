@@ -2,4 +2,4 @@ language: cpp
 compiler:
   - gcc
   - clang
-script: ./KPascal/KPascal/nbproject/ && make
+script: ./KPascal/KPascal/makefile && make
