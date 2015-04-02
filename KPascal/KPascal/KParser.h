@@ -114,7 +114,7 @@ namespace KPascal
 				registerArray.currentRegisterIndex++;
 				NewRegister = false;
 			}
-			else if (RightSide == "+")
+			else if (!NewRegister && RightSide == "+")
 			{
 				// add this token to the next available register 
 				fout << "add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
