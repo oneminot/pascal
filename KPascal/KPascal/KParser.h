@@ -1,8 +1,10 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <fstream>
 #include "Lexer.h"
 #include "SymbolTable.h"
+#include "KRegisterArray.h"
 #ifndef KParser_H_
 #define KParser_H_ 
 namespace KPascal
@@ -13,194 +15,239 @@ namespace KPascal
 		KPascal::Lexer lexer;
 		KPascal::Token token;
 		KPascal::SymbolTable symbol;
-
+		KPascal::KRegisterArray registerArray;
 		std::vector<std::string> temporaryVector;
 
+		std::ofstream fout;
 		int GlobalOffset = 0;
-		//bool isGlobalVariable = false;
-
-		bool ShoveTokenIntoSymbolTable()
-		{
-			return false;
-		}
+		bool NewRegister = true;
 
 		void HasError(std::string FailingTokenValue = "")
 		{
-			if (FailingTokenValue == "")
-			{
-				std::cout << "Error in who knows what method with who knows what token" << std::endl;
-
-			}
-			else
-			{
-				std::cout << "Error due to " << FailingTokenValue << std::endl;
-			}
+			if (FailingTokenValue == "") { std::cout << "Error in who knows what method with who knows what token" << std::endl; }
+			else { std::cout << "Error due to " << FailingTokenValue << std::endl; }
 			std::cout << "Press ENTER to quit." << std::endl;
 			std::cin.get();
 			exit(1);
 		}
 
-		void factorprime()
+		std::string FactorPrime(std::string MethodName = "")
 		{
-			if (token.value == "*" || token.value == ")")
+			if (token.value == "*")
 			{
 				lexer.getToken(token);
-				factor();
-				factorprime();
+				Factor(MethodName);
+				FactorPrime(MethodName);
+				return "*";
+			}
+			else 
+			{
+				return " ";
 			}
 		}
 
-		void factor()
+		std::string Factor(std::string MethodName = "")
 		{
-
+			std::string LeftSide = "";
+			std::string RightSide = "";
 			if (token.value == "(")
 			{
+				NewRegister = true;
 				lexer.getToken(token);
-				expr();
+				Expression();
 				if (token.value == ")")
 				{
+					NewRegister = true;
 					lexer.getToken(token);
-					factorprime();
+					FactorPrime(MethodName);
 				}
-				else
-				{
-					HasError(token.value);
-				}
+				else { HasError(token.value); }
 			}
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 			{
+				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
+				LeftSide = FactorPrime(MethodName);
+				std::string ReturnString = token.value;
 				lexer.getToken(token);
-				factorprime();
+				if (LeftSide == " ")
+				{
+					return ReturnString;
+				}
+				else if (LeftSide == "*")
+				{
+					// I need to add some assembler code here 
+					return " ";
+				}
 			}
-			else
-			{
-				HasError(token.value);
-			}
+			else { HasError(token.value); }
 		}
 
-
-		void termprime()
+		std::string TermPrime(std::string MethodName = "")
 		{
+			std::string LeftSide = "";
 			if (token.value == "+" || token.value == "-")
 			{
 				lexer.getToken(token);
-				term();
-				termprime();
+				Term(MethodName);
+				LeftSide = TermPrime(MethodName);
+				// I need to add some more code at some point; assembler code 
+				return token.value;
+			}
+			else
+			{
+				return " ";
 			}
 		}
 
-		void term()
+		void Term(std::string MethodName = "")
 		{
-			factor();
-			termprime();
+			std::string LeftSide = "";
+			std::string RightSide = "";
+			LeftSide = Factor(MethodName);
+			// if term prime goes to epsilon, do something 
+			RightSide = TermPrime(MethodName);
+			if (NewRegister && RightSide == " ")
+			{
+				// add this token to the next available register 
+				fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+				registerArray.currentRegisterIndex++;
+				NewRegister = false;
+			}
+			else if (RightSide == "+")
+			{
+				// add this token to the next available register 
+				fout << "add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+			}
 		}
 
-		void expr()
+		void Expression(std::string MethodName = "")
 		{
-			term();
+			Term(MethodName);
 		}
 
-		void bexprprime()
+		void BooleanExpressionPrime(std::string MethodName = "")
 		{
 			if (token.value == "=")
 			{
 				lexer.getToken(token);
-				expr();
+				Expression(MethodName);
 			}
 			else if (token.value == "<")
 			{
 				lexer.getToken(token);
-				expr();
+				Expression(MethodName);
 			}
 			else if (token.value == ">")
 			{
 				lexer.getToken(token);
-				expr();
+				Expression(MethodName);
 			}
-			else
-			{
-				HasError(token.value);
-			}
+			else { HasError(token.value); }
 		}
 
-		void bexpr()
+		void BooleanExpression(std::string MethodName = "")
 		{
-			expr();
-			bexprprime();
+			Expression(MethodName);
+			BooleanExpressionPrime();
 		}
 
-		void statprime()
+		void StatementPrime(std::string MethodName = "")
 		{
 			if (token.value == "else")
 			{
 				lexer.getToken(token);
-				stat();
+				Statement(MethodName);
 			}
 		}
 
-		void stat()
+		void Statement(std::string MethodName = "")
 		{
 			// looking for a variable 
 			if (token.sType == "word" && !token.isKeyword)
 			{
-				lexer.getToken(token);
-				if (token.value == ":=")
+				//make sure the variable is in the symbol table 
+				bool IsVariableInParameterList = MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end();
+				bool IsVariableInLocalVariableList = MethodName != "" && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end();
+				// the name of the method should already be in the Global Variable List because it should be in the symbol table 
+				bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
+				if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 				{
 					lexer.getToken(token);
-					expr();
+					if (token.value == ":=")
+					{
+						lexer.getToken(token);
+						if (token.sType == "word" && !token.isKeyword)
+						{
+							//make sure the variable is in the symbol table 
+							bool IsVariableInParameterList = MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end();
+							bool IsVariableInLocalVariableList = MethodName != "" && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end();
+							// the name of the method should already be in the Global Variable List because it should be in the symbol table 
+							bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
+							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
+							{
+								Expression(MethodName);
+							}
+							else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
+						}
+						else if (token.sType == "integer")
+						{
+							Expression(MethodName);
+						}
+						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
+						{
+							Expression(MethodName);
+						}
+						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
+					}
+					else { HasError(token.value); }
 				}
-				else
-				{
-					HasError(token.value);
-				}
+				else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 			}
 			else if (token.value == "begin")
 			{
 				lexer.getToken(token);
-				mstat();
+				MultipleStatement(MethodName);
 				if (token.value == "end")
 				{
 					lexer.getToken(token);
 				}
-				else
-				{
-					HasError(token.value);
-				}
+				else { HasError(token.value); }
 			}
 			else if (token.value == "if")
 			{
 				lexer.getToken(token);
-				bexpr();
+				BooleanExpression();
 				if (token.value == "then")
 				{
 					lexer.getToken(token);
-					stat();
-					statprime();
+					Statement(MethodName);
+					StatementPrime(MethodName);
 				}
 			}
 		}
 
-		void mstatprime()
+		void MultipleStatementPrime(std::string MethodName = "")
 		{
 			if (token.value == ";")
 			{
 				lexer.getToken(token);
-				mstat();
+				MultipleStatement(MethodName);
 			}
 		}
 
-		void mstat()
+		void MultipleStatement(std::string MethodName = "")
 		{
-			stat();
-			mstatprime();
+			Statement(MethodName);
+			MultipleStatementPrime(MethodName);
 		}
 
-		void block()
+		void Block(std::string MethodName = "")
 		{
 			if (token.value == "begin")
 			{
 				lexer.getToken(token);
-				mstat();
+				MultipleStatement(MethodName);
 				if (token.value == "end")
 				{
 					lexer.getToken(token);
@@ -210,11 +257,11 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Datatype(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false, bool IsPassedByReference = false)
+		void DataType(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false, bool IsPassedByReference = false, bool IsLocalVariable = false)
 		{
 			if (token.value == "boolean" || token.value == "integer")
 			{
-				if (IsGlobalVariable)
+				if (IsGlobalVariable && MethodName == "")
 				{
 					for (auto myTokenValue : temporaryVector)
 					{
@@ -241,7 +288,7 @@ namespace KPascal
 					temporaryVector.clear();
 					lexer.getToken(token);
 				}
-				else if (MethodName != "" && IsReturnValue == false)
+				else if (MethodName != "" && IsReturnValue == false && !IsLocalVariable)
 				{
 					//This is where we handle the parameters of the method 
 					for (auto myTokenValue : temporaryVector)
@@ -257,6 +304,8 @@ namespace KPascal
 								symbol.Table[MethodName].parameters[myTokenValue].size = 4;
 							}
 							symbol.Table[MethodName].parameters[myTokenValue].type = token.value;
+							// for now we assume that parameters are not methods 
+							symbol.Table[MethodName].parameters[myTokenValue].isMethod = false;
 							symbol.Table[MethodName].parameters[myTokenValue].offset = symbol.Table[MethodName].size;
 							symbol.Table[MethodName].parameters[myTokenValue].isPassedByReference = IsPassedByReference;
 							symbol.Table[MethodName].size += symbol.Table[MethodName].parameters[myTokenValue].size;;
@@ -265,10 +314,36 @@ namespace KPascal
 					temporaryVector.clear();
 					lexer.getToken(token);
 				}
+				else if (MethodName != "" && IsReturnValue == false && IsLocalVariable)
+				{
+					//This is where we handle the local variables of the method 
+					for (auto myTokenValue : temporaryVector)
+					{
+						if (symbol.Table[MethodName].parameters.find(myTokenValue) == symbol.Table[MethodName].parameters.end() && symbol.Table[MethodName].localvariables.find(myTokenValue) == symbol.Table[MethodName].localvariables.end())
+						{
+							if (token.value == "boolean")
+							{
+								symbol.Table[MethodName].localvariables[myTokenValue].size = 1;
+							}
+							if (token.value == "integer")
+							{
+								symbol.Table[MethodName].localvariables[myTokenValue].size = 4;
+							}
+							symbol.Table[MethodName].localvariables[myTokenValue].type = token.value;
+							// for now we assume that parameters are not methods 
+							symbol.Table[MethodName].localvariables[myTokenValue].isMethod = false;
+							symbol.Table[MethodName].localvariables[myTokenValue].offset = symbol.Table[MethodName].size;
+							//symbol.Table[MethodName].localvariables[myTokenValue].isPassedByReference = IsPassedByReference;
+							symbol.Table[MethodName].size += symbol.Table[MethodName].localvariables[myTokenValue].size;;
+						}
+					}
+					temporaryVector.clear();
+					lexer.getToken(token);
+				}
 				else if (MethodName != "")
 				{
 					//This is where we get the return type of the method 
-					//We should only get here from Func() never from Proc() 
+					//We should only get here from Function() never from Procedure() 
 					symbol.Table[MethodName].isMethod = true;
 					symbol.Table[MethodName].type = token.value;
 					lexer.getToken(token);
@@ -277,21 +352,21 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Varprod(std::string MethodName = "", bool IsPassedByReference = false)
+		void VariableProduction(bool IsGlobalVariable = false, std::string MethodName = "", bool IsPassedByReference = false, bool IsLocalVariable = false)
 		{
 			if (token.sType == "word" && !token.isKeyword)
 			{
 				lexer.getToken(token);
-				Varlist();
+				VariableList();
 				//lexer.getToken(token);
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype(false, MethodName, false, IsPassedByReference);
+					DataType(false, MethodName, false, IsPassedByReference, IsLocalVariable);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
-						Varprodprime();
+						VariableProductionPrime(IsGlobalVariable, MethodName, IsLocalVariable);
 					}
 					else { HasError(token.value); }
 				}
@@ -300,7 +375,7 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void Varprodprime()
+		void VariableProductionPrime(bool IsGlobalVariable = false, std::string MethodName = "", bool IsLocalVariable = false)
 		{
 			if (token.value == "var")
 			{
@@ -310,15 +385,15 @@ namespace KPascal
 					//we have a variable 
 					temporaryVector.push_back(token.value);
 					lexer.getToken(token);
-					Varlist();
+					VariableList();
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype();
+						DataType(IsGlobalVariable, MethodName, false, false, IsLocalVariable);
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Varprodprime();
+							VariableProductionPrime(IsGlobalVariable, MethodName, IsLocalVariable);
 						}
 						else { HasError(token.value); }
 					}
@@ -331,22 +406,22 @@ namespace KPascal
 				//we have a variable 
 				temporaryVector.push_back(token.value);
 				lexer.getToken(token);
-				Varlist();
+				VariableList();
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype();
+					DataType();
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
-						Varprodprime();
+						VariableProductionPrime();
 					}
 				}
 				else { HasError(token.value); }
 			}
 		}
 
-		void Varlist()
+		void VariableList()
 		{
 			if (token.value == ",")
 			{
@@ -356,43 +431,44 @@ namespace KPascal
 					//we have a variable 
 					temporaryVector.push_back(token.value);
 					lexer.getToken(token);
-					Varlist();
+					VariableList();
 				}
 			}
 		}
 
-		void Vari()
+		void Variable(bool IsGlobalVariable = false, std::string MethodName = "", bool IsLocalVariable = false)
 		{
 			if (!token.isKeyword)
 			{
 				//we have a variable 
 				temporaryVector.push_back(token.value);
 				lexer.getToken(token);
-				Varlist();
+				VariableList();
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype(true);
+					DataType(IsGlobalVariable, MethodName, IsLocalVariable);
 					if (token.value == ";")
 					{
 						lexer.getToken(token);
-						Varprodprime();
+						VariableProductionPrime(IsGlobalVariable, MethodName, IsLocalVariable);
 					}
 					else { HasError(token.value); }
 				}
 			}
 		}
 
-		void Localvar(std::string MethodName = "", bool IsPassedByReference = false)
+		void LocalVariable(bool IsGlobalVariable = false, std::string MethodName = "", bool IsPassedByReference = false, bool IsLocalVariable = false)
 		{
 			if (token.value == "var")
 			{
 				lexer.getToken(token);
-				Varprod(MethodName, IsPassedByReference);
+				temporaryVector.push_back(token.value);
+				VariableProduction(IsGlobalVariable, MethodName, IsPassedByReference, IsLocalVariable);
 			}
 		}
 
-		void PLprime()
+		void ParameterListPrime(std::string MethodName = "")
 		{
 			if (token.value == "var")
 			{
@@ -402,12 +478,12 @@ namespace KPascal
 					//we have a variable 
 					temporaryVector.push_back(token.value);
 					lexer.getToken(token);
-					Varlist();
+					VariableList();
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype();
-						PLend();
+						DataType(false, MethodName);
+						ParameterListEnd(MethodName);
 					}
 				}
 			}
@@ -416,27 +492,27 @@ namespace KPascal
 				//we have a variable 
 				temporaryVector.push_back(token.value);
 				lexer.getToken(token);
-				Varlist();
+				VariableList();
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype();
-					PLend();
+					DataType(false, MethodName);
+					ParameterListEnd(MethodName);
 				}
 			}
 			else { HasError(token.value); }
 		}
 
-		void PLend()
+		void ParameterListEnd(std::string MethodName = "")
 		{
 			if (token.value == ";")
 			{
 				lexer.getToken(token);
-				PLprime();
+				ParameterListPrime(MethodName);
 			}
 		}
 
-		void Plist(std::string MethodName = "")
+		void ParameterList(std::string MethodName = "")
 		{
 			if (token.value == "var")
 			{
@@ -446,12 +522,12 @@ namespace KPascal
 					//we have a variable 
 					temporaryVector.push_back(token.value);
 					lexer.getToken(token);
-					Varlist();
+					VariableList();
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype(false, MethodName);
-						PLend();
+						DataType(false, MethodName, false, true);
+						ParameterListEnd(MethodName);
 					}
 				}
 			}
@@ -460,44 +536,40 @@ namespace KPascal
 				//we have a local variable 
 				temporaryVector.push_back(token.value);
 				lexer.getToken(token);
-				Varlist();
+				VariableList();
 				if (token.value == ":")
 				{
 					lexer.getToken(token);
-					Datatype(false, MethodName);
-					PLend();
+					DataType(false, MethodName);
+					ParameterListEnd(MethodName);
 				}
 			}
 		}
 
-		void Proc()
+		void Procedure()
 		{
-			//we have a variable;
-			std::string myTokenValue = token.value;
-			if (symbol.Table.find(myTokenValue) == symbol.Table.end())
-			{
-				// we can replace the size by the size of the return value later 
-				symbol.Table[myTokenValue].size = 0;
-				symbol.Table[myTokenValue].isMethod = false;
-				symbol.Table[myTokenValue].type = token.value;
-				symbol.Table[myTokenValue].offset = GlobalOffset;
-				GlobalOffset += symbol.Table[myTokenValue].size;
-			}
-			else
-			{
-				std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
-				HasError(myTokenValue);
-			}
 			if (!token.isKeyword && token.sType == "word")
 			{
-				//we have a variable 
-				temporaryVector.push_back(token.value);
+				std::string myTokenValue = token.value;
+				if (symbol.Table.find(myTokenValue) == symbol.Table.end())
+				{
+					symbol.Table[myTokenValue].size = 0;
+					symbol.Table[myTokenValue].isMethod = false;
+					symbol.Table[myTokenValue].type = token.value;
+					symbol.Table[myTokenValue].offset = GlobalOffset;
+					GlobalOffset += symbol.Table[myTokenValue].size;
+				}
+				else
+				{
+					std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
+					HasError(myTokenValue);
+				}
 				lexer.getToken(token);
 				//we should get a left parenthesis now 
 				if (token.value == "(")
 				{
 					lexer.getToken(token);
-					Plist();
+					ParameterList(myTokenValue);
 					//we should have a right parenthesis now
 					if (token.value == ")")
 					{
@@ -505,8 +577,8 @@ namespace KPascal
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Localvar();
-							block();
+							LocalVariable(false, myTokenValue, false, true);
+							Block(myTokenValue);
 							//lexer.getToken(token);
 							if (token.value == ";")
 							{
@@ -524,7 +596,7 @@ namespace KPascal
 		}
 
 		// function abs(num:integer):integer;
-		void Func()
+		void Function()
 		{
 			std::string myTokenValue = token.value;
 			if (symbol.Table.find(myTokenValue) == symbol.Table.end())
@@ -546,19 +618,19 @@ namespace KPascal
 			if (token.value == "(")
 			{
 				lexer.getToken(token);
-				Plist(myTokenValue);
+				ParameterList(myTokenValue);
 				if (token.value == ")")
 				{
 					lexer.getToken(token);
 					if (token.value == ":")
 					{
 						lexer.getToken(token);
-						Datatype(false, myTokenValue, true);
+						DataType(false, myTokenValue, true);
 						if (token.value == ";")
 						{
 							lexer.getToken(token);
-							Localvar(myTokenValue);
-							block();
+							LocalVariable(false, myTokenValue, false, true);
+							Block(myTokenValue);
 							if (token.value == ";")
 							{
 								lexer.getToken(token);
@@ -574,49 +646,68 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		void PFV()
+		void ParameterFunctionVariable(bool IsGlobalVariable = false, std::string MethodName = "")
 		{
 			if (token.value == "var")
 			{
 				lexer.getToken(token);
-				Vari();
-				PFV();
+				Variable(IsGlobalVariable, MethodName);
+				ParameterFunctionVariable(IsGlobalVariable, MethodName);
 			}
 			else if (token.value == "procedure")
 			{
 				lexer.getToken(token);
-				Proc();
-				PFV();
+				Procedure();
+				ParameterFunctionVariable(IsGlobalVariable, MethodName);
 			}
 			else if (token.value == "function")
 			{
 				lexer.getToken(token);
-				Func();
-				PFV();
+				Function();
+				ParameterFunctionVariable(IsGlobalVariable, MethodName);
 			}
 		}
-		void program()
+		void Program()
 		{
-			if (token.value == "program")
+			if (fout.is_open())
 			{
-				//this is the program name 
-				lexer.getToken(token);
-				//this is the semi colon 
-				lexer.getToken(token);
-				if (token.value == ";")
+				if (token.value == "program")
 				{
+					//this is the program name 
 					lexer.getToken(token);
-					PFV();
-					block();
-					if (token.value == ".")
+					//this is the semi colon 
+					lexer.getToken(token);
+					if (token.value == ";")
 					{
 						lexer.getToken(token);
+						ParameterFunctionVariable(true);
+						Block();
+						if (token.value == ".")
+						{
+							lexer.getToken(token);
+						}
+						else { HasError(token.value); }
 					}
 					else { HasError(token.value); }
 				}
 				else { HasError(token.value); }
 			}
-			else { HasError(token.value); }
+			else { std::cout << "Output file is not open. You should never see this error. Please debug." << std::endl; }
+		}
+
+		KParser()
+		{
+			fout.open("..\\kAssembly.txt");
+			if (fout.is_open())
+			{
+				fout << "lea eax, DataSegment" << std::endl;
+				fout << "mov ebp, eax" << std::endl;
+			}
+			else { std::cout << "Output file is not open." << std::endl; }
+		}
+		~KParser()
+		{
+			fout.close();
 		}
 	};
 }
