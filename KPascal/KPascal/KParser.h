@@ -685,6 +685,12 @@ namespace KPascal
 						if (token.value == ".")
 						{
 							lexer.getToken(token);
+							if (fout.is_open())
+							{
+								fout << "	}" << std::endl;
+								fout << "	return 0;" << std::endl;
+								fout << "}" << std::endl;
+							}
 						}
 						else { HasError(token.value); }
 					}
@@ -697,9 +703,16 @@ namespace KPascal
 
 		KParser()
 		{
-			fout.open("..\\kAssembly.txt");
+			fout.open("..\\Kasm\\main.cpp");
 			if (fout.is_open())
 			{
+
+				fout << "#include <fstream>" << std::endl;
+				fout << "char DataSegment[65536];" << std::endl;
+				fout << "int main()" << std::endl;
+				fout << "{" << std::endl;
+				fout << "	_asm" << std::endl;
+				fout << "	{" << std::endl;
 				fout << "lea eax, DataSegment" << std::endl;
 				fout << "mov ebp, eax" << std::endl;
 			}
