@@ -6,7 +6,7 @@ int main()
 	{
 		lea eax, DataSegment
 			mov ebp, eax
-			mov EAX, 2
+			mov EAX, 52
 	}
 	return 0;
 }

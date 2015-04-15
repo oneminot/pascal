@@ -109,7 +109,7 @@ namespace KPascal
 			if (NewRegister && RightSide == " ")
 			{
 				// add this token to the next available register 
-				fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+				fout << "			mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
 				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 				registerArray.currentRegisterIndex++;
 				NewRegister = false;
@@ -117,7 +117,7 @@ namespace KPascal
 			else if (!NewRegister && RightSide == "+")
 			{
 				// add this token to the next available register 
-				fout << "add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+				fout << "			add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 			}
 		}
 
@@ -706,15 +706,14 @@ namespace KPascal
 			fout.open("..\\Kasm\\main.cpp");
 			if (fout.is_open())
 			{
-
 				fout << "#include <fstream>" << std::endl;
 				fout << "char DataSegment[65536];" << std::endl;
 				fout << "int main()" << std::endl;
 				fout << "{" << std::endl;
 				fout << "	_asm" << std::endl;
 				fout << "	{" << std::endl;
-				fout << "lea eax, DataSegment" << std::endl;
-				fout << "mov ebp, eax" << std::endl;
+				fout << "		lea eax, DataSegment" << std::endl;
+				fout << "			mov ebp, eax" << std::endl;
 			}
 			else { std::cout << "Output file is not open." << std::endl; }
 		}
