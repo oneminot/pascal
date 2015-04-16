@@ -31,6 +31,31 @@ namespace KPascal
 			exit(1);
 		}
 
+		void PushAllRegisters()
+		{
+			for (int x = 0; x < 6; x++)
+			{
+				fout << "		push " << registerArray.kRegisters[x].RegisterName << std::endl;
+			}
+			fout << "		push esp" << std::endl;
+			fout << "		push ebp" << std::endl;
+			fout << "		lea eax, DataSegment" << std::endl;
+			fout << "		mov ebp, eax" << std::endl;
+		}
+
+		void PopAllRegisters()
+		{
+			fout << "		pop ebp" << std::endl;
+			fout << "		pop esp" << std::endl;
+			for (int x = 5; x > -1; x--)
+			{
+				fout << "		pop " << registerArray.kRegisters[x].RegisterName << std::endl;
+			}
+			fout << "	}" << std::endl;
+			fout << "	return 0;" << std::endl;
+			fout << "}" << std::endl;
+		}
+
 		std::string FactorPrime(std::string MethodName = "")
 		{
 			if (token.value == "*")
@@ -688,15 +713,7 @@ namespace KPascal
 							lexer.getToken(token);
 							if (fout.is_open())
 							{
-								fout << "		pop ebp" << std::endl;
-								fout << "		pop esp" << std::endl;
-								for (int x = 5; x > -1; x--)
-								{
-									fout << "		pop " << registerArray.kRegisters[x].RegisterName << std::endl;
-								}
-								fout << "	}" << std::endl;
-								fout << "	return 0;" << std::endl;
-								fout << "}" << std::endl;
+								PopAllRegisters();
 							}
 						}
 						else { HasError(token.value); }
@@ -719,14 +736,7 @@ namespace KPascal
 				fout << "{" << std::endl;
 				fout << "	_asm" << std::endl;
 				fout << "	{" << std::endl;
-				for (int x = 0; x < 6; x++)
-				{
-					fout << "		push " << registerArray.kRegisters[x].RegisterName << std::endl;
-				}
-				fout << "		push esp" << std::endl;
-				fout << "		push ebp" << std::endl;
-				fout << "		lea eax, DataSegment" << std::endl;
-				fout << "		mov ebp, eax" << std::endl;
+				PushAllRegisters();
 			}
 			else { std::cout << "Output file is not open." << std::endl; }
 		}
