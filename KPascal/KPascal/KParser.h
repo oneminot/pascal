@@ -51,9 +51,6 @@ namespace KPascal
 			{
 				fout << "		pop " << registerArray.kRegisters[x].RegisterName << std::endl;
 			}
-			fout << "	}" << std::endl;
-			fout << "	return 0;" << std::endl;
-			fout << "}" << std::endl;
 		}
 
 		std::string FactorPrime(std::string MethodName = "")
@@ -714,6 +711,10 @@ namespace KPascal
 							if (fout.is_open())
 							{
 								PopAllRegisters();
+								fout << "	}" << std::endl;
+								fout << "	std::cin.get();" << std::endl;
+								fout << "	return 0;" << std::endl;
+								fout << "}" << std::endl;
 							}
 						}
 						else { HasError(token.value); }
@@ -731,6 +732,7 @@ namespace KPascal
 			if (fout.is_open())
 			{
 				fout << "#include <fstream>" << std::endl;
+				fout << "#include <iostream>" << std::endl;
 				fout << "char DataSegment[65536];" << std::endl;
 				fout << "int main()" << std::endl;
 				fout << "{" << std::endl;

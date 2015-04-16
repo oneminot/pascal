@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 char DataSegment[65536];
 int main()
 {
@@ -15,6 +16,8 @@ int main()
 		lea eax, DataSegment
 		mov ebp, eax
 		mov eax, 52
+		mov ebx, 2
+		add ebx, 5
 		pop ebp
 		pop esp
 		pop edi
@@ -24,5 +27,6 @@ int main()
 		pop ebx
 		pop eax
 	}
+	std::cin.get();
 	return 0;
 }
