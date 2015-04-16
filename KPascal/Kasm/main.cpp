@@ -16,8 +16,7 @@ int main()
 		lea eax, DataSegment
 		mov ebp, eax
 		mov eax, 52
-		mov ebx, 2
-		add ebx, globalboolean
+		mov [ebp + 0], eax
 		pop ebp
 		pop esp
 		pop edi
