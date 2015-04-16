@@ -17,7 +17,7 @@ int main()
 		mov ebp, eax
 		mov eax, 52
 		mov ebx, 2
-		add ebx, 5
+		add ebx, globalinteger
 		pop ebp
 		pop esp
 		pop edi

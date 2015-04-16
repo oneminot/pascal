@@ -1,6 +1,6 @@
 program HelloWorld;
-var global : integer;
+var GlobalInteger : integer;
 begin
-	global:=52;
-	global:=5+2;
+	GlobalInteger:=52;
+	GlobalInteger:=GlobalInteger+2;
 end.
