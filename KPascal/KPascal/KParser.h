@@ -84,19 +84,20 @@ namespace KPascal
 
 		std::string TermPrime(std::string MethodName = "")
 		{
-			std::string LeftSide = "";
+			std::string RightSide = "";
 			if (token.value == "+" || token.value == "-")
 			{
+				RightSide = token.value;
 				lexer.getToken(token);
 				Term(MethodName);
-				LeftSide = TermPrime(MethodName);
+				TermPrime(MethodName);
 				// I need to add some more code at some point; assembler code 
-				return token.value;
 			}
 			else
 			{
 				return " ";
 			}
+			return RightSide;
 		}
 
 		void Term(std::string MethodName = "")
@@ -112,9 +113,9 @@ namespace KPascal
 				fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
 				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 				registerArray.currentRegisterIndex++;
-				NewRegister = false;
+				NewRegister = true;
 			}
-			else if (!NewRegister && RightSide == "+")
+			else if (NewRegister && RightSide == "+")
 			{
 				// add this token to the next available register 
 				fout << "add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
