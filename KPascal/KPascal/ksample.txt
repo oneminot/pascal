@@ -1,6 +1,7 @@
 program HelloWorld;
 var GlobalInteger : integer;
+var GlobalBoolean : boolean;
 begin
 	GlobalInteger:=52;
-	GlobalInteger:=GlobalInteger+2;
+	GlobalBoolean:=GlobalBoolean+2;
 end.
