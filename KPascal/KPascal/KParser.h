@@ -110,7 +110,7 @@ namespace KPascal
 			if (NewRegister && RightSide == " ")
 			{
 				// add this token to the next available register 
-				fout << "			mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+				fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
 				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 				registerArray.currentRegisterIndex++;
 				NewRegister = true;
@@ -118,7 +118,7 @@ namespace KPascal
 			else if (NewRegister && RightSide == "+")
 			{
 				// add this token to the next available register 
-				fout << "			add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+				fout << "		add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 			}
 		}
 
@@ -688,6 +688,12 @@ namespace KPascal
 							lexer.getToken(token);
 							if (fout.is_open())
 							{
+								fout << "		pop ebp" << std::endl;
+								fout << "		pop esp" << std::endl;
+								for (int x = 5; x > -1; x--)
+								{
+									fout << "		pop " << registerArray.kRegisters[x].RegisterName << std::endl;
+								}
 								fout << "	}" << std::endl;
 								fout << "	return 0;" << std::endl;
 								fout << "}" << std::endl;
@@ -713,8 +719,14 @@ namespace KPascal
 				fout << "{" << std::endl;
 				fout << "	_asm" << std::endl;
 				fout << "	{" << std::endl;
+				for (int x = 0; x < 6; x++)
+				{
+					fout << "		push " << registerArray.kRegisters[x].RegisterName << std::endl;
+				}
+				fout << "		push esp" << std::endl;
+				fout << "		push ebp" << std::endl;
 				fout << "		lea eax, DataSegment" << std::endl;
-				fout << "			mov ebp, eax" << std::endl;
+				fout << "		mov ebp, eax" << std::endl;
 			}
 			else { std::cout << "Output file is not open." << std::endl; }
 		}

@@ -4,9 +4,25 @@ int main()
 {
 	_asm
 	{
+		push eax
+		push ebx
+		push ecx
+		push edx
+		push esi
+		push edi
+		push esp
+		push ebp
 		lea eax, DataSegment
-			mov ebp, eax
-			mov EAX, 52
+		mov ebp, eax
+		mov eax, 52
+		pop ebp
+		pop esp
+		pop edi
+		pop esi
+		pop edx
+		pop ecx
+		pop ebx
+		pop eax
 	}
 	return 0;
 }
