@@ -4,6 +4,7 @@
 #include <fstream>
 #include "Lexer.h"
 #include "SymbolTable.h"
+#include "KRegisterArray.h"
 #ifndef KParser_H_
 #define KParser_H_ 
 namespace KPascal
@@ -14,11 +15,12 @@ namespace KPascal
 		KPascal::Lexer lexer;
 		KPascal::Token token;
 		KPascal::SymbolTable symbol;
-
+		KPascal::KRegisterArray registerArray;
 		std::vector<std::string> temporaryVector;
 
 		std::ofstream fout;
 		int GlobalOffset = 0;
+		bool NewRegister = true;
 
 		void HasError(std::string FailingTokenValue = "")
 		{
@@ -29,24 +31,33 @@ namespace KPascal
 			exit(1);
 		}
 
-		void FactorPrime(std::string MethodName = "")
+		std::string FactorPrime(std::string MethodName = "")
 		{
-			if (token.value == "*" || token.value == ")")
+			if (token.value == "*")
 			{
 				lexer.getToken(token);
 				Factor(MethodName);
 				FactorPrime(MethodName);
+				return "*";
+			}
+			else 
+			{
+				return " ";
 			}
 		}
 
-		void Factor(std::string MethodName = "")
+		std::string Factor(std::string MethodName = "")
 		{
+			std::string LeftSide = "";
+			std::string RightSide = "";
 			if (token.value == "(")
 			{
+				NewRegister = true;
 				lexer.getToken(token);
 				Expression();
 				if (token.value == ")")
 				{
+					NewRegister = true;
 					lexer.getToken(token);
 					FactorPrime(MethodName);
 				}
@@ -54,26 +65,60 @@ namespace KPascal
 			}
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 			{
+				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
+				LeftSide = FactorPrime(MethodName);
+				std::string ReturnString = token.value;
 				lexer.getToken(token);
-				FactorPrime(MethodName);
+				if (LeftSide == " ")
+				{
+					return ReturnString;
+				}
+				else if (LeftSide == "*")
+				{
+					// I need to add some assembler code here 
+					return " ";
+				}
 			}
 			else { HasError(token.value); }
 		}
 
-		void TermPrime(std::string MethodName = "")
+		std::string TermPrime(std::string MethodName = "")
 		{
+			std::string LeftSide = "";
 			if (token.value == "+" || token.value == "-")
 			{
 				lexer.getToken(token);
 				Term(MethodName);
-				TermPrime(MethodName);
+				LeftSide = TermPrime(MethodName);
+				// I need to add some more code at some point; assembler code 
+				return token.value;
+			}
+			else
+			{
+				return " ";
 			}
 		}
 
 		void Term(std::string MethodName = "")
 		{
-			Factor(MethodName);
-			TermPrime(MethodName);
+			std::string LeftSide = "";
+			std::string RightSide = "";
+			LeftSide = Factor(MethodName);
+			// if term prime goes to epsilon, do something 
+			RightSide = TermPrime(MethodName);
+			if (NewRegister && RightSide == " ")
+			{
+				// add this token to the next available register 
+				fout << "			mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+				registerArray.currentRegisterIndex++;
+				NewRegister = false;
+			}
+			else if (!NewRegister && RightSide == "+")
+			{
+				// add this token to the next available register 
+				fout << "			add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+			}
 		}
 
 		void Expression(std::string MethodName = "")
@@ -640,6 +685,12 @@ namespace KPascal
 						if (token.value == ".")
 						{
 							lexer.getToken(token);
+							if (fout.is_open())
+							{
+								fout << "	}" << std::endl;
+								fout << "	return 0;" << std::endl;
+								fout << "}" << std::endl;
+							}
 						}
 						else { HasError(token.value); }
 					}
@@ -652,11 +703,17 @@ namespace KPascal
 
 		KParser()
 		{
-			fout.open("..\\kAssembly.txt");
+			fout.open("..\\Kasm\\main.cpp");
 			if (fout.is_open())
 			{
-				fout << "lea eax, DataSegment" << std::endl;
-				fout << "mov ebp, eax" << std::endl;
+				fout << "#include <fstream>" << std::endl;
+				fout << "char DataSegment[65536];" << std::endl;
+				fout << "int main()" << std::endl;
+				fout << "{" << std::endl;
+				fout << "	_asm" << std::endl;
+				fout << "	{" << std::endl;
+				fout << "		lea eax, DataSegment" << std::endl;
+				fout << "			mov ebp, eax" << std::endl;
 			}
 			else { std::cout << "Output file is not open." << std::endl; }
 		}
