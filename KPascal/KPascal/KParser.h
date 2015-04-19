@@ -211,22 +211,25 @@ namespace KPascal
 							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 							{
 								Expression(MethodName);
-								fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-								registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+								registerArray.currentRegisterIndex--;
+								fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
+								registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
 							}
 							else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 						}
 						else if (token.sType == "integer")
 						{
 							Expression(MethodName);
-							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-							registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+							registerArray.currentRegisterIndex--;
+							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
+							registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
 						}
 						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
 						{
 							Expression(MethodName);
-							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-							registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+							registerArray.currentRegisterIndex--;
+							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
+							registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
 						}
 						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 					}
