@@ -31,6 +31,28 @@ namespace KPascal
 			exit(1);
 		}
 
+		void PushAllRegisters()
+		{
+			for (int x = 0; x < 6; x++)
+			{
+				fout << "		push " << registerArray.kRegisters[x].RegisterName << std::endl;
+			}
+			fout << "		push esp" << std::endl;
+			fout << "		push ebp" << std::endl;
+			fout << "		lea eax, DataSegment" << std::endl;
+			fout << "		mov ebp, eax" << std::endl;
+		}
+
+		void PopAllRegisters()
+		{
+			fout << "		pop ebp" << std::endl;
+			fout << "		pop esp" << std::endl;
+			for (int x = 5; x > -1; x--)
+			{
+				fout << "		pop " << registerArray.kRegisters[x].RegisterName << std::endl;
+			}
+		}
+
 		std::string FactorPrime(std::string MethodName = "")
 		{
 			if (token.value == "*")
@@ -84,19 +106,20 @@ namespace KPascal
 
 		std::string TermPrime(std::string MethodName = "")
 		{
-			std::string LeftSide = "";
+			std::string RightSide = "";
 			if (token.value == "+" || token.value == "-")
 			{
+				RightSide = token.value;
 				lexer.getToken(token);
 				Term(MethodName);
-				LeftSide = TermPrime(MethodName);
+				TermPrime(MethodName);
 				// I need to add some more code at some point; assembler code 
-				return token.value;
 			}
 			else
 			{
 				return " ";
 			}
+			return RightSide;
 		}
 
 		void Term(std::string MethodName = "")
@@ -109,15 +132,15 @@ namespace KPascal
 			if (NewRegister && RightSide == " ")
 			{
 				// add this token to the next available register 
-				fout << "			mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+				fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
 				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 				registerArray.currentRegisterIndex++;
-				NewRegister = false;
+				NewRegister = true;
 			}
-			else if (!NewRegister && RightSide == "+")
+			else if (NewRegister && RightSide == "+")
 			{
 				// add this token to the next available register 
-				fout << "			add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+				fout << "		add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 			}
 		}
 
@@ -173,6 +196,7 @@ namespace KPascal
 				bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
 				if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 				{
+					Token LeftSideToken = token;
 					lexer.getToken(token);
 					if (token.value == ":=")
 					{
@@ -187,16 +211,22 @@ namespace KPascal
 							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 							{
 								Expression(MethodName);
+								fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+								registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
 							}
 							else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 						}
 						else if (token.sType == "integer")
 						{
 							Expression(MethodName);
+							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+							registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
 						}
 						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
 						{
 							Expression(MethodName);
+							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+							registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
 						}
 						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 					}
@@ -687,7 +717,9 @@ namespace KPascal
 							lexer.getToken(token);
 							if (fout.is_open())
 							{
+								PopAllRegisters();
 								fout << "	}" << std::endl;
+								fout << "	std::cin.get();" << std::endl;
 								fout << "	return 0;" << std::endl;
 								fout << "}" << std::endl;
 							}
@@ -707,13 +739,13 @@ namespace KPascal
 			if (fout.is_open())
 			{
 				fout << "#include <fstream>" << std::endl;
+				fout << "#include <iostream>" << std::endl;
 				fout << "char DataSegment[65536];" << std::endl;
 				fout << "int main()" << std::endl;
 				fout << "{" << std::endl;
 				fout << "	_asm" << std::endl;
 				fout << "	{" << std::endl;
-				fout << "		lea eax, DataSegment" << std::endl;
-				fout << "			mov ebp, eax" << std::endl;
+				PushAllRegisters();
 			}
 			else { std::cout << "Output file is not open." << std::endl; }
 		}
