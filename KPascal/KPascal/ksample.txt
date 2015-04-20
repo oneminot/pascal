@@ -2,5 +2,6 @@ program HelloWorld;
 var GlobalInteger : integer;
 var GlobalIntegerTwo : integer;
 begin
-	GlobalInteger:=52;
+	GlobalIntegerTwo = 2;
+	GlobalInteger:=1 + GlobalIntegerTwo;
 end.

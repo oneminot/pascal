@@ -88,9 +88,9 @@ namespace KPascal
 			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
 			{
 				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
-				LeftSide = FactorPrime(MethodName);
 				std::string ReturnString = token.value;
 				lexer.getToken(token);
+				LeftSide = FactorPrime(MethodName);
 				if (LeftSide == " ")
 				{
 					return ReturnString;
@@ -98,6 +98,7 @@ namespace KPascal
 				else if (LeftSide == "*")
 				{
 					// I need to add some assembler code here 
+					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << ReturnString << std::endl;
 					return " ";
 				}
 			}
