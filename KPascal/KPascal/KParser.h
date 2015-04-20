@@ -85,10 +85,32 @@ namespace KPascal
 				}
 				else { HasError(token.value); }
 			}
-			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
+			else if (token.sType == "real" || token.sType == "integer")
 			{
 				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
 				std::string ReturnString = token.value;
+				lexer.getToken(token);
+				LeftSide = FactorPrime(MethodName);
+				if (LeftSide == " ")
+				{
+					return ReturnString;
+				}
+				else if (LeftSide == "*")
+				{
+					// I need to add some assembler code here 
+					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << ReturnString << std::endl;
+					return " ";
+				}
+			}
+			else if(token.sType == "word" && !token.isKeyword)
+			{
+				Token ReturnToken = token;
+				std::string ReturnString = " ";
+				// we only have global variables so far so this will be good enough 
+				if(symbol.Table.find(ReturnToken.value) != symbol.Table.end())
+				{
+					ReturnString = "[ebp + " + std::to_string(symbol.Table[ReturnToken.value].offset) + "]";
+				}
 				lexer.getToken(token);
 				LeftSide = FactorPrime(MethodName);
 				if (LeftSide == " ")

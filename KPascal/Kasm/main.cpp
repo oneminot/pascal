@@ -15,10 +15,10 @@ int main()
 		push ebp
 		lea eax, DataSegment
 		mov ebp, eax
-		mov eax, 2
+		mov eax, 320
 		mov [ebp + 4], eax
-		mov eax, globalintegertwo
-		add eax, 1
+		mov eax, [ebp + 4]
+		add eax, [ebp + 4]
 		mov [ebp + 0], eax
 		pop ebp
 		pop esp
