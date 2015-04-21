@@ -55,11 +55,20 @@ namespace KPascal
 
 		std::string FactorPrime(std::string MethodName = "")
 		{
+			std::string LeftSide = "";
+			std::string RightSide = "";
 			if (token.value == "*")
 			{
 				lexer.getToken(token);
-				Factor(MethodName);
-				FactorPrime(MethodName);
+				LeftSide = Factor(MethodName);
+				RightSide = FactorPrime(MethodName);
+				if (LeftSide != " ")
+				{
+					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+					registerArray.currentRegisterIndex++;
+					NewRegister = true;
+				}
 				return "*";
 			}
 			else 
@@ -98,7 +107,7 @@ namespace KPascal
 				else if (LeftSide == "*")
 				{
 					// I need to add some assembler code here 
-					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << ReturnString << std::endl;
+					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << ReturnString << std::endl;
 					return " ";
 				}
 			}
@@ -120,7 +129,7 @@ namespace KPascal
 				else if (LeftSide == "*")
 				{
 					// I need to add some assembler code here 
-					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << ReturnString << std::endl;
+					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << ReturnString << std::endl;
 					return " ";
 				}
 			}
@@ -152,7 +161,7 @@ namespace KPascal
 			LeftSide = Factor(MethodName);
 			// if term prime goes to epsilon, do something 
 			RightSide = TermPrime(MethodName);
-			if (NewRegister && RightSide == " ")
+			if (NewRegister && RightSide == " " && LeftSide != " ")
 			{
 				// add this token to the next available register 
 				fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
@@ -160,7 +169,7 @@ namespace KPascal
 				registerArray.currentRegisterIndex++;
 				NewRegister = true;
 			}
-			else if (NewRegister && RightSide == "+")
+			else if (NewRegister && RightSide == "+" && LeftSide != " ")
 			{
 				// add this token to the next available register 
 				fout << "		add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;

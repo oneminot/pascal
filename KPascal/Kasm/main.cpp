@@ -18,7 +18,8 @@ int main()
 		mov eax, 320
 		mov [ebp + 4], eax
 		mov eax, [ebp + 4]
-		add eax, [ebp + 4]
+		imul eax, [ebp + 4]
+		imul eax, [ebp + 4]
 		mov [ebp + 0], eax
 		pop ebp
 		pop esp

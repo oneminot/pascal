@@ -3,5 +3,5 @@ var GlobalInteger : integer;
 var GlobalIntegerTwo : integer;
 begin
 	GlobalIntegerTwo := 320;
-	GlobalInteger := GlobalIntegerTwo + GlobalIntegerTwo;
+	GlobalInteger := GlobalIntegerTwo * GlobalIntegerTwo * GlobalIntegerTwo;
 end.
