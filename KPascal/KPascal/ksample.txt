@@ -1,11 +1,5 @@
 program HelloWorld;
 var GlobalInteger : integer;
-var GlobalIntegerTwo : integer;
-var GlobalIntegerThree : integer;
-var GlobalIntegerFour : integer;
 begin
-	GlobalIntegerTwo := 2;
-	GlobalIntegerThree := 3;
-	GlobalIntegerFour := 4;
-	GlobalInteger := GlobalIntegerTwo + GlobalIntegerThree;
+	GlobalInteger := 2 + 3;
 end.

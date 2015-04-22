@@ -147,7 +147,7 @@ namespace KPascal
 				lexer.getToken(token);
 				LeftSide = Term(MethodName);
 				RightSide = TermPrime(MethodName);
-				if (LeftSide != " ")
+				if (NewRegister && LeftSide != " ")
 				{
 					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
 					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
@@ -174,7 +174,7 @@ namespace KPascal
 				registerArray.currentRegisterIndex++;
 				NewRegister = false;
 			}
-			else if (NewRegister && RightSide == "+" && LeftSide != " ")
+			else if (!NewRegister && RightSide == "+" && LeftSide != " ")
 			{
 				// add this token to the next available register 
 				fout << "		add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
