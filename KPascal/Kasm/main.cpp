@@ -15,12 +15,16 @@ int main()
 		push ebp
 		lea eax, DataSegment
 		mov ebp, eax
-		mov eax, 320
+		mov eax, 2
 		mov [ebp + 4], eax
-		mov eax, [ebp + 4]
-		imul eax, [ebp + 4]
-		imul eax, [ebp + 4]
-		mov [ebp + 0], eax
+		mov eax, 3
+		mov [ebp + 8], eax
+		mov eax, 4
+		mov [ebp + 12], eax
+		mov eax, [ebp + 12]
+		mov ebx, [ebp + 12]
+		mov ecx, [ebp + 8]
+		mov [ebp + 0], ecx
 		pop ebp
 		pop esp
 		pop edi

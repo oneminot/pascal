@@ -67,11 +67,11 @@ namespace KPascal
 					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
 					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 					registerArray.currentRegisterIndex++;
-					NewRegister = true;
+					NewRegister = false;
 				}
 				return "*";
 			}
-			else 
+			else
 			{
 				return " ";
 			}
@@ -111,12 +111,12 @@ namespace KPascal
 					return " ";
 				}
 			}
-			else if(token.sType == "word" && !token.isKeyword)
+			else if (token.sType == "word" && !token.isKeyword)
 			{
 				Token ReturnToken = token;
 				std::string ReturnString = " ";
 				// we only have global variables so far so this will be good enough 
-				if(symbol.Table.find(ReturnToken.value) != symbol.Table.end())
+				if (symbol.Table.find(ReturnToken.value) != symbol.Table.end())
 				{
 					ReturnString = "[ebp + " + std::to_string(symbol.Table[ReturnToken.value].offset) + "]";
 				}
@@ -138,26 +138,31 @@ namespace KPascal
 
 		std::string TermPrime(std::string MethodName = "")
 		{
-			std::string RightSide = "";
+			std::string LeftSide;
+			std::string RightSide;
+			std::string ReturnString;
 			if (token.value == "+" || token.value == "-")
 			{
-				RightSide = token.value;
+				ReturnString = token.value;
 				lexer.getToken(token);
-				Term(MethodName);
-				TermPrime(MethodName);
-				// I need to add some more code at some point; assembler code 
+				LeftSide = Term(MethodName);
+				RightSide = TermPrime(MethodName);
+				if (LeftSide != " ")
+				{
+					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+					registerArray.currentRegisterIndex++;
+					NewRegister = false;
+				}
+				return ReturnString;
 			}
-			else
-			{
-				return " ";
-			}
-			return RightSide;
+			return " ";
 		}
 
-		void Term(std::string MethodName = "")
+		std::string Term(std::string MethodName = "")
 		{
-			std::string LeftSide = "";
-			std::string RightSide = "";
+			std::string LeftSide;
+			std::string RightSide;
 			LeftSide = Factor(MethodName);
 			// if term prime goes to epsilon, do something 
 			RightSide = TermPrime(MethodName);
@@ -167,13 +172,15 @@ namespace KPascal
 				fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
 				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 				registerArray.currentRegisterIndex++;
-				NewRegister = true;
+				NewRegister = false;
 			}
 			else if (NewRegister && RightSide == "+" && LeftSide != " ")
 			{
 				// add this token to the next available register 
 				fout << "		add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+				return " ";
 			}
+			return LeftSide;
 		}
 
 		void Expression(std::string MethodName = "")
@@ -243,6 +250,7 @@ namespace KPascal
 							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 							{
 								Expression(MethodName);
+								NewRegister = true;
 								registerArray.currentRegisterIndex--;
 								fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
 								registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
@@ -252,6 +260,7 @@ namespace KPascal
 						else if (token.sType == "integer")
 						{
 							Expression(MethodName);
+							NewRegister = true;
 							registerArray.currentRegisterIndex--;
 							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
 							registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
@@ -259,6 +268,7 @@ namespace KPascal
 						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
 						{
 							Expression(MethodName);
+							NewRegister = true;
 							registerArray.currentRegisterIndex--;
 							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
 							registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
