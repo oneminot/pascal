@@ -7,7 +7,7 @@ int main()
 	parser.lexer.getToken(parser.token);
 	parser.Program();
 	std::cout << "Good code. Press ENTER to quit." << std::endl;
-	std::cin.get();
+	//std::cin.get();
 	return 0;
 }
 

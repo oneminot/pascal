@@ -7,5 +7,5 @@ begin
 	GlobalIntegerTwo := 2;
 	GlobalIntegerThree := 3;
 	GlobalIntegerFour := 4;
-	GlobalInteger := GlobalIntegerTwo + GlobalIntegerThree + GlobalIntegerFour;
+	GlobalInteger := GlobalIntegerTwo + GlobalIntegerThree;
 end.

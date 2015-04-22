@@ -21,10 +21,9 @@ int main()
 		mov [ebp + 8], eax
 		mov eax, 4
 		mov [ebp + 12], eax
-		mov eax, [ebp + 12]
-		mov ebx, [ebp + 12]
-		mov ecx, [ebp + 8]
-		mov [ebp + 0], ecx
+		mov eax, [ebp + 8]
+		mov ebx, [ebp + 8]
+		mov [ebp + 0], ebx
 		pop ebp
 		pop esp
 		pop edi
