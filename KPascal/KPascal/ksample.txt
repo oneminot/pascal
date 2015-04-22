@@ -1,5 +1,5 @@
 program HelloWorld;
 var GlobalInteger : integer;
 begin
-	GlobalInteger := 2 + 3;
+	GlobalInteger := 2 * 3 + 4;
 end.

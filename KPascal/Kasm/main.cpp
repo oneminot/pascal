@@ -16,17 +16,4 @@ int main()
 		lea eax, DataSegment
 		mov ebp, eax
 		mov eax, 3
-		add eax, 2
-		mov [ebp + 0], eax
-		pop ebp
-		pop esp
-		pop edi
-		pop esi
-		pop edx
-		pop ecx
-		pop ebx
-		pop eax
-	}
-	std::cin.get();
-	return 0;
-}
+		imul eax, 2
