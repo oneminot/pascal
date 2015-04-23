@@ -55,8 +55,8 @@ namespace KPascal
 
 		std::string FactorPrime(std::string MethodName = "")
 		{
-			std::string LeftSide = "";
-			std::string RightSide = "";
+			std::string LeftSide;
+			std::string RightSide;
 			if (token.value == "*")
 			{
 				lexer.getToken(token);
@@ -168,7 +168,6 @@ namespace KPascal
 					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 					return " ";
 				}
-				
 			}
 			return " ";
 		}
