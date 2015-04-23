@@ -153,8 +153,22 @@ namespace KPascal
 					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 					registerArray.currentRegisterIndex++;
 					NewRegister = false;
+					return ReturnString;
 				}
-				return ReturnString;
+				else if (!NewRegister && LeftSide != " " && RightSide == " ")
+				{
+					if (ReturnString == "+")
+					{
+						fout << "		add ";
+					}
+					else if (ReturnString == "-")
+					{
+						fout << "		sub ";
+					}
+					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+					return " ";
+				}
+				
 			}
 			return " ";
 		}

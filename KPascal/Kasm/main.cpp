@@ -17,3 +17,17 @@ int main()
 		mov ebp, eax
 		mov eax, 3
 		imul eax, 2
+		add eax, 4
+		mov [ebp + 0], eax
+		pop ebp
+		pop esp
+		pop edi
+		pop esi
+		pop edx
+		pop ecx
+		pop ebx
+		pop eax
+	}
+	std::cin.get();
+	return 0;
+}
