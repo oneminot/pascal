@@ -68,6 +68,10 @@ namespace KPascal
 					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 					registerArray.currentRegisterIndex++;
 					NewRegister = false;
+					if (RightSide != " ")
+					{
+						return " ";
+					}
 				}
 				return "*";
 			}
@@ -187,6 +191,7 @@ namespace KPascal
 				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 				registerArray.currentRegisterIndex++;
 				NewRegister = false;
+				return " ";
 			}
 			else if (!NewRegister && RightSide == "+" && LeftSide != " ")
 			{
