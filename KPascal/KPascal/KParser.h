@@ -96,7 +96,6 @@ namespace KPascal
 			}
 			else if (token.sType == "real" || token.sType == "integer")
 			{
-				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
 				std::string ReturnString = token.value;
 				lexer.getToken(token);
 				LeftSide = FactorPrime(MethodName);
@@ -106,7 +105,6 @@ namespace KPascal
 				}
 				else if (LeftSide == "*")
 				{
-					// I need to add some assembler code here 
 					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << ReturnString << std::endl;
 					return " ";
 				}
@@ -128,7 +126,6 @@ namespace KPascal
 				}
 				else if (LeftSide == "*")
 				{
-					// I need to add some assembler code here 
 					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << ReturnString << std::endl;
 					return " ";
 				}
