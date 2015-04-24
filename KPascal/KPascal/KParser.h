@@ -53,6 +53,15 @@ namespace KPascal
 			}
 		}
 
+		void MoveRegisterValueToStack(std::string MethodName, Token LeftSideToken)
+		{
+			Expression(MethodName);
+			NewRegister = true;
+			registerArray.currentRegisterIndex--;
+			fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
+			registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
+		}
+
 		std::string FactorPrime(std::string MethodName = "")
 		{
 			std::string LeftSide;
@@ -285,14 +294,6 @@ namespace KPascal
 							registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
 						}
 						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
-						{
-							Expression(MethodName);
-							NewRegister = true;
-							registerArray.currentRegisterIndex--;
-							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
-							registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
-						}
-						else if (token.value == "(")
 						{
 							Expression(MethodName);
 							NewRegister = true;
