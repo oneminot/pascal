@@ -292,6 +292,14 @@ namespace KPascal
 							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
 							registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
 						}
+						else if (token.value == "(")
+						{
+							Expression(MethodName);
+							NewRegister = true;
+							registerArray.currentRegisterIndex--;
+							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
+							registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
+						}
 						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 					}
 					else { HasError(token.value); }
