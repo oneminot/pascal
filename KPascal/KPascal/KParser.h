@@ -168,6 +168,10 @@ namespace KPascal
 					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 					return " ";
 				}
+				else
+				{
+					return ReturnString;
+				}
 			}
 			return " ";
 		}
