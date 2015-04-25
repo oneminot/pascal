@@ -104,7 +104,7 @@ namespace KPascal
 					NewRegister = true;
 					lexer.getToken(token);
 					RightSide = FactorPrime(MethodName);
-					if (token.value == ";" && RightSide == " ")
+					if (token.value == ";" && RightSide == " " && LeftSide != " ")
 					{
 						std::cout << "we found love" << std::endl;
 						fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
@@ -150,6 +150,7 @@ namespace KPascal
 				}
 			}
 			else { HasError(token.value); }
+			return " ";
 		}
 
 		std::string TermPrime(std::string MethodName = "")
