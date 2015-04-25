@@ -98,12 +98,21 @@ namespace KPascal
 			{
 				NewRegister = true;
 				lexer.getToken(token);
-				Expression();
+				LeftSide = Expression();
 				if (token.value == ")")
 				{
 					NewRegister = true;
 					lexer.getToken(token);
-					FactorPrime(MethodName);
+					RightSide = FactorPrime(MethodName);
+					if (token.value == ";" && RightSide == " ")
+					{
+						std::cout << "we found love" << std::endl;
+						fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+						registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+						registerArray.currentRegisterIndex++;
+						NewRegister = false;
+						return " ";
+					}
 				}
 				else { HasError(token.value); }
 			}
@@ -133,10 +142,7 @@ namespace KPascal
 				}
 				lexer.getToken(token);
 				LeftSide = FactorPrime(MethodName);
-				if (LeftSide == " ")
-				{
-					return ReturnString;
-				}
+				if (LeftSide == " ") { return ReturnString; }
 				else if (LeftSide == "*")
 				{
 					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << ReturnString << std::endl;
@@ -193,7 +199,7 @@ namespace KPascal
 			LeftSide = Factor(MethodName);
 			// if term prime goes to epsilon, do something 
 			RightSide = TermPrime(MethodName);
-			if (NewRegister && RightSide == " " && LeftSide != " ")
+			if (NewRegister && RightSide == " " && LeftSide != " " && token.value != ")")
 			{
 				// add this token to the next available register 
 				fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
@@ -211,9 +217,10 @@ namespace KPascal
 			return LeftSide;
 		}
 
-		void Expression(std::string MethodName = "")
+		std::string Expression(std::string MethodName = "")
 		{
-			Term(MethodName);
+			std::string result_string = Term(MethodName);
+			return result_string;
 		}
 
 		void BooleanExpressionPrime(std::string MethodName = "")
@@ -270,11 +277,6 @@ namespace KPascal
 						lexer.getToken(token);
 						if (token.sType == "word" && !token.isKeyword)
 						{
-							//make sure the variable is in the symbol table 
-							bool IsVariableInParameterList = MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end();
-							bool IsVariableInLocalVariableList = MethodName != "" && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end();
-							// the name of the method should already be in the Global Variable List because it should be in the symbol table 
-							bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
 							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 							{
 								MoveRegisterValueToStack(MethodName, LeftSideToken);
@@ -288,6 +290,11 @@ namespace KPascal
 						}
 						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
 						{
+							MoveRegisterValueToStack(MethodName, LeftSideToken);
+						}
+						else if (token.value == "(")
+						{
+							std::cout << "live is for the living my dear" << std::endl;
 							MoveRegisterValueToStack(MethodName, LeftSideToken);
 						}
 						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
