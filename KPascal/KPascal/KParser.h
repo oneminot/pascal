@@ -113,6 +113,24 @@ namespace KPascal
 						NewRegister = false;
 						return " ";
 					}
+					else if (token.value == ";" && RightSide == "*" && LeftSide == " ")
+					{
+						fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << std::endl;
+						return " ";
+					}
+					else if (token.value == ";" && (RightSide == "+" || RightSide == "-") && LeftSide == " ")
+					{
+						if (RightSide == "+")
+						{
+							fout << "		add ";
+						}
+						else if (RightSide == "-")
+						{
+							fout << "		sub ";
+						}
+						fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << std::endl;
+						return " ";
+					}
 				}
 				else { HasError(token.value); }
 			}

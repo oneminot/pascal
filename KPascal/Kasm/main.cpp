@@ -16,16 +16,10 @@ int main()
 		lea eax, DataSegment
 		mov ebp, eax
 		mov eax, 2
-		imul eax, 2
+		add eax, 1
 		mov ebx, 3
-		imul ebx, 3
-		mov ecx, 4
-		imul ecx, 4
-		mov edx, 5
-		imul edx, 5
-		mov esi, 6
-		imul esi, 6
-		mov [ebp + 0], esi
+		imul ebx, eax
+		mov [ebp + 0], ebx
 		pop ebp
 		pop esp
 		pop edi
