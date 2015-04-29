@@ -118,7 +118,7 @@ namespace KPascal
 					NewRegister = true;
 					lexer.getToken(token);
 					RightSide = FactorPrime(MethodName);
-					if (token.value == ";" && RightSide == " " && LeftSide != " ")
+					if (RightSide == " " && LeftSide != " ")
 					{
 						std::cout << "we found love" << std::endl;
 						fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
@@ -134,26 +134,26 @@ namespace KPascal
 						registerArray.currentRegisterIndex--;
 						return " ";
 					}
-					else if ((RightSide == "+" || RightSide == "-") && LeftSide == " ")
-					{
-						//if (RightSide == "+")
-						//{
-						//	fout << "		add ";
-						//}
-						//else if (RightSide == "-")
-						//{
-						//	fout << "		sub ";
-						//}
-						fout << "		" << SymbolToString(RightSide);
-						fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-						return " ";
-					}
-					else if (token.value == "+" || token.value == "-")
-					{
-						fout << "		" << SymbolToString(token.value);
-						fout << std::endl;
-						return " ";
-					}
+					//else if ((RightSide == "+" || RightSide == "-") && LeftSide == " ")
+					//{
+					//	//if (RightSide == "+")
+					//	//{
+					//	//	fout << "		add ";
+					//	//}
+					//	//else if (RightSide == "-")
+					//	//{
+					//	//	fout << "		sub ";
+					//	//}
+					//	fout << "		" << SymbolToString(RightSide);
+					//	fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+					//	return " ";
+					//}
+					//else if (token.value == "+" || token.value == "-")
+					//{
+					//	fout << "		" << SymbolToString(token.value);
+					//	fout << std::endl;
+					//	return " ";
+					//}
 				}
 				else { HasError(token.value); }
 			}
@@ -215,15 +215,10 @@ namespace KPascal
 				}
 				else if (!NewRegister && LeftSide != " " && RightSide == " ")
 				{
-					if (ReturnString == "+")
-					{
-						fout << "		add ";
-					}
-					else if (ReturnString == "-")
-					{
-						fout << "		sub ";
-					}
+					fout << "		" << SymbolToString(RightSide) << " ";
 					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+					registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+					registerArray.currentRegisterIndex--;
 					return " ";
 				}
 				else
@@ -241,7 +236,7 @@ namespace KPascal
 			LeftSide = Factor(MethodName);
 			// if term prime goes to epsilon, do something 
 			RightSide = TermPrime(MethodName);
-			if (NewRegister && RightSide == " " && LeftSide != " " && token.value != ")")
+			if (NewRegister && RightSide == " " && LeftSide != " ")
 			{
 				// add this token to the next available register 
 				fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
@@ -250,11 +245,20 @@ namespace KPascal
 				NewRegister = false;
 				return " ";
 			}
-			else if (!NewRegister && RightSide == "+" && LeftSide != " ")
+			else if (!NewRegister && (RightSide == "+" || RightSide == "-") && LeftSide != " ")
 			{
 				// add this token to the next available register 
-				fout << "		add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+				fout << "		" << SymbolToString(RightSide) << " ";
+				fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 				return " ";
+			}
+			else if (!NewRegister && (RightSide == "+" || RightSide == "-") && LeftSide == " ")
+			{
+					fout << "		" << SymbolToString(RightSide) << " ";
+					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+					registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+					registerArray.currentRegisterIndex--;
+					return " ";
 			}
 			return LeftSide;
 		}
