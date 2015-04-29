@@ -62,6 +62,20 @@ namespace KPascal
 			registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
 		}
 
+		std::string SymbolToString(std::string symbol)
+		{
+			std::string return_string;
+			if (symbol == "+")
+			{
+				return_string = "add";
+			}
+			else if (symbol == "-")
+			{
+				return_string = "sub";
+			}
+			return return_string;
+		}
+
 		std::string FactorPrime(std::string MethodName = "")
 		{
 			std::string LeftSide;
@@ -122,15 +136,22 @@ namespace KPascal
 					}
 					else if ((RightSide == "+" || RightSide == "-") && LeftSide == " ")
 					{
-						if (RightSide == "+")
-						{
-							fout << "		add ";
-						}
-						else if (RightSide == "-")
-						{
-							fout << "		sub ";
-						}
-						fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << std::endl;
+						//if (RightSide == "+")
+						//{
+						//	fout << "		add ";
+						//}
+						//else if (RightSide == "-")
+						//{
+						//	fout << "		sub ";
+						//}
+						fout << "		" << SymbolToString(RightSide);
+						fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+						return " ";
+					}
+					else if (token.value == "+" || token.value == "-")
+					{
+						fout << "		" << SymbolToString(token.value);
+						fout << std::endl;
 						return " ";
 					}
 				}
