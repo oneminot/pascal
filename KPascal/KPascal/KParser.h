@@ -134,26 +134,6 @@ namespace KPascal
 						registerArray.currentRegisterIndex--;
 						return " ";
 					}
-					//else if ((RightSide == "+" || RightSide == "-") && LeftSide == " ")
-					//{
-					//	//if (RightSide == "+")
-					//	//{
-					//	//	fout << "		add ";
-					//	//}
-					//	//else if (RightSide == "-")
-					//	//{
-					//	//	fout << "		sub ";
-					//	//}
-					//	fout << "		" << SymbolToString(RightSide);
-					//	fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-					//	return " ";
-					//}
-					//else if (token.value == "+" || token.value == "-")
-					//{
-					//	fout << "		" << SymbolToString(token.value);
-					//	fout << std::endl;
-					//	return " ";
-					//}
 				}
 				else { HasError(token.value); }
 			}
@@ -252,7 +232,7 @@ namespace KPascal
 				fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 				return " ";
 			}
-			else if (!NewRegister && (RightSide == "+" || RightSide == "-") && LeftSide == " ")
+			else if ((RightSide == "+" || RightSide == "-") && LeftSide == " ")
 			{
 					fout << "		" << SymbolToString(RightSide) << " ";
 					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
