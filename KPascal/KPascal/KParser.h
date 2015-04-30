@@ -193,14 +193,14 @@ namespace KPascal
 					NewRegister = false;
 					return ReturnString;
 				}
-				else if (!NewRegister && LeftSide != " " && RightSide == " ")
-				{
-					fout << "		" << SymbolToString(RightSide) << " ";
-					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
-					registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
-					registerArray.currentRegisterIndex--;
-					return " ";
-				}
+				//else if (!NewRegister && LeftSide != " " && RightSide == " ")
+				//{
+				//	fout << "		" << SymbolToString(RightSide) << " ";
+				//	fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+				//	registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				//	registerArray.currentRegisterIndex--;
+				//	return " ";
+				//}
 				else
 				{
 					return ReturnString;
@@ -225,7 +225,7 @@ namespace KPascal
 				NewRegister = false;
 				return " ";
 			}
-			else if (!NewRegister && (RightSide == "+" || RightSide == "-") && LeftSide != " ")
+			else if ((RightSide == "+" || RightSide == "-") && LeftSide != " ")
 			{
 				// add this token to the next available register 
 				fout << "		" << SymbolToString(RightSide) << " ";
