@@ -19,6 +19,12 @@ int main()
 		add eax, 2
 		mov ebx, 5
 		add ebx, 4
+		imul eax, ebx
+		mov ebx, 7
+		add ebx, 6
+		mov ecx, 9
+		add ecx, 8
+		imul ebx, ecx
 		add eax, ebx
 		mov [ebp + 0], eax
 		pop ebp
