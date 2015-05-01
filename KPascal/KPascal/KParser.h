@@ -71,7 +71,7 @@ namespace KPascal
 			}
 			else if (symbol == "-")
 			{
-				return_string = "sub";
+				return_string = "add";
 			}
 			return return_string;
 		}
@@ -187,7 +187,12 @@ namespace KPascal
 				RightSide = TermPrime(MethodName);
 				if (NewRegister && LeftSide != " ")
 				{
-					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", "; 
+					if (ReturnString == "-")
+					{
+						fout << "-";
+					}
+					fout << LeftSide << std::endl;
 					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 					registerArray.currentRegisterIndex++;
 					NewRegister = false;

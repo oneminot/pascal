@@ -1,5 +1,7 @@
 program HelloWorld;
 var GlobalInteger : integer;
 begin
-	GlobalInteger := ((4+5)*((3-2)*((7+6)*(9-8))));
+	GlobalInteger := 2;
+	if (1=1) then 
+		GlobalInteger := 3;
 end.
