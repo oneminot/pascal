@@ -249,8 +249,9 @@ namespace KPascal
 			return result_string;
 		}
 
-		void BooleanExpressionPrime(std::string MethodName = "")
+		std::string BooleanExpressionPrime(std::string MethodName = "")
 		{
+			//TODO: Add logic for returning a string from boolean prime 
 			if (token.value == "=")
 			{
 				lexer.getToken(token);
@@ -267,21 +268,25 @@ namespace KPascal
 				Expression(MethodName);
 			}
 			else { HasError(token.value); }
+			return " ";
 		}
 
-		void BooleanExpression(std::string MethodName = "")
+		std::string BooleanExpression(std::string MethodName = "")
 		{
-			Expression(MethodName);
-			BooleanExpressionPrime();
+			auto LeftSide = Expression(MethodName);
+			auto RightSide = BooleanExpressionPrime();
+			return " ";
 		}
 
-		void StatementPrime(std::string MethodName = "")
+		std::string StatementPrime(std::string MethodName = "")
 		{
+			//TODO: Add logic for returning a string from boolean prime 
 			if (token.value == "else")
 			{
 				lexer.getToken(token);
 				Statement(MethodName);
 			}
+			return " ";
 		}
 
 		void Statement(std::string MethodName = "")

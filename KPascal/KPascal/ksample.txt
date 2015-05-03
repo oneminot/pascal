@@ -1,5 +1,6 @@
-program HelloWorld;
-var GlobalInteger : integer;
+program ideone;
+var myinteger : integer;
 begin
-	GlobalInteger := ((4+5)*((3-2)*((7+6)*(9-8))));
+	if true then
+		myinteger := 1;
 end.
