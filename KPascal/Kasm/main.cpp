@@ -15,4 +15,20 @@ int main()
 		push ebp
 		lea eax, DataSegment
 		mov ebp, eax
-		mov eax, 2
+		mov eax, 1
+		mov [ebp + 0], eax
+		mov eax, [ebp + 0]
+		mov ebx, 1
+		mov [ebp + 0], ebx
+		pop ebp
+		pop esp
+		pop edi
+		pop esi
+		pop edx
+		pop ecx
+		pop ebx
+		pop eax
+	}
+	std::cin.get();
+	return 0;
+}

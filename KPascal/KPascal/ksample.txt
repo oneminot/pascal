@@ -1,7 +1,7 @@
-program HelloWorld;
-var GlobalInteger : integer;
+program helloworld;
+var myinteger : integer;
 begin
-	GlobalInteger := 2;
-	if (1=1) then 
-		GlobalInteger := 3;
+	myinteger := 1;
+	if myinteger = 1 then 
+		myinteger := 0;
 end.

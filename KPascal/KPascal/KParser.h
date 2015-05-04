@@ -187,11 +187,7 @@ namespace KPascal
 				RightSide = TermPrime(MethodName);
 				if (NewRegister && LeftSide != " ")
 				{
-					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", "; 
-					if (ReturnString == "-")
-					{
-						fout << "-";
-					}
+					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", ";
 					fout << LeftSide << std::endl;
 					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 					registerArray.currentRegisterIndex++;
@@ -220,6 +216,10 @@ namespace KPascal
 			std::string RightSide;
 			LeftSide = Factor(MethodName);
 			// if term prime goes to epsilon, do something 
+			if (LeftSide == " ")
+			{
+				NewRegister = true;
+			}
 			RightSide = TermPrime(MethodName);
 			if (NewRegister && RightSide == " " && LeftSide != " ")
 			{
@@ -233,17 +233,22 @@ namespace KPascal
 			else if ((RightSide == "+" || RightSide == "-") && LeftSide != " ")
 			{
 				// add this token to the next available register 
+				if (RightSide == "-")
+				{
+					fout << "		neg " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				}
 				fout << "		" << SymbolToString(RightSide) << " ";
 				fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 				return " ";
 			}
 			else if ((RightSide == "+" || RightSide == "-") && LeftSide == " ")
 			{
-					fout << "		" << SymbolToString(RightSide) << " ";
-					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-					registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
-					registerArray.currentRegisterIndex--;
-					return " ";
+				fout << "		neg " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				fout << "		" << SymbolToString(RightSide) << " ";
+				fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				registerArray.currentRegisterIndex--;
+				return " ";
 			}
 			return LeftSide;
 		}
@@ -259,17 +264,20 @@ namespace KPascal
 			//TODO: Add logic for returning a string from boolean prime 
 			if (token.value == "=")
 			{
-				lexer.getToken(token);
+				NewRegister = true;
+				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
 			}
 			else if (token.value == "<")
 			{
-				lexer.getToken(token);
+				NewRegister = true;
+				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
 			}
 			else if (token.value == ">")
 			{
-				lexer.getToken(token);
+				NewRegister = true;
+				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
 			}
 			else { HasError(token.value); }
