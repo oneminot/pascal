@@ -18,6 +18,8 @@ namespace KPascal
 		KPascal::KRegisterArray registerArray;
 		std::vector<std::string> temporaryVector;
 
+		int m_if_counter = 0;
+
 		std::ofstream fout;
 		int GlobalOffset = 0;
 		bool NewRegister = true;
@@ -267,6 +269,9 @@ namespace KPascal
 				NewRegister = true;
 				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
+				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				fout << "		jne  endorelse" << m_if_counter << std::endl;
+				m_if_counter++;
 			}
 			else if (token.value == "<")
 			{

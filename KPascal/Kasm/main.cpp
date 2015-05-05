@@ -19,6 +19,8 @@ int main()
 		mov [ebp + 0], eax
 		mov eax, [ebp + 0]
 		mov ebx, 1
+		cmp eax, ebx
+		JNE  EndOrElse0
 		mov [ebp + 0], ebx
 		pop ebp
 		pop esp
