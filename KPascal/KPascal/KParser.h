@@ -270,7 +270,11 @@ namespace KPascal
 				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
 				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-				fout << "		jne  endorelse" << m_if_counter << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 2].IsUsed = false;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				registerArray.currentRegisterIndex--;
+				registerArray.currentRegisterIndex--;
+				fout << "		jne  endorelse" << local_if_counter << std::endl;
 			}
 			else if (token.value == "<")
 			{
@@ -373,10 +377,10 @@ namespace KPascal
 					NewRegister = true;
 					lexer.getToken(token);
 					Statement(MethodName);
-					fout << "		jmp end" << m_if_counter << std::endl;
-					fout << "		endorelse" << m_if_counter << ":" << std::endl;
+					fout << "		jmp end" << local_if_counter << std::endl;
+					fout << "		endorelse" << local_if_counter << ":" << std::endl;
 					StatementPrime(MethodName);
-					fout << "		end" << m_if_counter << ":" << std::endl;
+					fout << "		end" << local_if_counter << ":" << std::endl;
 				}
 			}
 		}

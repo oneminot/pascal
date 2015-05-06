@@ -20,18 +20,35 @@ int main()
 		mov eax, [ebp + 0]
 		mov ebx, 5
 		cmp eax, ebx
+		jne  endorelse0
+		mov eax, 22
+		mov [ebp + 0], eax
+		mov eax, 1
+		add eax, [ebp + 0]
+		mov [ebp + 0], eax
+		mov eax, [ebp + 0]
+		mov ebx, 6
+		cmp eax, ebx
 		jne  endorelse1
-		mov ecx, 22
-		mov [ebp + 0], ecx
+		mov eax, 42
+		mov [ebp + 0], eax
 		jmp end1
 		endorelse1:
-		mov ecx, 33
-		mov [ebp + 0], ecx
-		mov ecx, 1
-		neg ecx
-		add ecx, [ebp + 0]
-		mov [ebp + 0], ecx
+		mov eax, 92
+		mov [ebp + 0], eax
 		end1:
+		jmp end0
+		endorelse0:
+		mov eax, 33
+		mov [ebp + 0], eax
+		mov eax, 1
+		neg eax
+		add eax, [ebp + 0]
+		mov [ebp + 0], eax
+		end0:
+		mov eax, [ebp + 0]
+		add eax, [ebp + 0]
+		mov [ebp + 0], eax
 		pop ebp
 		pop esp
 		pop edi
