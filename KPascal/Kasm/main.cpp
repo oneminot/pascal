@@ -15,13 +15,23 @@ int main()
 		push ebp
 		lea eax, DataSegment
 		mov ebp, eax
-		mov eax, 1
+		mov eax, 5
 		mov [ebp + 0], eax
 		mov eax, [ebp + 0]
-		mov ebx, 1
+		mov ebx, 5
 		cmp eax, ebx
-		JNE  EndOrElse0
-		mov [ebp + 0], ebx
+		jne  endorelse1
+		mov ecx, 22
+		mov [ebp + 0], ecx
+		jmp end1
+		endorelse1:
+		mov ecx, 33
+		mov [ebp + 0], ecx
+		mov ecx, 1
+		neg ecx
+		add ecx, [ebp + 0]
+		mov [ebp + 0], ecx
+		end1:
 		pop ebp
 		pop esp
 		pop edi

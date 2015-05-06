@@ -261,7 +261,7 @@ namespace KPascal
 			return result_string;
 		}
 
-		std::string BooleanExpressionPrime(std::string MethodName = "")
+		std::string BooleanExpressionPrime(std::string MethodName = "", int local_if_counter = 0)
 		{
 			//TODO: Add logic for returning a string from boolean prime 
 			if (token.value == "=")
@@ -271,7 +271,6 @@ namespace KPascal
 				Expression(MethodName);
 				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
 				fout << "		jne  endorelse" << m_if_counter << std::endl;
-				m_if_counter++;
 			}
 			else if (token.value == "<")
 			{
@@ -289,10 +288,10 @@ namespace KPascal
 			return " ";
 		}
 
-		std::string BooleanExpression(std::string MethodName = "")
+		std::string BooleanExpression(std::string MethodName = "", int local_if_counter = 0)
 		{
 			auto LeftSide = Expression(MethodName);
-			auto RightSide = BooleanExpressionPrime();
+			auto RightSide = BooleanExpressionPrime(MethodName, local_if_counter);
 			return " ";
 		}
 
@@ -354,6 +353,7 @@ namespace KPascal
 			}
 			else if (token.value == "begin")
 			{
+				NewRegister = true;
 				lexer.getToken(token);
 				MultipleStatement(MethodName);
 				if (token.value == "end")
@@ -364,13 +364,19 @@ namespace KPascal
 			}
 			else if (token.value == "if")
 			{
+				int local_if_counter = m_if_counter;
+				m_if_counter++;
 				lexer.getToken(token);
-				BooleanExpression();
+				BooleanExpression(MethodName, local_if_counter);
 				if (token.value == "then")
 				{
+					NewRegister = true;
 					lexer.getToken(token);
 					Statement(MethodName);
+					fout << "		jmp end" << m_if_counter << std::endl;
+					fout << "		endorelse" << m_if_counter << ":" << std::endl;
 					StatementPrime(MethodName);
+					fout << "		end" << m_if_counter << ":" << std::endl;
 				}
 			}
 		}

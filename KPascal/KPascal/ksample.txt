@@ -1,7 +1,12 @@
 program helloworld;
-var myinteger : integer;
+var x : integer;
 begin
-	myinteger := 1;
-	if myinteger = 1 then 
-		myinteger := 0;
+	x := 5;
+	if x = 5 then  
+		x := 22
+	else 
+	begin 
+		x := 33; 
+		x := x - 1;
+	end
 end.
