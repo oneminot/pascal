@@ -2,23 +2,8 @@ program helloworld;
 var x : integer;
 begin
 	x := 5;
-	if x = 5 then  
-	begin
-		x := 22;
-		x := x + 1;
-		if x = 6 then 
-		begin 
-			x := 42;
-		end
-		else 
-		begin 
-			x := 92;
-		end
-	end
-	else 
+	if x < 6 then
 	begin 
-		x := 33; 
-		x := x - 1;
+		x := 42;
 	end;
-	x := x + x;
 end.

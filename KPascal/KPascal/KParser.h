@@ -281,12 +281,24 @@ namespace KPascal
 				NewRegister = true;
 				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
+				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 2].IsUsed = false;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				registerArray.currentRegisterIndex--;
+				registerArray.currentRegisterIndex--;
+				fout << "		jge  endorelse" << local_if_counter << std::endl;
 			}
 			else if (token.value == ">")
 			{
 				NewRegister = true;
 				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
+				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 2].IsUsed = false;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				registerArray.currentRegisterIndex--;
+				registerArray.currentRegisterIndex--;
+				fout << "		jle  endorelse" << local_if_counter << std::endl;
 			}
 			else { HasError(token.value); }
 			return " ";
