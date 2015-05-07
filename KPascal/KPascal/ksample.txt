@@ -1,9 +1,5 @@
 program helloworld;
-var x : integer;
+var myarray : Array [2..4, 3..12] of integer;
 begin
-	x := 5;
-	if x < 6 then
-	begin 
-		x := 42;
-	end;
+	myarray[3,4] := 12;
 end.
