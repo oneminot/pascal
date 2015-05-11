@@ -18,6 +18,8 @@ namespace KPascal
 		KPascal::KRegisterArray registerArray;
 		std::vector<std::string> temporaryVector;
 
+		int m_if_counter = 0;
+
 		std::ofstream fout;
 		int GlobalOffset = 0;
 		bool NewRegister = true;
@@ -71,7 +73,7 @@ namespace KPascal
 			}
 			else if (symbol == "-")
 			{
-				return_string = "sub";
+				return_string = "add";
 			}
 			return return_string;
 		}
@@ -187,7 +189,8 @@ namespace KPascal
 				RightSide = TermPrime(MethodName);
 				if (NewRegister && LeftSide != " ")
 				{
-					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", ";
+					fout << LeftSide << std::endl;
 					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 					registerArray.currentRegisterIndex++;
 					NewRegister = false;
@@ -215,6 +218,10 @@ namespace KPascal
 			std::string RightSide;
 			LeftSide = Factor(MethodName);
 			// if term prime goes to epsilon, do something 
+			if (LeftSide == " ")
+			{
+				NewRegister = true;
+			}
 			RightSide = TermPrime(MethodName);
 			if (NewRegister && RightSide == " " && LeftSide != " ")
 			{
@@ -228,17 +235,22 @@ namespace KPascal
 			else if ((RightSide == "+" || RightSide == "-") && LeftSide != " ")
 			{
 				// add this token to the next available register 
+				if (RightSide == "-")
+				{
+					fout << "		neg " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				}
 				fout << "		" << SymbolToString(RightSide) << " ";
 				fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
 				return " ";
 			}
 			else if ((RightSide == "+" || RightSide == "-") && LeftSide == " ")
 			{
-					fout << "		" << SymbolToString(RightSide) << " ";
-					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-					registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
-					registerArray.currentRegisterIndex--;
-					return " ";
+				fout << "		neg " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				fout << "		" << SymbolToString(RightSide) << " ";
+				fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				registerArray.currentRegisterIndex--;
+				return " ";
 			}
 			return LeftSide;
 		}
@@ -249,39 +261,65 @@ namespace KPascal
 			return result_string;
 		}
 
-		void BooleanExpressionPrime(std::string MethodName = "")
+		std::string BooleanExpressionPrime(std::string MethodName = "", int local_if_counter = 0)
 		{
+			//TODO: Add logic for returning a string from boolean prime 
 			if (token.value == "=")
 			{
-				lexer.getToken(token);
+				NewRegister = true;
+				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
+				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 2].IsUsed = false;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				registerArray.currentRegisterIndex--;
+				registerArray.currentRegisterIndex--;
+				fout << "		jne  endorelse" << local_if_counter << std::endl;
 			}
 			else if (token.value == "<")
 			{
-				lexer.getToken(token);
+				NewRegister = true;
+				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
+				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 2].IsUsed = false;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				registerArray.currentRegisterIndex--;
+				registerArray.currentRegisterIndex--;
+				fout << "		jge  endorelse" << local_if_counter << std::endl;
 			}
 			else if (token.value == ">")
 			{
-				lexer.getToken(token);
+				NewRegister = true;
+				auto right_side_string = lexer.getToken(token);
 				Expression(MethodName);
+				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 2].IsUsed = false;
+				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				registerArray.currentRegisterIndex--;
+				registerArray.currentRegisterIndex--;
+				fout << "		jle  endorelse" << local_if_counter << std::endl;
 			}
 			else { HasError(token.value); }
+			return " ";
 		}
 
-		void BooleanExpression(std::string MethodName = "")
+		std::string BooleanExpression(std::string MethodName = "", int local_if_counter = 0)
 		{
-			Expression(MethodName);
-			BooleanExpressionPrime();
+			auto LeftSide = Expression(MethodName);
+			auto RightSide = BooleanExpressionPrime(MethodName, local_if_counter);
+			return " ";
 		}
 
-		void StatementPrime(std::string MethodName = "")
+		std::string StatementPrime(std::string MethodName = "")
 		{
+			//TODO: Add logic for returning a string from boolean prime 
 			if (token.value == "else")
 			{
 				lexer.getToken(token);
 				Statement(MethodName);
 			}
+			return " ";
 		}
 
 		void Statement(std::string MethodName = "")
@@ -331,6 +369,7 @@ namespace KPascal
 			}
 			else if (token.value == "begin")
 			{
+				NewRegister = true;
 				lexer.getToken(token);
 				MultipleStatement(MethodName);
 				if (token.value == "end")
@@ -341,13 +380,19 @@ namespace KPascal
 			}
 			else if (token.value == "if")
 			{
+				int local_if_counter = m_if_counter;
+				m_if_counter++;
 				lexer.getToken(token);
-				BooleanExpression();
+				BooleanExpression(MethodName, local_if_counter);
 				if (token.value == "then")
 				{
+					NewRegister = true;
 					lexer.getToken(token);
 					Statement(MethodName);
+					fout << "		jmp end" << local_if_counter << std::endl;
+					fout << "		endorelse" << local_if_counter << ":" << std::endl;
 					StatementPrime(MethodName);
+					fout << "		end" << local_if_counter << ":" << std::endl;
 				}
 			}
 		}
@@ -380,6 +425,33 @@ namespace KPascal
 				else { HasError(token.value); }
 			}
 			else { HasError(token.value); }
+		}
+
+		std::string MultipleArray(std::string MethodName)
+		{
+			if (token.value == ",")
+			{
+				Expression(MethodName);
+				MultipleArray(MethodName);
+				std::cin.get();
+			}
+			return "";
+		}
+
+		std::string CheckArray(std::string MethodName)
+		{
+			//std::cin.get();
+			if (token.value == "[")
+			{
+				lexer.getToken(token);
+				Expression(MethodName);
+				MultipleArray(MethodName);
+				if (token.value == "]")
+				{
+					//std::cin.get();
+				}
+			}
+			return "";
 		}
 
 		void DataType(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false, bool IsPassedByReference = false, bool IsLocalVariable = false)
@@ -473,6 +545,13 @@ namespace KPascal
 					symbol.Table[MethodName].type = token.value;
 					lexer.getToken(token);
 				}
+			}
+			else if (token.value == "array")
+			{
+				lexer.getToken(token);
+				// the next token must be a "["
+				// check array here 
+				CheckArray(MethodName);
 			}
 			else { HasError(token.value); }
 		}

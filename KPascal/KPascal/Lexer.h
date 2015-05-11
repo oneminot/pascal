@@ -11,7 +11,7 @@ namespace KPascal
 	class Lexer
 	{
 	private:
-		const static int numberOfStates = 13;
+		const static int numberOfStates = 14;
 		const static int numberOfAsciiValuesOfInput = 127;
 		const std::string dfaFileName = "dfa.txt";
 		const std::string programFileName = "ksample.txt";
