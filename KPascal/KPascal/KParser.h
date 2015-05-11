@@ -522,6 +522,7 @@ namespace KPascal
 			{
 				symbol.Table[_MyTokenValue].size = ArrayElementTypeSize * GetArraySize(_MyTokenValue);
 			}
+			temporaryVector.clear();
 			return "";
 		}
 
