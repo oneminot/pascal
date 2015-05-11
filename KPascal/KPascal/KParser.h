@@ -427,6 +427,33 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
+		std::string MultipleArray(std::string MethodName)
+		{
+			if (token.value == ",")
+			{
+				Expression(MethodName);
+				MultipleArray(MethodName);
+				std::cin.get();
+			}
+			return "";
+		}
+
+		std::string CheckArray(std::string MethodName)
+		{
+			//std::cin.get();
+			if (token.value == "[")
+			{
+				lexer.getToken(token);
+				Expression(MethodName);
+				MultipleArray(MethodName);
+				if (token.value == "]")
+				{
+					//std::cin.get();
+				}
+			}
+			return "";
+		}
+
 		void DataType(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false, bool IsPassedByReference = false, bool IsLocalVariable = false)
 		{
 			if (token.value == "boolean" || token.value == "integer")
@@ -518,6 +545,13 @@ namespace KPascal
 					symbol.Table[MethodName].type = token.value;
 					lexer.getToken(token);
 				}
+			}
+			else if (token.value == "array")
+			{
+				lexer.getToken(token);
+				// the next token must be a "["
+				// check array here 
+				CheckArray(MethodName);
 			}
 			else { HasError(token.value); }
 		}
