@@ -1,5 +1,5 @@
 program helloworld;
-var x : integer;
+var myarray : Array [2 .. 4, 3 .. 12] of integer;
 begin
-	x := 10
+	myarray[3,4] := 12;
 end.

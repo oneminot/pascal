@@ -127,7 +127,7 @@ namespace KPascal
 						registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 						registerArray.currentRegisterIndex++;
 						NewRegister = false;
-						return " ";
+						return " "; 
 					}
 					else if (RightSide == "*" && LeftSide == " ")
 					{
@@ -454,6 +454,52 @@ namespace KPascal
 			return "";
 		}
 
+		std::string ArraySize(std::string MethodName)
+		{
+			if (token.value == ",")
+			{
+				lexer.getToken(token);
+				if (token.sType == "integer")
+				{
+					/*std::cout << "the pirates love arrays" << std::endl;
+					std::cin.get();*/
+					lexer.getToken(token);
+					if (token.sType == "special" && token.value == "..")
+					{
+						/*std::cout << "the pirates love integers" << std::endl;
+						std::cin.get();*/
+						lexer.getToken(token);
+						if (token.sType == "integer")
+						{
+							lexer.getToken(token);
+							ArraySize(MethodName);
+						}
+					}
+				}
+			}
+			return "";
+		}
+
+		std::string ArrayDataType(std::string MethodName)
+		{
+			if (token.sType == "word" && token.value == "boolean")
+			{
+				std::cout << "hello, i am an boolean. i don't hate you" << std::endl;
+				std::cin.get();
+				lexer.getToken(token);
+				return "boolean";
+			}
+			else if (token.sType == "word" && token.value == "integer")
+			{
+				std::cout << "hello, i am an integer. i don't hate you" << std::endl;
+				std::cin.get();
+				lexer.getToken(token);
+				return "integer";
+			}
+			else { HasError(token.value); }
+			return "";
+		}
+
 		void DataType(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false, bool IsPassedByReference = false, bool IsLocalVariable = false)
 		{
 			if (token.value == "boolean" || token.value == "integer")
@@ -551,7 +597,36 @@ namespace KPascal
 				lexer.getToken(token);
 				// the next token must be a "["
 				// check array here 
-				CheckArray(MethodName);
+				if (token.value == "[")
+				{
+					lexer.getToken(token);
+					if (token.sType == "integer")
+					{
+						/*std::cout << "the pirates love arrays" << std::endl;
+						std::cin.get();*/
+						lexer.getToken(token);
+						if (token.sType == "special" && token.value == "..")
+						{
+							/*std::cout << "the pirates love integers" << std::endl;
+							std::cin.get();*/
+							lexer.getToken(token);
+							if (token.sType == "integer")
+							{
+								lexer.getToken(token);
+								ArraySize(MethodName);
+								if (token.sType == "special" && token.value == "]")
+								{
+									lexer.getToken(token);
+									if (token.sType == "word" && token.value == "of")
+									{
+										lexer.getToken(token);
+										ArrayDataType(MethodName);
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 			else { HasError(token.value); }
 		}
