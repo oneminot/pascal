@@ -482,8 +482,10 @@ namespace KPascal
 
 		std::string ArrayDataType(std::string MethodName)
 		{
+			auto ArrayElementTypeSize = 0;
 			if (token.sType == "word" && token.value == "boolean")
 			{
+				ArrayElementTypeSize = 1;
 				std::cout << "hello, i am an boolean. i don't hate you" << std::endl;
 				std::cin.get();
 				lexer.getToken(token);
@@ -491,6 +493,7 @@ namespace KPascal
 			}
 			else if (token.sType == "word" && token.value == "integer")
 			{
+				ArrayElementTypeSize = 4;
 				std::cout << "hello, i am an integer. i don't hate you" << std::endl;
 				std::cin.get();
 				lexer.getToken(token);
