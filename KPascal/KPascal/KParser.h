@@ -5,6 +5,7 @@
 #include "Lexer.h"
 #include "SymbolTable.h"
 #include "KRegisterArray.h"
+#include "KArrayDimension.h"
 #ifndef KParser_H_
 #define KParser_H_ 
 namespace KPascal
@@ -127,7 +128,7 @@ namespace KPascal
 						registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 						registerArray.currentRegisterIndex++;
 						NewRegister = false;
-						return " "; 
+						return " ";
 					}
 					else if (RightSide == "*" && LeftSide == " ")
 					{
@@ -463,6 +464,7 @@ namespace KPascal
 				{
 					/*std::cout << "the pirates love arrays" << std::endl;
 					std::cin.get();*/
+					auto MyArrayStartIndex = std::stoi(token.value);
 					lexer.getToken(token);
 					if (token.sType == "special" && token.value == "..")
 					{
@@ -471,6 +473,12 @@ namespace KPascal
 						lexer.getToken(token);
 						if (token.sType == "integer")
 						{
+							auto MyArrayEndIndex = std::stoi(token.value);
+							auto k_array_dimension = KArrayDimension(MyArrayStartIndex, MyArrayEndIndex);
+							for (auto myTokenValue : temporaryVector)
+							{
+								symbol.Table[myTokenValue].my_array_size.push_back(k_array_dimension);
+							}
 							lexer.getToken(token);
 							ArraySize(MethodName);
 						}
@@ -480,26 +488,40 @@ namespace KPascal
 			return "";
 		}
 
+		int GetArraySize(std::string _MyTokenValue)
+		{
+			auto size = 0;
+			for (auto k_array_dimension : symbol.Table[_MyTokenValue].my_array_size)
+			{
+				size += k_array_dimension.get_size();
+			}
+			return size;
+		}
+
 		std::string ArrayDataType(std::string MethodName)
 		{
 			auto ArrayElementTypeSize = 0;
 			if (token.sType == "word" && token.value == "boolean")
 			{
 				ArrayElementTypeSize = 1;
-				std::cout << "hello, i am an boolean. i don't hate you" << std::endl;
-				std::cin.get();
+				//std::cout << "hello, i am an boolean. i don't hate you" << std::endl;
+				//std::cin.get();
 				lexer.getToken(token);
 				return "boolean";
 			}
 			else if (token.sType == "word" && token.value == "integer")
 			{
 				ArrayElementTypeSize = 4;
-				std::cout << "hello, i am an integer. i don't hate you" << std::endl;
-				std::cin.get();
+				//std::cout << "hello, i am an integer. i don't hate you" << std::endl;
+				//std::cin.get();
 				lexer.getToken(token);
 				return "integer";
 			}
 			else { HasError(token.value); }
+			for (auto _MyTokenValue : temporaryVector)
+			{
+				symbol.Table[_MyTokenValue].size = ArrayElementTypeSize * GetArraySize(_MyTokenValue);
+			}
 			return "";
 		}
 
@@ -597,9 +619,26 @@ namespace KPascal
 			}
 			else if (token.value == "array")
 			{
-				lexer.getToken(token);
 				// the next token must be a "["
 				// check array here 
+				if (IsGlobalVariable && MethodName == "")
+				{
+					for (auto myTokenValue : temporaryVector)
+					{
+						if (symbol.Table.find(myTokenValue) == symbol.Table.end())
+						{
+							symbol.Table[myTokenValue].isMethod = false;
+							symbol.Table[myTokenValue].type = token.value;
+							symbol.Table[myTokenValue].offset = GlobalOffset;
+							//GlobalOffset += symbol.Table[myTokenValue].size;
+						}
+						else
+						{
+							std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
+						}
+					}
+				}
+				lexer.getToken(token);
 				if (token.value == "[")
 				{
 					lexer.getToken(token);
@@ -607,6 +646,7 @@ namespace KPascal
 					{
 						/*std::cout << "the pirates love arrays" << std::endl;
 						std::cin.get();*/
+						auto MyArrayStartIndex = std::stoi(token.value);
 						lexer.getToken(token);
 						if (token.sType == "special" && token.value == "..")
 						{
@@ -615,6 +655,12 @@ namespace KPascal
 							lexer.getToken(token);
 							if (token.sType == "integer")
 							{
+								auto MyArrayEndIndex = std::stoi(token.value);
+								auto k_array_dimension = KArrayDimension(MyArrayStartIndex, MyArrayEndIndex);
+								for (auto myTokenValue :  temporaryVector)
+								{
+									symbol.Table[myTokenValue].my_array_size.push_back(k_array_dimension);
+								}
 								lexer.getToken(token);
 								ArraySize(MethodName);
 								if (token.sType == "special" && token.value == "]")

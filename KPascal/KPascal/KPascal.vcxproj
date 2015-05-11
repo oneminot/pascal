@@ -68,6 +68,7 @@
     <ClCompile Include="RecursiveDescent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="KArrayDimension.h" />
     <ClInclude Include="Keyword.h" />
     <ClInclude Include="KParser.h" />
     <ClInclude Include="KRegister.h" />
