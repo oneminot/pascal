@@ -53,16 +53,52 @@ namespace KPascal
 			}
 		}
 
+		void MoveRegisterValueToStack(std::string MethodName, Token LeftSideToken)
+		{
+			Expression(MethodName);
+			NewRegister = true;
+			registerArray.currentRegisterIndex--;
+			fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
+			registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
+		}
+
+		std::string SymbolToString(std::string symbol)
+		{
+			std::string return_string;
+			if (symbol == "+")
+			{
+				return_string = "add";
+			}
+			else if (symbol == "-")
+			{
+				return_string = "sub";
+			}
+			return return_string;
+		}
+
 		std::string FactorPrime(std::string MethodName = "")
 		{
+			std::string LeftSide;
+			std::string RightSide;
 			if (token.value == "*")
 			{
 				lexer.getToken(token);
-				Factor(MethodName);
-				FactorPrime(MethodName);
+				LeftSide = Factor(MethodName);
+				RightSide = FactorPrime(MethodName);
+				if (LeftSide != " ")
+				{
+					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+					registerArray.currentRegisterIndex++;
+					NewRegister = false;
+					if (RightSide != " ")
+					{
+						return " ";
+					}
+				}
 				return "*";
 			}
-			else 
+			else
 			{
 				return " ";
 			}
@@ -76,77 +112,141 @@ namespace KPascal
 			{
 				NewRegister = true;
 				lexer.getToken(token);
-				Expression();
+				LeftSide = Expression();
 				if (token.value == ")")
 				{
 					NewRegister = true;
 					lexer.getToken(token);
-					FactorPrime(MethodName);
+					RightSide = FactorPrime(MethodName);
+					if (RightSide == " " && LeftSide != " ")
+					{
+						std::cout << "we found love" << std::endl;
+						fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+						registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+						registerArray.currentRegisterIndex++;
+						NewRegister = false;
+						return " ";
+					}
+					else if (RightSide == "*" && LeftSide == " ")
+					{
+						fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+						registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+						registerArray.currentRegisterIndex--;
+						return " ";
+					}
 				}
 				else { HasError(token.value); }
 			}
-			else if (token.sType == "real" || (token.sType == "word" && !token.isKeyword) || token.sType == "integer")
+			else if (token.sType == "real" || token.sType == "integer")
 			{
-				//fout << "mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << token.value << std::endl;
-				LeftSide = FactorPrime(MethodName);
 				std::string ReturnString = token.value;
 				lexer.getToken(token);
+				LeftSide = FactorPrime(MethodName);
 				if (LeftSide == " ")
 				{
 					return ReturnString;
 				}
 				else if (LeftSide == "*")
 				{
-					// I need to add some assembler code here 
+					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << ReturnString << std::endl;
+					return " ";
+				}
+			}
+			else if (token.sType == "word" && !token.isKeyword)
+			{
+				Token ReturnToken = token;
+				std::string ReturnString = " ";
+				// we only have global variables so far so this will be good enough 
+				if (symbol.Table.find(ReturnToken.value) != symbol.Table.end())
+				{
+					ReturnString = "[ebp + " + std::to_string(symbol.Table[ReturnToken.value].offset) + "]";
+				}
+				lexer.getToken(token);
+				LeftSide = FactorPrime(MethodName);
+				if (LeftSide == " ") { return ReturnString; }
+				else if (LeftSide == "*")
+				{
+					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << ReturnString << std::endl;
 					return " ";
 				}
 			}
 			else { HasError(token.value); }
+			return " ";
 		}
 
 		std::string TermPrime(std::string MethodName = "")
 		{
-			std::string RightSide = "";
+			std::string LeftSide;
+			std::string RightSide;
+			std::string ReturnString;
 			if (token.value == "+" || token.value == "-")
 			{
-				RightSide = token.value;
+				ReturnString = token.value;
 				lexer.getToken(token);
-				Term(MethodName);
-				TermPrime(MethodName);
-				// I need to add some more code at some point; assembler code 
+				LeftSide = Term(MethodName);
+				RightSide = TermPrime(MethodName);
+				if (NewRegister && LeftSide != " ")
+				{
+					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
+					registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
+					registerArray.currentRegisterIndex++;
+					NewRegister = false;
+					return ReturnString;
+				}
+				//else if (!NewRegister && LeftSide != " " && RightSide == " ")
+				//{
+				//	fout << "		" << SymbolToString(RightSide) << " ";
+				//	fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+				//	registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+				//	registerArray.currentRegisterIndex--;
+				//	return " ";
+				//}
+				else
+				{
+					return ReturnString;
+				}
 			}
-			else
-			{
-				return " ";
-			}
-			return RightSide;
+			return " ";
 		}
 
-		void Term(std::string MethodName = "")
+		std::string Term(std::string MethodName = "")
 		{
-			std::string LeftSide = "";
-			std::string RightSide = "";
+			std::string LeftSide;
+			std::string RightSide;
 			LeftSide = Factor(MethodName);
 			// if term prime goes to epsilon, do something 
 			RightSide = TermPrime(MethodName);
-			if (NewRegister && RightSide == " ")
+			if (NewRegister && RightSide == " " && LeftSide != " ")
 			{
 				// add this token to the next available register 
 				fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << LeftSide << std::endl;
 				registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = true;
 				registerArray.currentRegisterIndex++;
-				NewRegister = true;
+				NewRegister = false;
+				return " ";
 			}
-			else if (NewRegister && RightSide == "+")
+			else if ((RightSide == "+" || RightSide == "-") && LeftSide != " ")
 			{
 				// add this token to the next available register 
-				fout << "		add " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+				fout << "		" << SymbolToString(RightSide) << " ";
+				fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
+				return " ";
 			}
+			else if ((RightSide == "+" || RightSide == "-") && LeftSide == " ")
+			{
+					fout << "		" << SymbolToString(RightSide) << " ";
+					fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
+					registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+					registerArray.currentRegisterIndex--;
+					return " ";
+			}
+			return LeftSide;
 		}
 
-		void Expression(std::string MethodName = "")
+		std::string Expression(std::string MethodName = "")
 		{
-			Term(MethodName);
+			std::string result_string = Term(MethodName);
+			return result_string;
 		}
 
 		void BooleanExpressionPrime(std::string MethodName = "")
@@ -203,30 +303,25 @@ namespace KPascal
 						lexer.getToken(token);
 						if (token.sType == "word" && !token.isKeyword)
 						{
-							//make sure the variable is in the symbol table 
-							bool IsVariableInParameterList = MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end();
-							bool IsVariableInLocalVariableList = MethodName != "" && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end();
-							// the name of the method should already be in the Global Variable List because it should be in the symbol table 
-							bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
 							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 							{
-								Expression(MethodName);
-								fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-								registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+								MoveRegisterValueToStack(MethodName, LeftSideToken);
 							}
 							else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 						}
 						else if (token.sType == "integer")
 						{
-							Expression(MethodName);
-							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-							registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+							MoveRegisterValueToStack(MethodName, LeftSideToken);
+
 						}
 						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
 						{
-							Expression(MethodName);
-							fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
-							registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
+							MoveRegisterValueToStack(MethodName, LeftSideToken);
+						}
+						else if (token.value == "(")
+						{
+							std::cout << "live is for the living my dear" << std::endl;
+							MoveRegisterValueToStack(MethodName, LeftSideToken);
 						}
 						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 					}
