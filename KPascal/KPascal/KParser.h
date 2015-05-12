@@ -491,6 +491,14 @@ namespace KPascal
 						auto minimum_multiplier_dimension_value = symbol.Table[ArrayName.value].my_array_size[i].starts_at();
 						my_multiplication_factor *= (maximum_multiplier_dimension_value - minimum_multiplier_dimension_value + 1);
 					}
+					if (symbol.Table[ArrayName.value].type == "boolean")
+					{
+						// do nothing 
+					}
+					if (symbol.Table[ArrayName.value].type == "integer")
+					{
+						my_multiplication_factor *= 4;
+					}
 					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << my_multiplication_factor << std::endl;
 					MultipleArray(MethodName, ArrayName, ArrayDimensionCounter);
 					if (token.value == "]")
