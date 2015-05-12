@@ -323,20 +323,20 @@ namespace KPascal
 			return " ";
 		}
 
-		void VariableParameterList(std::string MethodName)
-		{
-			if (token.value == ",")
-			{
-				Expression(MethodName);
-				VariableParameterList(MethodName);
-			}
-		}
+		//void VariableParameterList(std::string MethodName)
+		//{
+		//	if (token.value == ",")
+		//	{
+		//		Expression(MethodName);
+		//		VariableParameterList(MethodName);
+		//	}
+		//}
 
-		void VariableParameter(std::string MethodName)
-		{
-			Expression(MethodName);
-			VariableParameterList(MethodName);
-		}
+		//void VariableParameter(std::string MethodName)
+		//{
+		//	Expression(MethodName);
+		//	VariableParameterList(MethodName);
+		//}
 
 
 		void Statement(std::string MethodName = "")
@@ -381,10 +381,10 @@ namespace KPascal
 						}
 						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
 					}
-					else if (token.value == "(")
-					{
-						VariableParameter(MethodName);
-					}
+					//else if (token.value == "(")
+					//{
+					//	VariableParameter(MethodName);
+					//}
 					else { HasError(token.value); }
 				}
 				else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
