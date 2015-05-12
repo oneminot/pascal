@@ -142,7 +142,7 @@ namespace KPascal
 			}
 			else if (token.sType == "real" || token.sType == "integer")
 			{
-				std::string ReturnString = token.value;
+				auto ReturnString = token.value;
 				lexer.getToken(token);
 				LeftSide = FactorPrime(MethodName);
 				if (LeftSide == " ")
@@ -353,7 +353,7 @@ namespace KPascal
 				{
 					auto LeftSideToken = token;
 					lexer.getToken(token);
-					CheckArray(MethodName, LeftSideToken);
+					CheckArray(MethodName, LeftSideToken, 0);
 					if (token.value == ":=")
 					{
 						lexer.getToken(token);
@@ -449,13 +449,22 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		std::string MultipleArray(std::string MethodName)
+		std::string MultipleArray(std::string MethodName, Token ArrayName, int ArrayDimensionCounter)
 		{
 			if (token.value == ",")
 			{
 				lexer.getToken(token);
-				Expression(MethodName);
-				MultipleArray(MethodName);
+				auto maximum_dimension_value = symbol.Table[ArrayName.value].my_array_size[ArrayDimensionCounter].ends_at();
+				auto minimum_dimension_value = symbol.Table[ArrayName.value].my_array_size[ArrayDimensionCounter].starts_at();
+				auto this_dimension = std::stoi(token.value);
+				if (maximum_dimension_value >= this_dimension)
+				{
+					Expression(MethodName);
+					fout << "		sub " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << minimum_dimension_value << std::endl;
+					ArrayDimensionCounter++;
+					MultipleArray(MethodName, ArrayName, ArrayDimensionCounter);
+				}
+				else { HasError(token.value); }
 				//std::cin.get();
 			}
 			return "";
@@ -467,14 +476,30 @@ namespace KPascal
 			if (token.value == "[")
 			{
 				lexer.getToken(token);
-				Expression(MethodName);
-				fout << "		sub " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << symbol.Table[ArrayName.value].my_array_size[ArrayDimensionCounter].starts_at() << std::endl;
-				MultipleArray(MethodName);
-				if (token.value == "]")
+				auto maximum_dimension_value = symbol.Table[ArrayName.value].my_array_size[ArrayDimensionCounter].ends_at();
+				auto minimum_dimension_value = symbol.Table[ArrayName.value].my_array_size[ArrayDimensionCounter].starts_at();
+				auto first_dimension = std::stoi(token.value);
+				if (maximum_dimension_value >= first_dimension)
 				{
-					//std::cin.get();
-					lexer.getToken(token);
+					Expression(MethodName);
+					fout << "		sub " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << minimum_dimension_value << std::endl;
+					auto my_multiplication_factor = 1;
+					ArrayDimensionCounter++;
+					for (size_t i = ArrayDimensionCounter; i < symbol.Table[ArrayName.value].my_array_size.size(); i++)
+					{
+						auto maximum_multiplier_dimension_value = symbol.Table[ArrayName.value].my_array_size[i].ends_at();
+						auto minimum_multiplier_dimension_value = symbol.Table[ArrayName.value].my_array_size[i].starts_at();
+						my_multiplication_factor *= (maximum_multiplier_dimension_value - minimum_multiplier_dimension_value + 1);
+					}
+					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << my_multiplication_factor << std::endl;
+					MultipleArray(MethodName, ArrayName, ArrayDimensionCounter);
+					if (token.value == "]")
+					{
+						//std::cin.get();
+						lexer.getToken(token);
+					}
 				}
+				else { HasError(token.value); }
 			}
 			return "";
 		}
@@ -545,7 +570,9 @@ namespace KPascal
 			else { HasError(token.value); }
 			for (auto _MyTokenValue : temporaryVector)
 			{
+				symbol.Table[_MyTokenValue].type = ReturnString;
 				symbol.Table[_MyTokenValue].size = ArrayElementTypeSize * GetArraySize(_MyTokenValue);
+				GlobalOffset += symbol.Table[_MyTokenValue].size;
 			}
 			temporaryVector.clear();
 			return ReturnString;
@@ -654,7 +681,7 @@ namespace KPascal
 						if (symbol.Table.find(myTokenValue) == symbol.Table.end())
 						{
 							symbol.Table[myTokenValue].isMethod = false;
-							symbol.Table[myTokenValue].type = token.value;
+							//symbol.Table[myTokenValue].type = token.value;
 							symbol.Table[myTokenValue].offset = GlobalOffset;
 							//GlobalOffset += symbol.Table[myTokenValue].size;
 						}
