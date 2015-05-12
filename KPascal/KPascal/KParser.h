@@ -351,9 +351,9 @@ namespace KPascal
 				bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
 				if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 				{
-					Token LeftSideToken = token;
+					auto LeftSideToken = token;
 					lexer.getToken(token);
-					CheckArray(MethodName);
+					CheckArray(MethodName, LeftSideToken);
 					if (token.value == ":=")
 					{
 						lexer.getToken(token);
@@ -461,13 +461,14 @@ namespace KPascal
 			return "";
 		}
 
-		std::string CheckArray(std::string MethodName)
+		std::string CheckArray(std::string MethodName, Token ArrayName, int ArrayDimensionCounter = 0)
 		{
 			//std::cin.get();
 			if (token.value == "[")
 			{
 				lexer.getToken(token);
 				Expression(MethodName);
+				fout << "		sub " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << symbol.Table[ArrayName.value].my_array_size[ArrayDimensionCounter].starts_at() << std::endl;
 				MultipleArray(MethodName);
 				if (token.value == "]")
 				{
@@ -524,13 +525,14 @@ namespace KPascal
 		std::string ArrayDataType(std::string MethodName)
 		{
 			auto ArrayElementTypeSize = 0;
+			auto ReturnString = "";
 			if (token.sType == "word" && token.value == "boolean")
 			{
 				ArrayElementTypeSize = 1;
 				//std::cout << "hello, i am an boolean. i don't hate you" << std::endl;
 				//std::cin.get();
 				lexer.getToken(token);
-				return "boolean";
+				ReturnString = "boolean";
 			}
 			else if (token.sType == "word" && token.value == "integer")
 			{
@@ -538,7 +540,7 @@ namespace KPascal
 				//std::cout << "hello, i am an integer. i don't hate you" << std::endl;
 				//std::cin.get();
 				lexer.getToken(token);
-				return "integer";
+				ReturnString = "integer";
 			}
 			else { HasError(token.value); }
 			for (auto _MyTokenValue : temporaryVector)
@@ -546,7 +548,7 @@ namespace KPascal
 				symbol.Table[_MyTokenValue].size = ArrayElementTypeSize * GetArraySize(_MyTokenValue);
 			}
 			temporaryVector.clear();
-			return "";
+			return ReturnString;
 		}
 
 		void DataType(bool IsGlobalVariable = false, std::string MethodName = "", bool IsReturnValue = false, bool IsPassedByReference = false, bool IsLocalVariable = false)
