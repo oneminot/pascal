@@ -1,4 +1,5 @@
 program helloworld;
 var myarray : Array [2 .. 4, 3 .. 12] of integer;
 begin
+	myarray[3,4] := 25;
 end.

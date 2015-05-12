@@ -323,6 +323,22 @@ namespace KPascal
 			return " ";
 		}
 
+		void VariableParameterList(std::string MethodName)
+		{
+			if (token.value == ",")
+			{
+				Expression(MethodName);
+				VariableParameterList(MethodName);
+			}
+		}
+
+		void VariableParameter(std::string MethodName)
+		{
+			Expression(MethodName);
+			VariableParameterList(MethodName);
+		}
+
+
 		void Statement(std::string MethodName = "")
 		{
 			// looking for a variable 
@@ -337,6 +353,7 @@ namespace KPascal
 				{
 					Token LeftSideToken = token;
 					lexer.getToken(token);
+					CheckArray(MethodName);
 					if (token.value == ":=")
 					{
 						lexer.getToken(token);
@@ -363,6 +380,10 @@ namespace KPascal
 							MoveRegisterValueToStack(MethodName, LeftSideToken);
 						}
 						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
+					}
+					else if (token.value == "(")
+					{
+						VariableParameter(MethodName);
 					}
 					else { HasError(token.value); }
 				}
@@ -432,9 +453,10 @@ namespace KPascal
 		{
 			if (token.value == ",")
 			{
+				lexer.getToken(token);
 				Expression(MethodName);
 				MultipleArray(MethodName);
-				std::cin.get();
+				//std::cin.get();
 			}
 			return "";
 		}
@@ -450,6 +472,7 @@ namespace KPascal
 				if (token.value == "]")
 				{
 					//std::cin.get();
+					lexer.getToken(token);
 				}
 			}
 			return "";

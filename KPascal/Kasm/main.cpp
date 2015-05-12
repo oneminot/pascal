@@ -15,6 +15,8 @@ int main()
 		push ebp
 		lea eax, DataSegment
 		mov ebp, eax
+		mov eax, 3
+		mov [ebp + 0], eax
 		pop ebp
 		pop esp
 		pop edi
