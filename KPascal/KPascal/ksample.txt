@@ -1,5 +1,8 @@
 program helloworld;
+var myinteger, myinteger2 : integer;
 var myarray : Array [2 .. 4, 3 .. 12, 3 .. 12] of integer;
 begin
+	myinteger := 2 + (3 - 4);
+	myinteger2 := 42 * (43 - (44 + 45));
 	myarray[3, 4, 4] := 25;
 end.

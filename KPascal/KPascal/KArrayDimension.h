@@ -43,6 +43,6 @@ inline int KArrayDimension::ends_at()
 
 inline int KArrayDimension::get_size()
 {
-	return end_index - start_index;
+	return end_index - start_index + 1;
 }
 #endif // KArrayDimension_H_
