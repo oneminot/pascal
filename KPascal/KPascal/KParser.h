@@ -460,8 +460,25 @@ namespace KPascal
 				if (maximum_dimension_value >= this_dimension)
 				{
 					Expression(MethodName);
-					fout << "		sub " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << minimum_dimension_value << std::endl;
+					fout << "		sub " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << minimum_dimension_value << std::endl;
 					ArrayDimensionCounter++;
+					auto my_multiplication_factor = 1;
+					for (size_t i = ArrayDimensionCounter; i < symbol.Table[ArrayName.value].my_array_size.size(); i++)
+					{
+						auto maximum_multiplier_dimension_value = symbol.Table[ArrayName.value].my_array_size[i].ends_at();
+						auto minimum_multiplier_dimension_value = symbol.Table[ArrayName.value].my_array_size[i].starts_at();
+						my_multiplication_factor *= (maximum_multiplier_dimension_value - minimum_multiplier_dimension_value + 1);
+					}
+					if (symbol.Table[ArrayName.value].type == "boolean")
+					{
+						// do nothing 
+					}
+					if (symbol.Table[ArrayName.value].type == "integer")
+					{
+						my_multiplication_factor *= 4;
+					}
+					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << my_multiplication_factor << std::endl;
+					NewRegister = true;
 					MultipleArray(MethodName, ArrayName, ArrayDimensionCounter);
 				}
 				else { HasError(token.value); }
@@ -482,9 +499,9 @@ namespace KPascal
 				if (maximum_dimension_value >= first_dimension)
 				{
 					Expression(MethodName);
-					fout << "		sub " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << minimum_dimension_value << std::endl;
-					auto my_multiplication_factor = 1;
+					fout << "		sub " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << minimum_dimension_value << std::endl;
 					ArrayDimensionCounter++;
+					auto my_multiplication_factor = 1;
 					for (size_t i = ArrayDimensionCounter; i < symbol.Table[ArrayName.value].my_array_size.size(); i++)
 					{
 						auto maximum_multiplier_dimension_value = symbol.Table[ArrayName.value].my_array_size[i].ends_at();
@@ -499,7 +516,8 @@ namespace KPascal
 					{
 						my_multiplication_factor *= 4;
 					}
-					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", " << my_multiplication_factor << std::endl;
+					fout << "		imul " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << my_multiplication_factor << std::endl;
+					NewRegister = true;
 					MultipleArray(MethodName, ArrayName, ArrayDimensionCounter);
 					if (token.value == "]")
 					{
