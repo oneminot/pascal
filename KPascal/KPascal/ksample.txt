@@ -1,15 +1,6 @@
 program helloworld;
-var x1, x2 : integer;
+var x1:array [0 .. 9] of integer;
 begin
-	x1 := 2;
-	while x1 < 5 do 
-	begin 
-		x2 := x1;
-		x1 := x1 + 1;
-		if x2 = 5 
-		then 
-			while x2 < 20 
-			do 
-				x2 := x2 + 5
-	end
+	x1[0] := 10;
+	x1[1] := x1[0];
 end.

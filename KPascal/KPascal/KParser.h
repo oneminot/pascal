@@ -387,6 +387,15 @@ namespace KPascal
 					if (token.value == ":=")
 					{
 						lexer.getToken(token);
+						auto is_rightside_an_array_element = false; 
+						if (symbol.Table[token.value].my_array_size.size() > 0)
+						{
+							is_rightside_an_array_element = true;
+						}
+						else
+						{
+							is_rightside_an_array_element = false;
+						}
 						if (token.sType == "word" && !token.isKeyword)
 						{
 							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
