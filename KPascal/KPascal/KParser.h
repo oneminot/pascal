@@ -548,12 +548,26 @@ namespace KPascal
 		bool CheckArray(std::string MethodName, Token ArrayName)
 		{
 			auto ArrayDimensionCounter = 0;
+			auto first_dimension = 0;
 			if (token.value == "[")
 			{
 				lexer.getToken(token);
 				auto maximum_dimension_value = symbol.Table[ArrayName.value].my_array_size[ArrayDimensionCounter].ends_at();
 				auto minimum_dimension_value = symbol.Table[ArrayName.value].my_array_size[ArrayDimensionCounter].starts_at();
-				auto first_dimension = std::stoi(token.value);
+				if (token.sType == "integer")
+				{
+					first_dimension = std::stoi(token.value);
+				}
+				else if (token.sType == "word")
+				{
+					auto IsVariableInParameterList = MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end();
+					auto IsVariableInLocalVariableList = MethodName != "" && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end();
+					auto IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
+					if (IsVariableInGlobalVariableList || IsVariableInLocalVariableList || IsVariableInParameterList)
+					{
+						std::cout << "Sorry. I cannot handle variables as array dimensions yet. I understand " << token.value << " is a valid token. However, I'm afraid I can't do that." << std::endl;
+					}
+				}
 				if (maximum_dimension_value >= first_dimension)
 				{
 					Expression(MethodName);
