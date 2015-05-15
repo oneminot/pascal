@@ -9,3 +9,5 @@ procedure
 if
 then
 else
+while
+do

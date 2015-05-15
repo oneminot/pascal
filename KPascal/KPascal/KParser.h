@@ -20,6 +20,7 @@ namespace KPascal
 		std::vector<std::string> temporaryVector;
 
 		int m_if_counter = 0;
+		int m_while_counter = 0;
 
 		std::ofstream fout;
 		int GlobalOffset = 0;
@@ -36,7 +37,7 @@ namespace KPascal
 
 		void PushAllRegisters()
 		{
-			for (int x = 0; x < 6; x++)
+			for (auto x = 0; x < 6; x++)
 			{
 				fout << "		push " << registerArray.kRegisters[x].RegisterName << std::endl;
 			}
@@ -270,7 +271,7 @@ namespace KPascal
 			return result_string;
 		}
 
-		std::string BooleanExpressionPrime(std::string MethodName = "", int local_if_counter = 0)
+		std::string BooleanExpressionPrime(std::string MethodName = "", int local_if_counter = 0, std::string k_loop_type = "")
 		{
 			//TODO: Add logic for returning a string from boolean prime 
 			if (token.value == "=")
@@ -283,7 +284,14 @@ namespace KPascal
 				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
 				registerArray.currentRegisterIndex--;
 				registerArray.currentRegisterIndex--;
-				fout << "		jne  endorelse" << local_if_counter << std::endl;
+				if (k_loop_type == "if")
+				{
+					fout << "		jne  endorelse" << local_if_counter << std::endl;
+				}
+				if (k_loop_type == "while")
+				{
+					fout << "		jne  endwhile" << local_if_counter << std::endl;
+				}
 			}
 			else if (token.value == "<")
 			{
@@ -295,7 +303,14 @@ namespace KPascal
 				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
 				registerArray.currentRegisterIndex--;
 				registerArray.currentRegisterIndex--;
-				fout << "		jge  endorelse" << local_if_counter << std::endl;
+				if (k_loop_type == "if")
+				{
+					fout << "		jne  endorelse" << local_if_counter << std::endl;
+				}
+				if (k_loop_type == "while")
+				{
+					fout << "		jne  endwhile" << local_if_counter << std::endl;
+				}
 			}
 			else if (token.value == ">")
 			{
@@ -307,16 +322,23 @@ namespace KPascal
 				registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
 				registerArray.currentRegisterIndex--;
 				registerArray.currentRegisterIndex--;
-				fout << "		jle  endorelse" << local_if_counter << std::endl;
+				if (k_loop_type == "if")
+				{
+					fout << "		jne  endorelse" << local_if_counter << std::endl;
+				}
+				if (k_loop_type == "while")
+				{
+					fout << "		jne  endwhile" << local_if_counter << std::endl;
+				}
 			}
 			else { HasError(token.value); }
 			return " ";
 		}
 
-		std::string BooleanExpression(std::string MethodName = "", int local_if_counter = 0)
+		std::string BooleanExpression(std::string MethodName = "", int local_if_counter = 0, std::string k_loop_type = "")
 		{
 			auto LeftSide = Expression(MethodName);
-			auto RightSide = BooleanExpressionPrime(MethodName, local_if_counter);
+			auto RightSide = BooleanExpressionPrime(MethodName, local_if_counter, k_loop_type);
 			return " ";
 		}
 
@@ -353,15 +375,15 @@ namespace KPascal
 			if (token.sType == "word" && !token.isKeyword)
 			{
 				//make sure the variable is in the symbol table 
-				bool IsVariableInParameterList = MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end();
-				bool IsVariableInLocalVariableList = MethodName != "" && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end();
+				auto IsVariableInParameterList = MethodName != "" && symbol.Table[MethodName].parameters.find(token.value) != symbol.Table[MethodName].parameters.end();
+				auto IsVariableInLocalVariableList = MethodName != "" && symbol.Table[MethodName].localvariables.find(token.value) != symbol.Table[MethodName].localvariables.end();
 				// the name of the method should already be in the Global Variable List because it should be in the symbol table 
-				bool IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
+				auto IsVariableInGlobalVariableList = symbol.Table.find(token.value) != symbol.Table.end();
 				if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 				{
 					auto LeftSideToken = token;
 					lexer.getToken(token);
-					bool is_array = CheckArray(MethodName, LeftSideToken);
+					auto is_array = CheckArray(MethodName, LeftSideToken);
 					if (token.value == ":=")
 					{
 						lexer.getToken(token);
@@ -410,10 +432,10 @@ namespace KPascal
 			}
 			else if (token.value == "if")
 			{
-				int local_if_counter = m_if_counter;
+				auto local_if_counter = m_if_counter;
 				m_if_counter++;
 				lexer.getToken(token);
-				BooleanExpression(MethodName, local_if_counter);
+				BooleanExpression(MethodName, local_if_counter, "if");
 				if (token.value == "then")
 				{
 					NewRegister = true;
@@ -423,6 +445,22 @@ namespace KPascal
 					fout << "		endorelse" << local_if_counter << ":" << std::endl;
 					StatementPrime(MethodName);
 					fout << "		end" << local_if_counter << ":" << std::endl;
+				}
+			}
+			else if (token.value == "while")
+			{
+				auto local_while_counter = m_while_counter;
+				fout << "		while" << local_while_counter << ":" << std::endl;
+				m_while_counter++;
+				lexer.getToken(token);
+				BooleanExpression(MethodName, local_while_counter, "while");
+				if (token.value == "do")
+				{
+					NewRegister = true;
+					lexer.getToken(token);
+					Statement(MethodName);
+					fout << "		jmp while" << local_while_counter << std::endl;
+					fout << "		endwhile" << local_while_counter << ":" << std::endl;
 				}
 			}
 		}
