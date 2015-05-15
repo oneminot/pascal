@@ -305,11 +305,11 @@ namespace KPascal
 				registerArray.currentRegisterIndex--;
 				if (k_loop_type == "if")
 				{
-					fout << "		jne  endorelse" << local_if_counter << std::endl;
+					fout << "		jge  endorelse" << local_if_counter << std::endl;
 				}
 				if (k_loop_type == "while")
 				{
-					fout << "		jne  endwhile" << local_if_counter << std::endl;
+					fout << "		jge  endwhile" << local_if_counter << std::endl;
 				}
 			}
 			else if (token.value == ">")
@@ -324,11 +324,11 @@ namespace KPascal
 				registerArray.currentRegisterIndex--;
 				if (k_loop_type == "if")
 				{
-					fout << "		jne  endorelse" << local_if_counter << std::endl;
+					fout << "		jle  endorelse" << local_if_counter << std::endl;
 				}
 				if (k_loop_type == "while")
 				{
-					fout << "		jne  endwhile" << local_if_counter << std::endl;
+					fout << "		jle  endwhile" << local_if_counter << std::endl;
 				}
 			}
 			else { HasError(token.value); }

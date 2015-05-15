@@ -6,5 +6,10 @@ begin
 	begin 
 		x2 := x1;
 		x1 := x1 + 1;
+		if x2 = 5 
+		then 
+			while x2 < 20 
+			do 
+				x2 := x2 + 5
 	end
 end.
