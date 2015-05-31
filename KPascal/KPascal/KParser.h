@@ -353,22 +353,6 @@ namespace KPascal
 			return " ";
 		}
 
-		//void VariableParameterList(std::string MethodName)
-		//{
-		//	if (token.value == ",")
-		//	{
-		//		Expression(MethodName);
-		//		VariableParameterList(MethodName);
-		//	}
-		//}
-
-		//void VariableParameter(std::string MethodName)
-		//{
-		//	Expression(MethodName);
-		//	VariableParameterList(MethodName);
-		//}
-
-
 		void Statement(std::string MethodName = "")
 		{
 			// looking for a variable 
@@ -1076,7 +1060,6 @@ namespace KPascal
 			else { HasError(token.value); }
 		}
 
-		// function abs(num:integer):integer;
 		void Function()
 		{
 			std::string myTokenValue = token.value;
@@ -1148,6 +1131,7 @@ namespace KPascal
 				ParameterFunctionVariable(IsGlobalVariable, MethodName);
 			}
 		}
+
 		void Program()
 		{
 			if (fout.is_open())
@@ -1200,6 +1184,7 @@ namespace KPascal
 			}
 			else { std::cout << "Output file is not open." << std::endl; }
 		}
+
 		~KParser()
 		{
 			fout.close();
