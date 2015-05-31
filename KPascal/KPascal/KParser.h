@@ -44,28 +44,6 @@ namespace KPascal
 			exit(1);
 		}
 
-		void PushAllRegisters()
-		{
-			for (auto x = 0; x < 6; x++)
-			{
-				fout << "		push " << registerArray.kRegisters[x].RegisterName << std::endl;
-			}
-			fout << "		push esp" << std::endl;
-			fout << "		push ebp" << std::endl;
-			fout << "		lea eax, DataSegment" << std::endl;
-			fout << "		mov ebp, eax" << std::endl;
-		}
-
-		void PopAllRegisters()
-		{
-			fout << "		pop ebp" << std::endl;
-			fout << "		pop esp" << std::endl;
-			for (int x = 5; x > -1; x--)
-			{
-				fout << "		pop " << registerArray.kRegisters[x].RegisterName << std::endl;
-			}
-		}
-
 		void MoveRegisterValueToStack(std::string MethodName, Token LeftSideToken, bool IsArray)
 		{
 			Expression(MethodName);
@@ -1161,7 +1139,6 @@ namespace KPascal
 							lexer.getToken(token);
 							if (fout.is_open())
 							{
-								// PopAllRegisters();
 								fout << "	}" << std::endl;
 								fout << "	std::cin.get();" << std::endl;
 								fout << "	return 0;" << std::endl;
@@ -1189,7 +1166,6 @@ namespace KPascal
 				fout << "{" << std::endl;
 				fout << "	_asm" << std::endl;
 				fout << "	{" << std::endl;
-				// PushAllRegisters();
 			}
 			else { std::cout << "Output file is not open." << std::endl; }
 		}
