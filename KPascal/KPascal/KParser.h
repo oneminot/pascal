@@ -122,8 +122,8 @@ namespace KPascal
 
 		std::string Factor(std::string MethodName = "")
 		{
-			std::string LeftSide = "";
-			std::string RightSide = "";
+			std::string LeftSide;
+			std::string RightSide;
 			if (token.value == "(")
 			{
 				NewRegister = true;
@@ -193,14 +193,13 @@ namespace KPascal
 		std::string TermPrime(std::string MethodName = "")
 		{
 			std::string LeftSide;
-			std::string RightSide;
 			std::string ReturnString;
 			if (token.value == "+" || token.value == "-")
 			{
 				ReturnString = token.value;
 				lexer.getToken(token);
 				LeftSide = Term(MethodName);
-				RightSide = TermPrime(MethodName);
+				TermPrime(MethodName);
 				if (NewRegister && LeftSide != " ")
 				{
 					fout << "		mov " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << ", ";
@@ -210,18 +209,7 @@ namespace KPascal
 					NewRegister = false;
 					return ReturnString;
 				}
-				//else if (!NewRegister && LeftSide != " " && RightSide == " ")
-				//{
-				//	fout << "		" << SymbolToString(RightSide) << " ";
-				//	fout << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << ", " << LeftSide << std::endl;
-				//	registerArray.kRegisters[registerArray.currentRegisterIndex - 1].IsUsed = false;
-				//	registerArray.currentRegisterIndex--;
-				//	return " ";
-				//}
-				else
-				{
-					return ReturnString;
-				}
+				else { return ReturnString; }
 			}
 			return " ";
 		}
@@ -282,7 +270,7 @@ namespace KPascal
 			if (token.value == "=")
 			{
 				NewRegister = true;
-				auto right_side_string = lexer.getToken(token);
+				lexer.getToken(token);
 				Expression(MethodName);
 				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
 				registerArray.kRegisters[registerArray.currentRegisterIndex - 2].IsUsed = false;
@@ -301,7 +289,7 @@ namespace KPascal
 			else if (token.value == "<")
 			{
 				NewRegister = true;
-				auto right_side_string = lexer.getToken(token);
+				lexer.getToken(token);
 				Expression(MethodName);
 				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
 				registerArray.kRegisters[registerArray.currentRegisterIndex - 2].IsUsed = false;
@@ -320,7 +308,7 @@ namespace KPascal
 			else if (token.value == ">")
 			{
 				NewRegister = true;
-				auto right_side_string = lexer.getToken(token);
+				lexer.getToken(token);
 				Expression(MethodName);
 				fout << "		cmp " << registerArray.kRegisters[registerArray.currentRegisterIndex - 2].RegisterName << ", " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << std::endl;
 				registerArray.kRegisters[registerArray.currentRegisterIndex - 2].IsUsed = false;
@@ -376,15 +364,6 @@ namespace KPascal
 					if (token.value == ":=")
 					{
 						lexer.getToken(token);
-						auto is_rightside_an_array_element = false;
-						if (symbol.Table[token.value].my_array_size.size() > 0)
-						{
-							is_rightside_an_array_element = true;
-						}
-						else
-						{
-							is_rightside_an_array_element = false;
-						}
 						if (token.sType == "word" && !token.isKeyword)
 						{
 							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
