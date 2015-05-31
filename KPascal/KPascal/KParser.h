@@ -38,7 +38,7 @@ namespace KPascal
 		void HasError(Token token)
 		{
 			if (token.value == "") { std::cout << "Error in who knows what method with who knows what token" << std::endl; }
-			else { std::cout << "Error due to " << token.value << std::endl; }
+			else { std::cout << "Error due to " << token.value << "of type " << token.sType << std::endl; }
 			std::cout << "Press ENTER to quit." << std::endl;
 			std::cin.get();
 			exit(1);
@@ -1161,7 +1161,7 @@ namespace KPascal
 							lexer.getToken(token);
 							if (fout.is_open())
 							{
-								PopAllRegisters();
+								// PopAllRegisters();
 								fout << "	}" << std::endl;
 								fout << "	std::cin.get();" << std::endl;
 								fout << "	return 0;" << std::endl;
@@ -1189,7 +1189,7 @@ namespace KPascal
 				fout << "{" << std::endl;
 				fout << "	_asm" << std::endl;
 				fout << "	{" << std::endl;
-				PushAllRegisters();
+				// PushAllRegisters();
 			}
 			else { std::cout << "Output file is not open." << std::endl; }
 		}
