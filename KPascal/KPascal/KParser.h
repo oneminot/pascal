@@ -35,6 +35,15 @@ namespace KPascal
 			exit(1);
 		}
 
+		void HasError(Token token)
+		{
+			if (token.value == "") { std::cout << "Error in who knows what method with who knows what token" << std::endl; }
+			else { std::cout << "Error due to " << token.value << std::endl; }
+			std::cout << "Press ENTER to quit." << std::endl;
+			std::cin.get();
+			exit(1);
+		}
+
 		void PushAllRegisters()
 		{
 			for (auto x = 0; x < 6; x++)
@@ -146,7 +155,7 @@ namespace KPascal
 						return " ";
 					}
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
 			else if (token.sType == "real" || token.sType == "integer")
 			{
@@ -181,7 +190,7 @@ namespace KPascal
 					return " ";
 				}
 			}
-			else { HasError(token.value); }
+			else { HasError(token); }
 			return " ";
 		}
 
@@ -331,7 +340,7 @@ namespace KPascal
 					fout << "		jle  endwhile" << local_if_counter << std::endl;
 				}
 			}
-			else { HasError(token.value); }
+			else { HasError(token); }
 			return " ";
 		}
 
@@ -386,7 +395,7 @@ namespace KPascal
 							{
 								MoveRegisterValueToStack(MethodName, LeftSideToken, is_array);
 							}
-							else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
+							else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token); }
 						}
 						else if (token.sType == "integer")
 						{
@@ -402,15 +411,15 @@ namespace KPascal
 							std::cout << "live is for the living my dear" << std::endl;
 							MoveRegisterValueToStack(MethodName, LeftSideToken, is_array);
 						}
-						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
+						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token); }
 					}
 					//else if (token.value == "(")
 					//{
 					//	VariableParameter(MethodName);
 					//}
-					else { HasError(token.value); }
+					else { HasError(token); }
 				}
-				else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token.value); }
+				else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token); }
 			}
 			else if (token.value == "begin")
 			{
@@ -421,7 +430,7 @@ namespace KPascal
 				{
 					lexer.getToken(token);
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
 			else if (token.value == "if")
 			{
@@ -483,9 +492,9 @@ namespace KPascal
 				{
 					lexer.getToken(token);
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
-			else { HasError(token.value); }
+			else { HasError(token); }
 		}
 
 		std::string MultipleArray(std::string MethodName, Token ArrayName, int ArrayDimensionCounter)
@@ -523,7 +532,7 @@ namespace KPascal
 					NewRegister = true;
 					MultipleArray(MethodName, ArrayName, ArrayDimensionCounter);
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 				//std::cin.get();
 			}
 			return "";
@@ -582,7 +591,7 @@ namespace KPascal
 						return true;
 					}
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
 			return false;
 		}
@@ -650,7 +659,7 @@ namespace KPascal
 				lexer.getToken(token);
 				ReturnString = "integer";
 			}
-			else { HasError(token.value); }
+			else { HasError(token); }
 			for (auto _MyTokenValue : temporaryVector)
 			{
 				symbol.Table[_MyTokenValue].type = ReturnString;
@@ -814,7 +823,7 @@ namespace KPascal
 					}
 				}
 			}
-			else { HasError(token.value); }
+			else { HasError(token); }
 		}
 
 		void VariableProduction(bool IsGlobalVariable = false, std::string MethodName = "", bool IsPassedByReference = false, bool IsLocalVariable = false)
@@ -833,11 +842,11 @@ namespace KPascal
 						lexer.getToken(token);
 						VariableProductionPrime(IsGlobalVariable, MethodName, IsLocalVariable);
 					}
-					else { HasError(token.value); }
+					else { HasError(token); }
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
-			else { HasError(token.value); }
+			else { HasError(token); }
 		}
 
 		void VariableProductionPrime(bool IsGlobalVariable = false, std::string MethodName = "", bool IsLocalVariable = false)
@@ -860,11 +869,11 @@ namespace KPascal
 							lexer.getToken(token);
 							VariableProductionPrime(IsGlobalVariable, MethodName, IsLocalVariable);
 						}
-						else { HasError(token.value); }
+						else { HasError(token); }
 					}
-					else { HasError(token.value); }
+					else { HasError(token); }
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
 			else if (!token.isKeyword && token.sType == "word")
 			{
@@ -882,7 +891,7 @@ namespace KPascal
 						VariableProductionPrime();
 					}
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
 		}
 
@@ -918,7 +927,7 @@ namespace KPascal
 						lexer.getToken(token);
 						VariableProductionPrime(IsGlobalVariable, MethodName, IsLocalVariable);
 					}
-					else { HasError(token.value); }
+					else { HasError(token); }
 				}
 			}
 		}
@@ -965,7 +974,7 @@ namespace KPascal
 					ParameterListEnd(MethodName);
 				}
 			}
-			else { HasError(token.value); }
+			else { HasError(token); }
 		}
 
 		void ParameterListEnd(std::string MethodName = "")
@@ -1027,7 +1036,7 @@ namespace KPascal
 				else
 				{
 					std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
-					HasError(myTokenValue);
+					HasError(token);
 				}
 				lexer.getToken(token);
 				//we should get a left parenthesis now 
@@ -1049,15 +1058,15 @@ namespace KPascal
 							{
 								lexer.getToken(token);
 							}
-							else { HasError(token.value); }
+							else { HasError(token); }
 						}
-						else { HasError(token.value); }
+						else { HasError(token); }
 					}
-					else { HasError(token.value); }
+					else { HasError(token); }
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
-			else { HasError(token.value); }
+			else { HasError(token); }
 		}
 
 		void Function()
@@ -1075,7 +1084,7 @@ namespace KPascal
 			else
 			{
 				std::cout << "It seems that you have already defined " << myTokenValue << ". Please try again." << std::endl;
-				HasError(myTokenValue);
+				HasError(token);
 			}
 			lexer.getToken(token);
 			//we have a left parenthesis 
@@ -1099,15 +1108,15 @@ namespace KPascal
 							{
 								lexer.getToken(token);
 							}
-							else { HasError(token.value); }
+							else { HasError(token); }
 						}
-						else { HasError(token.value); }
+						else { HasError(token); }
 					}
-					else { HasError(token.value); }
+					else { HasError(token); }
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
-			else { HasError(token.value); }
+			else { HasError(token); }
 		}
 
 		void ParameterFunctionVariable(bool IsGlobalVariable = false, std::string MethodName = "")
@@ -1159,11 +1168,11 @@ namespace KPascal
 								fout << "}" << std::endl;
 							}
 						}
-						else { HasError(token.value); }
+						else { HasError(token); }
 					}
-					else { HasError(token.value); }
+					else { HasError(token); }
 				}
-				else { HasError(token.value); }
+				else { HasError(token); }
 			}
 			else { std::cout << "Output file is not open. You should never see this error. Please debug." << std::endl; }
 		}
