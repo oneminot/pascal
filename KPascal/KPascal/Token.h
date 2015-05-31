@@ -1,6 +1,5 @@
 #ifndef Token_H
 #define Token_H
-#include <string>
 
 namespace KPascal
 {

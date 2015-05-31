@@ -1,6 +1,5 @@
 #ifndef VariableData_H_
 #define VariableData_H_ 
-#include <string>
 #include <map>
 #include "Variable.h"
 #include "LocalVariable.h"

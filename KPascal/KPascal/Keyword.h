@@ -5,8 +5,9 @@
 #include <fstream>
 #include <map>
 #include <utility>
-#include <iostream>
 #include <vector>
+#include <sstream>
+
 namespace KPascal
 {
 	class Keyword

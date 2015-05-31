@@ -65,7 +65,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="RecursiveDescent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="KArrayDimension.h" />
@@ -76,7 +75,6 @@
     <ClInclude Include="Lexer.h" />
     <ClInclude Include="LocalVariable.h" />
     <ClInclude Include="ParameterData.h" />
-    <ClInclude Include="Parser.h" />
     <ClInclude Include="Production.h" />
     <ClInclude Include="ReservedKeyword.h" />
     <ClInclude Include="SymbolTable.h" />

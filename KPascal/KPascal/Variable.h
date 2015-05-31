@@ -1,6 +1,6 @@
 #ifndef Variable_H_
 #define Variable_H_
-#include <string>
+
 namespace KPascal
 {
 	struct Variable

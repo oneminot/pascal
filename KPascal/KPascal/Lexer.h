@@ -1,7 +1,6 @@
 #ifndef Lexer_H
 #define Lexer_H
 #include <string>
-#include <sstream>
 #include <fstream>
 #include <algorithm>
 #include "Token.h"

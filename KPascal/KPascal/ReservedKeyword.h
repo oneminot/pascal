@@ -5,7 +5,7 @@
 #include <map>
 #include <utility>
 #include <iostream>
-#include <vector>
+
 namespace KPascal
 {
 	class ReservedKeyword
