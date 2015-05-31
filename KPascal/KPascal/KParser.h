@@ -53,10 +53,28 @@ namespace KPascal
 			{
 				fout << "		mov [ebp + " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
 			}
-			else 
+			else
 			{
 				fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
 			}
+			registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
+		}
+
+		void MoveRegisterValueToStack(std::string MethodName, Token LeftSideToken)
+		{
+			Expression(MethodName);
+			NewRegister = true;
+			registerArray.currentRegisterIndex--;
+			fout << "		mov [ebp + " << symbol.Table[LeftSideToken.value].offset << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
+			registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
+		}
+
+		void MoveRegisterValueToStackForArrays(std::string MethodName, Token LeftSideToken)
+		{
+			Expression(MethodName);
+			NewRegister = true;
+			registerArray.currentRegisterIndex--;
+			fout << "		mov [ebp + " << registerArray.kRegisters[registerArray.currentRegisterIndex - 1].RegisterName << "], " << registerArray.kRegisters[registerArray.currentRegisterIndex].RegisterName << std::endl;
 			registerArray.kRegisters[registerArray.currentRegisterIndex].IsUsed = false;
 		}
 
@@ -358,7 +376,7 @@ namespace KPascal
 					if (token.value == ":=")
 					{
 						lexer.getToken(token);
-						auto is_rightside_an_array_element = false; 
+						auto is_rightside_an_array_element = false;
 						if (symbol.Table[token.value].my_array_size.size() > 0)
 						{
 							is_rightside_an_array_element = true;
@@ -371,23 +389,50 @@ namespace KPascal
 						{
 							if (IsVariableInParameterList || IsVariableInLocalVariableList || IsVariableInGlobalVariableList)
 							{
-								MoveRegisterValueToStack(MethodName, LeftSideToken, is_array);
+								if (is_array)
+								{
+									MoveRegisterValueToStackForArrays(MethodName, LeftSideToken);
+								}
+								else
+								{
+									MoveRegisterValueToStack(MethodName, LeftSideToken);
+								}
 							}
 							else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token); }
 						}
 						else if (token.sType == "integer")
 						{
-							MoveRegisterValueToStack(MethodName, LeftSideToken, is_array);
-
+							if (is_array)
+							{
+								MoveRegisterValueToStackForArrays(MethodName, LeftSideToken);
+							}
+							else
+							{
+								MoveRegisterValueToStack(MethodName, LeftSideToken);
+							}
 						}
 						else if (token.sType == "word" && (token.value == "true" || token.value == "false"))
 						{
-							MoveRegisterValueToStack(MethodName, LeftSideToken, is_array);
+							if (is_array)
+							{
+								MoveRegisterValueToStackForArrays(MethodName, LeftSideToken);
+							}
+							else
+							{
+								MoveRegisterValueToStack(MethodName, LeftSideToken);
+							}
 						}
 						else if (token.value == "(")
 						{
 							std::cout << "live is for the living my dear" << std::endl;
-							MoveRegisterValueToStack(MethodName, LeftSideToken, is_array);
+							if (is_array)
+							{
+								MoveRegisterValueToStackForArrays(MethodName, LeftSideToken);
+							}
+							else
+							{
+								MoveRegisterValueToStack(MethodName, LeftSideToken);
+							}
 						}
 						else { std::cout << "The compiler could not find a definition for " << token.value << ". " << std::endl; HasError(token); }
 					}
@@ -781,7 +826,7 @@ namespace KPascal
 							{
 								auto MyArrayEndIndex = std::stoi(token.value);
 								auto k_array_dimension = KArrayDimension(MyArrayStartIndex, MyArrayEndIndex);
-								for (auto myTokenValue :  temporaryVector)
+								for (auto myTokenValue : temporaryVector)
 								{
 									symbol.Table[myTokenValue].my_array_size.push_back(k_array_dimension);
 								}
