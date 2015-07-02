@@ -1,11 +1,31 @@
-#include <map>
+﻿#include <iostream>
 #include <string>
-#include <utility>
-#include <iostream>
+
+class Poop
+{
+public:
+	//Poop()
+	//{
+	//	my_poop_array_p_ = nullptr;
+	//	size = 0;
+	//	is_empty_b_ = true;
+	//};
+	//int * my_poop_array_p_;
+	bool is_empty_b_;
+	bool is_empty_b_2;
+	bool is_empty_b_3;
+	long long size;
+	bool is_empty_b_4;
+	bool is_empty_b_5;
+	bool is_empty_b_6;
+	bool is_empty_b_7;
+	bool is_empty_b_8;
+};
+
 int main() {
-	std::map<std::string, std::string> production;
-	production.insert(std::make_pair("070000", "08"));
-	production.insert(std::make_pair("050907", "05"));
-	production.insert(std::make_pair("051007", "05"));
-	std::cout << production["050907"] << std::endl;
+	Poop my_poop;
+	//my_poop.my_poop_array_p_ = new int[10];
+	int x = sizeof(Poop);
+	std::cout << x;
+	return x;
 }
